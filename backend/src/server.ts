@@ -1,6 +1,4 @@
-import express from "express";
-
-const app = express();
+import app from "./app.ts";
 
 app.get("/", (req, res) => {
   res.sendStatus(200);
