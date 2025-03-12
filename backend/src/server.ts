@@ -1,7 +1,11 @@
-import app from "./app.ts";
+import app from "./app.js";
+import { query } from "./db/index.js";
 
-app.get("/", (req, res) => {
-  res.sendStatus(200);
-});
-
-app.listen(3000, () => console.log("server listening"));
+query("SELECT 1")
+  .then(() => {
+    console.log("db connection test success");
+    app.listen(process.env.PORT, () =>
+      console.log(`server listening on port ${process.env.PORT}`)
+    );
+  })
+  .catch(console.error);
