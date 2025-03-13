@@ -6,7 +6,7 @@ const { Client } = pkg;
 
 const USER_COUNT = 20;
 
-const seedDatabase = async (): Promise<void> => {
+export const seedDatabase = async (): Promise<void> => {
   const client = new Client({
     ...pgConnection,
     host: process.env.POSTGRES_HOST,

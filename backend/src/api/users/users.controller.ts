@@ -5,7 +5,7 @@ import type { UserRequestParams } from "./users.types.js";
 export const getUsers: RequestHandler = async (req, res) => {
   try {
     const { rows } = await query("select * from users;");
-    if (rows.length) res.status(200).json(rows);
+    res.status(200).json(rows);
   } catch (err) {
     console.error("Database query error:", err);
     res.status(500).json({ err });
@@ -17,6 +17,20 @@ export const getUser: RequestHandler<UserRequestParams> = async (req, res) => {
   try {
     const { rows } = await query("select * from users where id = $1;", [id]);
     if (rows.length) res.status(200).json(rows[0]);
+  } catch (err) {
+    console.error("Database query error:", err);
+    res.status(500).json({ err });
+  }
+};
+
+export const deleteUser: RequestHandler<UserRequestParams> = async (
+  req,
+  res
+) => {
+  const { id } = req.params;
+  try {
+    await query("delete from users where id = $1", [id]);
+    res.status(204).json({ msg: "record deleted " });
   } catch (err) {
     console.error("Database query error:", err);
     res.status(500).json({ err });

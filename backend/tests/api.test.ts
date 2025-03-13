@@ -4,6 +4,7 @@ import request from "supertest";
 import { Client } from "pg";
 import { pgConnection } from "../src/db/config.js";
 import { UserSchema } from "../src/api/users/users.types.js";
+import { seedDatabase } from "../src/db/seeder.js";
 
 describe("api tests", () => {
   const apiReq = request(`${process.env.TEST_URL}`);
@@ -16,9 +17,12 @@ describe("api tests", () => {
     });
 
     await client.connect();
+    await seedDatabase();
   });
 
   afterAll(async () => {
+    // await client.query("truncate table users restart identity;");
+    await seedDatabase();
     await client.end();
   });
 
@@ -45,23 +49,32 @@ describe("api tests", () => {
       expect(validateUser.success).toBe(true);
     });
 
-    test("DELETE /:id should delete user with id", async () => {});
+    test("DELETE /:id should delete user with id", async () => {
+      const { rows } = await client.query("select id from users limit 1;");
+      const { id } = rows[0];
+      const deleteUserResponse = await apiReq.delete(`/api/users/${id}`);
+      expect(deleteUserResponse.status).toBe(204);
 
-    test("PUT /:id should update a user", async () => {});
+      const deletedRows = await client.query(
+        "select id from users where id = $1;",
+        [id]
+      );
+      expect(deletedRows.rows.length).toBe(0);
+    });
+
+    // test("PUT /:id should update a user", async () => {});
   });
 
-  describe("api/auth", () => {
-    // test("POST / should create a new user", async () => {
-    //   const id = crypto.randomUUID();
-    //   const newUser = {
-    //     id,
-    //     first_name: "testuser",
-    //     last_name: "testuserlastname",
-    //     username: "testuser123",
-    //     email: "testuser@gmail.com",
-    //     password_hash: "thisisahashedpassword",
-    //   };
-    //   apiReq.post("/api/users").send(newUser);
-    // });
-  });
+  //   test("POST / should create a new user", async () => {
+  //     const id = crypto.randomUUID();
+  //     const newUser = {
+  //       id,
+  //       first_name: "testuser",
+  //       last_name: "testuserlastname",
+  //       username: "testuser123",
+  //       email: "testuser@gmail.com",
+  //       password_hash: "thisisahashedpassword",
+  //     };
+  //     apiReq.post("/api/users").send(newUser);
+  //   });
 });
