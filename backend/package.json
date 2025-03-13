@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "build": "tsc --build --watch",
-    "dev": "node dist/src/server.js"
+    "build": "tsc",
+    "dev": "node dist/src/server.js",
+    "migrate": "node dist/src/db/migrations.js",
+    "seed": "node dist/src/db/seeder.js"
   },
   "keywords": [],
   "author": "",
@@ -17,15 +19,19 @@
     "express-rate-limit": "^7.5.0",
     "express-session": "^1.18.1",
     "helmet": "^8.0.0",
+    "http-errors": "^2.0.0",
     "morgan": "^1.10.0",
-    "pg": "^8.13.3"
+    "pg": "^8.13.3",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@faker-js/faker": "^9.6.0",
     "@types/express": "^5.0.0",
     "@types/morgan": "^1.9.9",
     "@types/pg": "^8.11.11",
     "@types/supertest": "^6.0.2",
+    "dotenv": "^16.4.7",
     "eslint": "^9.22.0",
     "globals": "^16.0.0",
     "node-pg-migrate": "^7.9.1",

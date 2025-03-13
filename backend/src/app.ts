@@ -2,6 +2,7 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
+import mountRoutes from "./api/index.routes.js";
 
 const app = express();
 
@@ -15,12 +16,7 @@ app.use(
     legacyHeaders: false,
   })
 );
-
-app.get("/health", (req, res, next) => {
-  res.sendStatus(200);
-  next();
-});
-
+mountRoutes(app);
 app.use(morgan("dev"));
 
 export default app;

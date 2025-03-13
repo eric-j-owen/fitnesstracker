@@ -1,11 +1,13 @@
 services:
   db:
     image: postgres:17.4
-    env_file: .env
+    env_file: ./backend/.env
     restart: always
     shm_size: 128mb
     volumes:
       - workout_tracker_db_volume:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
   adminer:
     image: adminer
@@ -17,7 +19,7 @@ services:
 
   backend:
     build: ./backend
-    env_file: .env
+    env_file: ./backend/.env
     # user: node
     develop:
       watch:
