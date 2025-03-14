@@ -3,7 +3,7 @@ import { describe, expect, test, beforeAll, afterAll } from "vitest";
 import request from "supertest";
 import { Client } from "pg";
 import { pgConnection } from "../src/db/config.js";
-import { UserSchema } from "../src/api/users/users.types.js";
+import { UserSchema } from "../src/api/users/users.schemas.js";
 import { seedDatabase } from "../src/db/seeder.js";
 
 describe("api tests", () => {
@@ -62,7 +62,19 @@ describe("api tests", () => {
       expect(deletedRows.rows.length).toBe(0);
     });
 
-    // test("PUT /:id should update a user", async () => {});
+    test("PATCH /:id should update a user", async () => {
+      const { rows } = await client.query("select id from users limit 1;");
+      const { id } = rows[0];
+      const userEdit = {
+        email: "updated@updated.com",
+      };
+      const updateUserRes = await apiReq
+        .patch(`/api/users/${id}`)
+        .send(userEdit)
+        .expect(200);
+
+      expect(updateUserRes.body).toHaveProperty("email", userEdit.email);
+    });
   });
 
   //   test("POST / should create a new user", async () => {
@@ -71,7 +83,6 @@ describe("api tests", () => {
   //       id,
   //       first_name: "testuser",
   //       last_name: "testuserlastname",
-  //       username: "testuser123",
   //       email: "testuser@gmail.com",
   //       password_hash: "thisisahashedpassword",
   //     };
