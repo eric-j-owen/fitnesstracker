@@ -3,7 +3,7 @@ import { describe, expect, test, beforeAll, afterAll } from "vitest";
 import request from "supertest";
 import { Client } from "pg";
 import { pgConnection } from "../src/db/config.js";
-import { UserSchema } from "../src/api/users/users.schemas.js";
+import { UserSchema } from "../src/api/users/user.schemas.js";
 import { seedDatabase } from "../src/db/seeder.js";
 
 describe("api tests", () => {

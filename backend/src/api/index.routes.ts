@@ -1,5 +1,5 @@
 import createHttpError from "http-errors";
-import userRouter from "./users/users.routes.js";
+import userRouter from "./users/user.routes.js";
 
 import type { Express } from "express";
 
