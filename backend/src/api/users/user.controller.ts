@@ -1,7 +1,16 @@
 import type { RequestHandler } from "express";
 import { query } from "../../db/index.js";
-import type { UpdateUserBody, UserRequestParams } from "./user.schemas.js";
+import type {
+  RegisterUserBody,
+  UpdateUserBody,
+  UserRequestParams,
+  LoginUserBody,
+  User,
+} from "./user.schemas.js";
 import createHttpError from "http-errors";
+import argon2 from "argon2";
+
+const DUMMY_HASH = await argon2.hash("dummy password");
 
 export const getUsers: RequestHandler = async (req, res, next) => {
   try {
@@ -72,8 +81,66 @@ export const updateUser: RequestHandler<
   }
 };
 
-// export const register: RequestHandler = async (req, res) => {};
+export const registerUser: RequestHandler<
+  unknown,
+  unknown,
+  RegisterUserBody
+> = async (req, res, next) => {
+  const { first_name, email, passwordRaw } = req.body;
 
-// export const login: RequestHandler = async (req, res) => {};
+  try {
+    const hash = await argon2.hash(passwordRaw);
+    const { rows } = await query(
+      `
+      insert into users(first_name, email, password_hash)
+      values($1, $2, $3)
+      returning *;  
+    `,
+      [first_name, email, hash]
+    );
 
-// export const logout: RequestHandler = async (req, res) => {};
+    res.status(201).json(rows[0]);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const loginUser: RequestHandler<
+  unknown,
+  unknown,
+  LoginUserBody
+> = async (req, res, next) => {
+  const { email, passwordRaw } = req.body;
+
+  try {
+    const { rows } = await query(
+      `
+      select id, email, first_name, password_hash from users where email = $1
+      `,
+      [email]
+    );
+
+    const user: User = rows[0] || { password_hash: DUMMY_HASH };
+    let isValid = false;
+
+    isValid = await argon2.verify(user.password_hash, passwordRaw);
+    if (isValid && user.email) {
+      res.status(200).json(`Welcome ${user.first_name}`);
+    } else {
+      throw createHttpError(401, "invalid credentials");
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+// export const logoutUser: RequestHandler = async (req, res) => {
+//   need to impliment sessions and redis first
+//   req.session.destroy((error) => {
+//     if (error) {
+//       next(error);
+//     } else {
+//       res.status(200).json({ msg: "logout successful" });
+//     }
+//   });
+// };

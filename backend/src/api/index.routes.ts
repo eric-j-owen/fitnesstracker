@@ -10,7 +10,7 @@ export default function mountRoutes(app: Express) {
 
   app.use("/api/users", userRouter);
 
-  app.use((req, _res, next) => {
+  app.use((req, res, next) => {
     next(createHttpError(404, `${req.path} Endpoint not found`));
   });
 }
