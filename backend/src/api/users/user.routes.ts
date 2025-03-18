@@ -7,6 +7,7 @@ import {
   UpdateUserSchema,
   UserRequestParamsSchema,
 } from "./user.schemas.js";
+import { requireAuth } from "../../middleware/auth.js";
 
 const router = Router();
 
@@ -20,6 +21,6 @@ router.post("/register", validate(registerUserSchema), Controller.registerUser);
 
 router.post("/login", validate(LoginSchema), Controller.loginUser);
 
-// router.post("/logout", Controller.logout);
+router.post("/logout", requireAuth, Controller.logoutUser);
 
 export default router;

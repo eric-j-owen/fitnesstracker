@@ -1,6 +1,5 @@
 import createHttpError from "http-errors";
 import userRouter from "./users/user.routes.js";
-
 import type { Express } from "express";
 
 export default function mountRoutes(app: Express) {

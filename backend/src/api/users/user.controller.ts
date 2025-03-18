@@ -12,6 +12,13 @@ import argon2 from "argon2";
 
 const DUMMY_HASH = await argon2.hash("dummy password");
 
+declare module "express-session" {
+  interface SessionData {
+    userId?: number;
+    isAuthenticated?: boolean;
+  }
+}
+
 export const getUsers: RequestHandler = async (req, res, next) => {
   try {
     const { rows } = await query("select * from users;");
@@ -121,10 +128,19 @@ export const loginUser: RequestHandler<
     );
 
     const user: User = rows[0] || { password_hash: DUMMY_HASH };
-
     const isValid = await argon2.verify(user.password_hash, passwordRaw);
+
     if (isValid && user.email) {
-      res.status(200).json(`Welcome ${user.first_name}`);
+      req.session.regenerate((err) => {
+        if (err) return next(err);
+        req.session.userId = user.id;
+        req.session.isAuthenticated = true;
+
+        req.session.save((err) => {
+          if (err) return next(err);
+          res.status(200).json(`Welcome ${user.first_name}`);
+        });
+      });
     } else {
       throw createHttpError(401, "invalid credentials");
     }
@@ -133,13 +149,13 @@ export const loginUser: RequestHandler<
   }
 };
 
-// export const logoutUser: RequestHandler = async (req, res) => {
-//   need to impliment sessions and redis first
-//   req.session.destroy((error) => {
-//     if (error) {
-//       next(error);
-//     } else {
-//       res.status(200).json({ msg: "logout successful" });
-//     }
-//   });
-// };
+export const logoutUser: RequestHandler = async (req, res, next) => {
+  req.session.destroy((error) => {
+    if (error) {
+      next(error);
+    } else {
+      res.clearCookie("connect.sid");
+      res.status(200).json({ msg: "logout successful" });
+    }
+  });
+};
