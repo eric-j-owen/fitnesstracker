@@ -1,10 +1,10 @@
 FROM node:22
 
-WORKDIR /app
+WORKDIR /app/backend
 
 COPY package.json package-lock.json ./
 
-RUN npm install --include=dev
+RUN npm install
 
 COPY . .
 

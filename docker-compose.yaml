@@ -1,4 +1,7 @@
 services:
+  #################
+  #  databases
+  #################
   db:
     image: postgres:17.4
     env_file: ./backend/.env
@@ -19,6 +22,10 @@ services:
   redis:
     image: redis:7.2-alpine
     restart: always
+
+  #################
+  #  backend
+  #################
   backend:
     build: ./backend
     env_file: ./backend/.env
@@ -36,6 +43,25 @@ services:
       - redis
     ports:
       - 3000:3000
+
+  #################
+  #  frontend
+  #################
+  frontend:
+    build: ./frontend
+    ports:
+      - 5173:5173
+    env_file: ./frontend/.env
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+          target: /app
+          ignore:
+            - node_modules/
+            - .git/
+    depends_on:
+      - backend
 
 volumes:
   workout_tracker_db_volume:
