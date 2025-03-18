@@ -121,9 +121,8 @@ export const loginUser: RequestHandler<
     );
 
     const user: User = rows[0] || { password_hash: DUMMY_HASH };
-    let isValid = false;
 
-    isValid = await argon2.verify(user.password_hash, passwordRaw);
+    const isValid = await argon2.verify(user.password_hash, passwordRaw);
     if (isValid && user.email) {
       res.status(200).json(`Welcome ${user.first_name}`);
     } else {
