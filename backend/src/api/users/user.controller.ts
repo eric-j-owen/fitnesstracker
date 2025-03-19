@@ -112,10 +112,9 @@ export const registerUser: RequestHandler<
       req.session.isAuthenticated = true;
       req.session.save((err) => {
         if (err) return next(err);
-        res.status(200).json(`Success`);
+        res.status(200).json(rows[0]);
       });
     });
-    res.status(201).json(rows[0]);
   } catch (error) {
     next(error);
   }

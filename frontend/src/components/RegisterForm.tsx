@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { registerUser } from "../api/users";
+import { registerUser } from "../api/usersApi";
 import { registerUserSchema } from "../../schemas/users";
 
 export default function RegisterForm() {
@@ -25,9 +25,8 @@ export default function RegisterForm() {
     validators: {
       onSubmit: registerUserSchema,
     },
-    onSubmit: async ({ formApi, value }) => {
+    onSubmit: async ({ value }) => {
       registerUserMutation.mutateAsync(value);
-      formApi.reset();
     },
   });
 
@@ -140,9 +139,7 @@ export default function RegisterForm() {
         validators={{
           onChange: ({ value, fieldApi }) => {
             const passwordRaw = fieldApi.form.getFieldValue("passwordRaw");
-            if (value !== passwordRaw) {
-              return "Passwords do not match";
-            }
+            if (value !== passwordRaw) return "Passwords do not match";
             return undefined;
           },
         }}
@@ -171,7 +168,7 @@ export default function RegisterForm() {
         children={([canSubmit, isSubmitting]) => (
           <div>
             <button type="submit" disabled={!canSubmit}>
-              {isSubmitting ? "..." : "Submit"}
+              {isSubmitting ? "..." : "Register"}
             </button>
           </div>
         )}
