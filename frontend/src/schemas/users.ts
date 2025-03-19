@@ -6,8 +6,7 @@ export const registerUserSchema = z.object({
   passwordRaw: z
     .string()
     .min(8, "Password must contain 8 characters")
-    .max(255)
-    .regex(/^\S*$/, "Cannot have spaces in password"),
+    .max(255, "Password cannot be longer than 255 characters"),
   confirmPassword: z.string(),
 });
 

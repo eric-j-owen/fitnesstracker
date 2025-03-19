@@ -10,8 +10,6 @@ import type {
 import createHttpError from "http-errors";
 import argon2 from "argon2";
 
-const DUMMY_HASH = await argon2.hash("dummy password");
-
 declare module "express-session" {
   interface SessionData {
     userId?: number;
@@ -135,7 +133,9 @@ export const loginUser: RequestHandler<
       [email]
     );
 
-    const user: User = rows[0] || { password_hash: DUMMY_HASH };
+    const user: User = rows[0];
+    if (!user) throw createHttpError(401, "invalid credentials");
+
     const isValid = await argon2.verify(user.password_hash, passwordRaw);
 
     if (isValid && user.email) {

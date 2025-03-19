@@ -1,4 +1,4 @@
-import { LoginUserData, RegisterUserData } from "../../schemas/users";
+import { LoginUserData, RegisterUserData } from "../schemas/users";
 import { fetchData } from "./client";
 
 export const registerUser = async (

@@ -45,11 +45,7 @@ export const registerUserSchema = z.object({
   body: z.object({
     firstName: z.string().trim().min(1).max(255),
     email: z.string().email().max(255),
-    passwordRaw: z
-      .string()
-      .min(8)
-      .max(255)
-      .regex(/^\S*$/, "Cannot have spaces in password"),
+    passwordRaw: z.string().min(8).max(255),
     userRole: z.enum(["basic", "trainer"]).default("basic"),
   }),
 });

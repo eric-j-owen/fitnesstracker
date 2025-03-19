@@ -1,7 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { loginUser } from "../api/usersApi";
 import { useForm } from "@tanstack/react-form";
-import { loginUserSchema } from "../../schemas/users";
+import { loginUserSchema } from "../schemas/users";
+
 export default function LoginForm() {
   const loginUserMutation = useMutation({
     mutationFn: loginUser,
