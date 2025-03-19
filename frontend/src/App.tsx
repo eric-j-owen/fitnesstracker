@@ -1,9 +1,11 @@
-import Form from "./components/Form/Form";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
     <main>
-      <Form />
+      <RegisterPage />
+      <LoginPage />
     </main>
   );
 }

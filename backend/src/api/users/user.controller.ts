@@ -101,11 +101,20 @@ export const registerUser: RequestHandler<
       `
       insert into users(first_name, email, password_hash)
       values($1, $2, $3)
-      returning *;  
+      returning id;  
     `,
       [firstName, email, hash]
     );
 
+    req.session.regenerate((err) => {
+      if (err) return next(err);
+      req.session.userId = rows[0].id;
+      req.session.isAuthenticated = true;
+      req.session.save((err) => {
+        if (err) return next(err);
+        res.status(200).json(`Success`);
+      });
+    });
     res.status(201).json(rows[0]);
   } catch (error) {
     next(error);
@@ -138,7 +147,7 @@ export const loginUser: RequestHandler<
 
         req.session.save((err) => {
           if (err) return next(err);
-          res.status(200).json(`Welcome ${user.first_name}`);
+          res.status(200).json(`Success`);
         });
       });
     } else {
