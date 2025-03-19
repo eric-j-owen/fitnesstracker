@@ -5,6 +5,7 @@ import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 import { RedisStore } from "connect-redis";
 import session from "express-session";
+import cors from "cors";
 import { createClient } from "redis";
 import mountRoutes from "./api/index.routes.js";
 import { errorHandler } from "./middleware/globalErrorHandler.js";
@@ -52,6 +53,12 @@ function genuuid() {
 }
 
 app.use(helmet());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+  })
+);
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(

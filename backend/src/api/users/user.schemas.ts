@@ -43,7 +43,7 @@ export const UpdateUserSchema = z.object({
 
 export const registerUserSchema = z.object({
   body: z.object({
-    first_name: z.string().trim().min(1).max(255),
+    firstName: z.string().trim().min(1).max(255),
     email: z.string().email().max(255),
     passwordRaw: z
       .string()

@@ -93,7 +93,7 @@ export const registerUser: RequestHandler<
   unknown,
   RegisterUserBody
 > = async (req, res, next) => {
-  const { first_name, email, passwordRaw } = req.body;
+  const { firstName, email, passwordRaw } = req.body;
 
   try {
     const hash = await argon2.hash(passwordRaw);
@@ -103,7 +103,7 @@ export const registerUser: RequestHandler<
       values($1, $2, $3)
       returning *;  
     `,
-      [first_name, email, hash]
+      [firstName, email, hash]
     );
 
     res.status(201).json(rows[0]);

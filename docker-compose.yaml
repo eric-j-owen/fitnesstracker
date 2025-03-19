@@ -52,6 +52,7 @@ services:
     ports:
       - 5173:5173
     env_file: ./frontend/.env
+
     develop:
       watch:
         - action: rebuild
@@ -60,8 +61,6 @@ services:
           ignore:
             - node_modules/
             - .git/
-    depends_on:
-      - backend
 
 volumes:
   workout_tracker_db_volume:

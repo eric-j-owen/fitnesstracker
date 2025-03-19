@@ -1,5 +1,11 @@
+import Form from "./components/Form/Form";
+
 function App() {
-  return <>app</>;
+  return (
+    <main>
+      <Form />
+    </main>
+  );
 }
 
 export default App;
