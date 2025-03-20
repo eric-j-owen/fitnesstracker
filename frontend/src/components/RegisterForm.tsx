@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { registerUser } from "../api/usersApi";
+import { registerUser } from "../api/client";
 import { registerUserSchema } from "../schemas/users";
 
 export default function RegisterForm() {

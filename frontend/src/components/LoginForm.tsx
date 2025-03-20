@@ -1,19 +1,11 @@
-import { useMutation } from "@tanstack/react-query";
-import { loginUser } from "../api/usersApi";
 import { useForm } from "@tanstack/react-form";
 import { loginUserSchema } from "../schemas/users";
+import { useAuth } from "../api/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
-  const loginUserMutation = useMutation({
-    mutationFn: loginUser,
-    onSuccess: () => {
-      alert("Login successful!");
-      form.reset();
-    },
-    onError: (error) => {
-      alert(error);
-    },
-  });
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const form = useForm({
     defaultValues: {
@@ -24,7 +16,17 @@ export default function LoginForm() {
       onSubmit: loginUserSchema,
     },
     onSubmit: async ({ value }) => {
-      loginUserMutation.mutateAsync(value);
+      try {
+        const success = await login(value);
+        if (success) {
+          form.reset();
+          navigate("/dashboard");
+        } else {
+          alert("hello");
+        }
+      } catch (error) {
+        alert(error);
+      }
     },
   });
   return (
