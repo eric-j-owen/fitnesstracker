@@ -26,27 +26,22 @@ const redisStore = new RedisStore({
 });
 
 const sessionConfig = {
-  store: redisStore,
-  resave: false,
-  saveUninitialized: false,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   genid: function (req: Request) {
     return genuuid();
   },
+  store: redisStore,
+  resave: false,
+  saveUninitialized: false,
   secret: process.env.SESSION_SECRET!,
+  rolling: true,
   cookie: {
-    secure: false,
-    httpOnly: false,
-    sameSite: false,
-    maxAge: 60000,
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+    sameSite: true,
+    maxAge: 60 * 60 * 1000,
   },
 };
-
-if (process.env.NODE_ENV === "production") {
-  sessionConfig.cookie.secure = true;
-  sessionConfig.cookie.httpOnly = true;
-  sessionConfig.cookie.sameSite = true;
-}
 
 function genuuid() {
   return crypto.randomUUID();
@@ -57,6 +52,7 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     methods: ["GET", "POST", "PATCH", "DELETE"],
+    credentials: true,
   })
 );
 app.use(express.json());
