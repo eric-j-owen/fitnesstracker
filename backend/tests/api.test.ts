@@ -68,24 +68,41 @@ describe("api tests", () => {
       const userEdit = {
         email: "updated@updated.com",
       };
-      const updateUserRes = await apiReq
-        .patch(`/api/users/${id}`)
-        .send(userEdit)
-        .expect(200);
+      await apiReq.patch(`/api/users/${id}`).send(userEdit).expect(200);
 
-      expect(updateUserRes.body).toHaveProperty("email", userEdit.email);
+      const checkUserUpdateResponse = await client.query(
+        `select email from users where id = ${id}`
+      );
+      expect(checkUserUpdateResponse.rows[0]).toHaveProperty(
+        "email",
+        userEdit.email
+      );
     });
   });
 
-  //   test("POST / should create a new user", async () => {
-  //     const id = crypto.randomUUID();
-  //     const newUser = {
-  //       id,
-  //       first_name: "testuser",
-  //       last_name: "testuserlastname",
-  //       email: "testuser@gmail.com",
-  //       password_hash: "thisisahashedpassword",
-  //     };
-  //     apiReq.post("/api/users").send(newUser);
-  //   });
+  describe("api/auth", () => {
+    const newUser = {
+      first_name: "testuser",
+      email: "testuser@gmail.com",
+      passwordRaw: "thisisahashedpassword",
+    };
+    test("POST /register should create a new user", async () => {
+      const response = await apiReq
+        .post("/api/users/register")
+        .send(newUser)
+        .expect(201);
+
+      const { rows } = await client.query(
+        `select email from users where id = ${response.body.id}`
+      );
+      expect(rows[0]).toHaveProperty("email", newUser.email);
+    });
+
+    test("POST /login", async () => {
+      await apiReq
+        .post("/api/users/login")
+        .send({ email: newUser.email, passwordRaw: newUser.passwordRaw })
+        .expect(200);
+    });
+  });
 });

@@ -24,7 +24,6 @@ export const UpdateUserSchema = z.object({
       first_name: z.string().trim().min(1).max(255).optional(),
       last_name: z.string().trim().min(1).max(255).optional(),
       email: z.string().email().max(255).optional(),
-      password_hash: z.string().optional(),
       user_role: z.enum(["basic", "trainer"]).default("basic").optional(),
     })
     .refine(
@@ -33,7 +32,6 @@ export const UpdateUserSchema = z.object({
           data.first_name !== undefined ||
           data.last_name !== undefined ||
           data.email !== undefined ||
-          data.password_hash !== undefined ||
           data.user_role !== undefined
         );
       },
@@ -43,13 +41,19 @@ export const UpdateUserSchema = z.object({
     ),
 });
 
-export const CreateUserSchema = z.object({
+export const registerUserSchema = z.object({
   body: z.object({
-    first_name: z.string().trim().min(1).max(255),
-    last_name: z.string().trim().min(1).max(255).optional(),
+    firstName: z.string().trim().min(1).max(255),
     email: z.string().email().max(255),
-    password_hash: z.string(),
-    user_role: z.enum(["basic", "trainer"]).default("basic"),
+    passwordRaw: z.string().min(8).max(255),
+    userRole: z.enum(["basic", "trainer"]).default("basic"),
+  }),
+});
+
+export const LoginSchema = z.object({
+  body: z.object({
+    email: z.string().email().max(255).trim().min(1),
+    passwordRaw: z.string().max(255).trim().min(1),
   }),
 });
 
@@ -58,4 +62,5 @@ export type UserRequestParams = z.infer<
   typeof UserRequestParamsSchema.shape.params
 >;
 export type UpdateUserBody = z.infer<typeof UpdateUserSchema.shape.body>;
-export type CreateUserBody = z.infer<typeof CreateUserSchema.shape.body>;
+export type RegisterUserBody = z.infer<typeof registerUserSchema.shape.body>;
+export type LoginUserBody = z.infer<typeof LoginSchema.shape.body>;

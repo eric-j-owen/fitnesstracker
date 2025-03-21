@@ -5,7 +5,7 @@ import createHttpError from "http-errors";
 
 export const getUsers: RequestHandler = async (req, res, next) => {
   try {
-    const { rows } = await query("select * from users;");
+    const { rows } = await query("select id, first_name from users;");
     res.status(200).json(rows);
   } catch (err) {
     next(err);
@@ -19,7 +19,10 @@ export const getUser: RequestHandler<UserRequestParams> = async (
 ) => {
   const { id } = req.params;
   try {
-    const { rows } = await query("select * from users where id = $1;", [id]);
+    const { rows } = await query(
+      "select id, first_name from users where id = $1;",
+      [id]
+    );
 
     if (rows.length) res.status(200).json(rows[0]);
     else throw createHttpError(404, "Not found.");
@@ -63,7 +66,7 @@ export const updateUser: RequestHandler<
   const idPosition = values.length + 1;
   const setFields = keys.map((key, i) => `${key}=$${i + 1}`).join(", ");
 
-  const q = `update users set ${setFields}, updated_at=current_timestamp where id=$${idPosition} returning *;`;
+  const q = `update users set ${setFields}, updated_at=current_timestamp where id=$${idPosition} returning id;`;
   try {
     const { rows } = await query(q, [...values, id]);
     res.status(200).json(rows[0]);
@@ -71,9 +74,3 @@ export const updateUser: RequestHandler<
     next(err);
   }
 };
-
-// export const register: RequestHandler = async (req, res) => {};
-
-// export const login: RequestHandler = async (req, res) => {};
-
-// export const logout: RequestHandler = async (req, res) => {};
