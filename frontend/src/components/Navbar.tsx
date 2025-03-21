@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../api/useAuth";
+import { useAuth } from "../api/auth/useAuth";
 import Logout from "./Logout";
 
 export default function Navbar() {
@@ -12,7 +12,6 @@ export default function Navbar() {
         <>
           <Link to="/dashboard">Dashboard</Link>
           <Link to="/profile">Profile</Link>
-
           <Logout />
         </>
       ) : (

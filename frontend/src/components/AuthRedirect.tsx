@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../api/useAuth";
+import { useAuth } from "../api/auth/useAuth";
 
 export function AuthRedirect() {
   const { isAuthenticated, isLoading, isError } = useAuth();
@@ -13,7 +13,7 @@ export function AuthRedirect() {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/" />;
+    return <Navigate to="/dashboard" />;
   }
 
   return <Outlet />;

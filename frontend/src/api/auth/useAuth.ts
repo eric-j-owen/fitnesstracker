@@ -4,8 +4,8 @@ import {
   loginUser,
   logoutUser,
   registerUser,
-} from "./client";
-import { UnauthorizedError } from "./errors";
+} from "./auth.api";
+import { UnauthorizedError } from "../errors";
 
 export const useAuth = () => {
   const queryClient = useQueryClient();
@@ -47,6 +47,7 @@ export const useAuth = () => {
       queryClient.clear();
     },
   });
+
   return {
     user: userQuery.data,
     isLoading: userQuery.isLoading,

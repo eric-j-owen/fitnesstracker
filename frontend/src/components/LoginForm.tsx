@@ -1,34 +1,27 @@
-import { useForm } from "@tanstack/react-form";
-import { loginUserSchema } from "../schemas/users";
-import { useAuth } from "../api/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../api/auth/useAuth";
+import { loginUserSchema } from "../api/auth/auth.schemas";
+import { useAppForm } from "./Form/form-context";
 
 export default function LoginForm() {
   const { login } = useAuth();
-  const navigate = useNavigate();
 
-  const form = useForm({
+  const form = useAppForm({
     defaultValues: {
       email: "",
       passwordRaw: "",
     },
+
     validators: {
       onSubmit: loginUserSchema,
+      onChange: loginUserSchema,
     },
+
     onSubmit: async ({ value }) => {
-      try {
-        const success = await login(value);
-        if (success) {
-          form.reset();
-          navigate("/dashboard");
-        } else {
-          alert("hello");
-        }
-      } catch (error) {
-        alert(error);
-      }
+      await login(value);
+      form.reset();
     },
   });
+
   return (
     <form
       onSubmit={(e) => {
@@ -38,72 +31,22 @@ export default function LoginForm() {
       }}
     >
       <h1>Log in</h1>
-      <form.Field
+
+      <form.AppField
         name="email"
-        children={(field) => {
-          return (
-            <>
-              <div>
-                <label htmlFor="email">Email: </label>
-                <input
-                  type="email"
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </div>
-              {field.state.meta.errors.length ? (
-                <>
-                  {field.state.meta.errors.map((err) => (
-                    <div>
-                      <em>{err?.message}</em>
-                    </div>
-                  ))}
-                </>
-              ) : null}
-            </>
-          );
-        }}
+        children={(field) => <field.FormField label="Email" type="email" />}
       />
-      <form.Field
+
+      <form.AppField
         name="passwordRaw"
-        children={(field) => {
-          return (
-            <>
-              <div>
-                <label htmlFor="password">Password: </label>
-                <input
-                  type="password"
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </div>
-              {field.state.meta.errors.length ? (
-                <>
-                  {field.state.meta.errors.map((err) => (
-                    <div>
-                      <em>{err?.message}</em>
-                    </div>
-                  ))}
-                </>
-              ) : null}
-            </>
-          );
-        }}
-      />
-      <form.Subscribe
-        selector={(state) => [state.canSubmit, state.isSubmitting]}
-        children={([canSubmit, isSubmitting]) => (
-          <div>
-            <button type="submit" disabled={!canSubmit}>
-              {isSubmitting ? "..." : "Log in"}
-            </button>
-          </div>
+        children={(field) => (
+          <field.FormField label="Password" type="password" />
         )}
       />
+
+      <form.AppForm>
+        <form.SubscribeButton label="Log in" />
+      </form.AppForm>
     </form>
   );
 }

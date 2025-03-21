@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../api/useAuth";
+import { useAuth } from "../api/auth/useAuth";
 
 export default function Logout() {
   const { logout } = useAuth();
