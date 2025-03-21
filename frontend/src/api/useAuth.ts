@@ -50,7 +50,7 @@ export const useAuth = () => {
   return {
     user: userQuery.data,
     isLoading: userQuery.isLoading,
-    isAuthenticated: userQuery.data || null,
+    isAuthenticated: !!userQuery.data,
     isError: userQuery.isError,
     login: loginMutation.mutateAsync,
     register: registerMutation.mutateAsync,
