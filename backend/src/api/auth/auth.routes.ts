@@ -10,7 +10,7 @@ router.post("/register", validate(registerUserSchema), Controller.registerUser);
 
 router.post("/login", validate(LoginSchema), Controller.loginUser);
 
-router.post("/logout", requireAuth, Controller.logoutUser);
+router.post("/logout", Controller.logoutUser);
 
 router.get("/me", requireAuth, Controller.getAuthenticatedUser);
 

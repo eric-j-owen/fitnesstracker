@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { loginUserSchema } from "../schemas/users";
-import { useAuth } from "../api/auth";
+import { useAuth } from "../api/useAuth";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {

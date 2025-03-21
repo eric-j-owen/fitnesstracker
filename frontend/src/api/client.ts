@@ -1,4 +1,5 @@
 import { LoginUserData, RegisterUserData } from "../schemas/users";
+import { UnauthorizedError } from "./errors";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const fetchData = async <T>(
@@ -7,8 +8,9 @@ export const fetchData = async <T>(
 ): Promise<T> => {
   const response = await fetch(BASE_URL + url, options);
   if (!response.ok) {
-    const errorMsg = await response.text();
-    throw new Error(errorMsg || "Something went wrong");
+    const msg = await response.text();
+    if (response.status === 401) throw new UnauthorizedError(msg);
+    throw new Error(response.status + ": " + msg);
   }
   return response.json();
 };
@@ -53,7 +55,14 @@ export interface User {
 }
 
 export const getAuthenticatedUser = async (): Promise<User | null> => {
-  return await fetchData("/api/auth/me", {
-    credentials: "include",
-  });
+  try {
+    return await fetchData("/api/auth/me", {
+      credentials: "include",
+    });
+  } catch (err) {
+    if (err instanceof UnauthorizedError) {
+      return null;
+    }
+    throw err;
+  }
 };
