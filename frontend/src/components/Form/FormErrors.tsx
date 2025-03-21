@@ -5,8 +5,11 @@ export default function FormErrors({ field }: { field: AnyFieldApi }) {
     <>
       {field.state.meta.isTouched && field.state.meta.errors.length ? (
         <div>
-          {field.state.meta.errors.map((err) => (
-            <em>{err?.message}</em>
+          {field.state.meta.errors.map((err, i) => (
+            <>
+              <em key={i}>{err?.message}</em>
+              <br />
+            </>
           ))}
         </div>
       ) : null}

@@ -7,17 +7,24 @@ export const registerUserSchema = z
     passwordRaw: z
       .string()
       .min(8, "Password must contain 8 characters")
-      .max(255, "Password cannot be longer than 255 characters"),
-    confirmPassword: z.string(),
+      .max(255, "Password is too long"),
+    confirmPassword: z
+      .string()
+      .min(8, "Password must contain 8 characters")
+      .max(255, "Password is too long"),
   })
-  .refine((data) => data.passwordRaw === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+  .refine(
+    (data) =>
+      data.passwordRaw === data.confirmPassword && data.confirmPassword.length,
+    {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    }
+  );
 
 export const loginUserSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  passwordRaw: z.string().min(1, "Password is required"),
+  email: registerUserSchema.innerType().shape.email,
+  passwordRaw: registerUserSchema.innerType().shape.passwordRaw,
 });
 
 export const authenticatedUser = z.object({

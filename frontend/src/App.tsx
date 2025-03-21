@@ -19,8 +19,8 @@ function App() {
           <Route path="/profile" element={<Profile />} />
         </Route>
         <Route element={<AuthRedirect />}>
-          <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
         </Route>
       </Routes>
     </>

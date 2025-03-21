@@ -14,7 +14,6 @@ export default function RegisterForm() {
     },
 
     validators: {
-      onSubmit: registerUserSchema,
       onChange: registerUserSchema,
     },
 
@@ -32,8 +31,6 @@ export default function RegisterForm() {
         form.handleSubmit();
       }}
     >
-      <h1>Register</h1>
-
       <form.AppField
         name="firstName"
         children={(field) => <field.FormField label="First Name" type="text" />}

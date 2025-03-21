@@ -12,7 +12,6 @@ export default function LoginForm() {
     },
 
     validators: {
-      onSubmit: loginUserSchema,
       onChange: loginUserSchema,
     },
 
@@ -30,8 +29,6 @@ export default function LoginForm() {
         form.handleSubmit();
       }}
     >
-      <h1>Log in</h1>
-
       <form.AppField
         name="email"
         children={(field) => <field.FormField label="Email" type="email" />}

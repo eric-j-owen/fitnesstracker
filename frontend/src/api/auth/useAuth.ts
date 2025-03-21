@@ -5,7 +5,6 @@ import {
   logoutUser,
   registerUser,
 } from "./auth.api";
-import { UnauthorizedError } from "../errors";
 
 export const useAuth = () => {
   const queryClient = useQueryClient();
@@ -13,11 +12,8 @@ export const useAuth = () => {
   const userQuery = useQuery({
     queryKey: ["auth-user"],
     queryFn: getAuthenticatedUser,
-    retry: false,
-    //need this check because retry:false doesnt seem to have the intended effect
-    throwOnError: (error) => {
-      return !(error instanceof UnauthorizedError);
-    },
+    throwOnError: false,
+    // retry: false,
   });
 
   const loginMutation = useMutation({
