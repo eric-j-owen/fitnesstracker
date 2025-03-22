@@ -1,4 +1,4 @@
-import { registerUserSchema } from "../api/auth/auth.schemas";
+import { registerUserSchema } from "../api/schemas";
 import { useAuth } from "../api/auth/useAuth";
 import { useAppForm } from "./Form/form-context";
 
@@ -8,7 +8,7 @@ export default function RegisterForm() {
   const form = useAppForm({
     defaultValues: {
       firstName: "",
-      email: "",
+      username: "",
       passwordRaw: "",
       confirmPassword: "",
     },
@@ -27,7 +27,6 @@ export default function RegisterForm() {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        e.stopPropagation();
         form.handleSubmit();
       }}
     >
@@ -37,8 +36,10 @@ export default function RegisterForm() {
       />
 
       <form.AppField
-        name="email"
-        children={(field) => <field.FormField label="Email" type="email" />}
+        name="username"
+        children={(field) => (
+          <field.FormField label="username" type="username" />
+        )}
       />
 
       <form.AppField

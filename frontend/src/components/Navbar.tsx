@@ -18,6 +18,7 @@ export default function Navbar() {
         <>
           <Link to="/dashboard">Dashboard</Link>
           <Link to="/profile">Profile</Link>
+          <Link to="/settings">Settings</Link>
           <Logout />
         </>
       )}

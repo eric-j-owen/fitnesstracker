@@ -1,5 +1,5 @@
 import { useAuth } from "../api/auth/useAuth";
-import { loginUserSchema } from "../api/auth/auth.schemas";
+import { loginUserSchema } from "../api/schemas";
 import { useAppForm } from "./Form/form-context";
 
 export default function LoginForm() {
@@ -7,7 +7,7 @@ export default function LoginForm() {
 
   const form = useAppForm({
     defaultValues: {
-      email: "",
+      username: "",
       passwordRaw: "",
     },
 
@@ -25,13 +25,14 @@ export default function LoginForm() {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        e.stopPropagation();
         form.handleSubmit();
       }}
     >
       <form.AppField
-        name="email"
-        children={(field) => <field.FormField label="Email" type="email" />}
+        name="username"
+        children={(field) => (
+          <field.FormField label="username" type="username" />
+        )}
       />
 
       <form.AppField
