@@ -2,13 +2,13 @@ import { z } from "zod";
 
 export const UserSchema = z.object({
   id: z.number(),
-  first_name: z.string(),
-  last_name: z.string().optional(),
-  email: z.string().email(),
+  firstName: z.string(),
+  lastName: z.string().optional(),
+  username: z.string(),
   password_hash: z.string(),
-  user_role: z.enum(["basic", "trainer"]),
-  created_at: z.date().or(z.string()),
-  updated_at: z.date().or(z.string()),
+  userRole: z.enum(["basic", "trainer"]),
+  createdAt: z.date().or(z.string()),
+  updatedAt: z.date().or(z.string()),
 });
 
 export const UserRequestParamsSchema = z.object({
@@ -21,18 +21,18 @@ export const UpdateUserSchema = z.object({
   params: UserRequestParamsSchema.shape.params,
   body: z
     .object({
-      first_name: z.string().trim().min(1).max(255).optional(),
-      last_name: z.string().trim().min(1).max(255).optional(),
-      email: z.string().email().max(255).optional(),
-      user_role: z.enum(["basic", "trainer"]).default("basic").optional(),
+      firstName: z.string().trim().min(1).max(255).optional(),
+      lastName: z.string().trim().max(255).optional(),
+      username: z.string().max(255).optional(),
+      userRole: z.enum(["basic", "trainer"]).default("basic").optional(),
     })
     .refine(
       (data) => {
         return (
-          data.first_name !== undefined ||
-          data.last_name !== undefined ||
-          data.email !== undefined ||
-          data.user_role !== undefined
+          data.firstName !== undefined ||
+          data.lastName !== undefined ||
+          data.username !== undefined ||
+          data.userRole !== undefined
         );
       },
       {
@@ -44,7 +44,7 @@ export const UpdateUserSchema = z.object({
 export const registerUserSchema = z.object({
   body: z.object({
     firstName: z.string().trim().min(1).max(255),
-    email: z.string().email().max(255),
+    username: z.string().max(255),
     passwordRaw: z.string().min(8).max(255),
     userRole: z.enum(["basic", "trainer"]).default("basic"),
   }),
@@ -52,7 +52,7 @@ export const registerUserSchema = z.object({
 
 export const LoginSchema = z.object({
   body: z.object({
-    email: z.string().email().max(255).trim().min(1),
+    username: z.string().max(255).trim().min(1),
     passwordRaw: z.string().max(255).trim().min(1),
   }),
 });

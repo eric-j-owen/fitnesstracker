@@ -33,6 +33,10 @@ export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
   // db errors
   else if (error instanceof DatabaseError) {
     response.message = error.message;
+  } else if (error instanceof TypeError) {
+    console.error(error);
+    // response.status = error;
+    response.message = error.message;
   }
 
   if (process.env.NODE_ENV === "development") {

@@ -40,7 +40,7 @@ migrationsUp.set(
         id serial primary key,
         first_name text not null,
         last_name text,
-        email text not null unique,
+        username text not null unique,
         password_hash text not null,
         user_role text check (user_role in ('basic', 'trainer')) default 'basic',
         created_at timestamptz default current_timestamp,

@@ -21,24 +21,24 @@ export const seedDatabase = async (): Promise<void> => {
     for (let i = 0; i < USER_COUNT; i++) {
       const firstName = faker.person.firstName();
       const lastName = faker.person.lastName();
-      const email = faker.internet.email({ firstName, lastName });
+      const username = faker.internet.username({ firstName, lastName });
       const passwordHash = crypto.randomUUID();
 
       const query = `
         insert into users (
           first_name, 
           last_name, 
-          email, 
+          username, 
           password_hash
         ) VALUES ($1, $2, $3, $4);
       `;
 
-      const values = [firstName, lastName, email, passwordHash];
+      const values = [firstName, lastName, username, passwordHash];
 
       try {
         await client.query(query, values);
       } catch (err) {
-        console.error(`failed to create user ${email}:`);
+        console.error(`failed to create user ${username}:`);
         throw err;
       }
     }

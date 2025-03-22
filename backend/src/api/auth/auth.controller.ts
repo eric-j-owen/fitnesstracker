@@ -19,17 +19,17 @@ export const registerUser: RequestHandler<
   unknown,
   RegisterUserBody
 > = async (req, res, next) => {
-  const { firstName, email, passwordRaw } = req.body;
+  const { firstName, username, passwordRaw } = req.body;
 
   try {
     const hash = await argon2.hash(passwordRaw);
     const { rows } = await query(
       `
-      insert into users(first_name, email, password_hash)
+      insert into users(first_name, username, password_hash)
       values($1, $2, $3)
       returning id;  
     `,
-      [firstName, email, hash]
+      [firstName, username, hash]
     );
 
     const user: User = rows[0];
@@ -51,14 +51,14 @@ export const loginUser: RequestHandler<
   unknown,
   LoginUserBody
 > = async (req, res, next) => {
-  const { email, passwordRaw } = req.body;
+  const { username, passwordRaw } = req.body;
 
   try {
     const { rows } = await query(
       `
-      select id, email, first_name, password_hash from users where email = $1
+      select id, username, first_name, password_hash from users where username = $1
       `,
-      [email]
+      [username]
     );
 
     const user: User = rows[0];
@@ -66,7 +66,7 @@ export const loginUser: RequestHandler<
 
     const isValid = await argon2.verify(user.password_hash, passwordRaw);
 
-    if (isValid && user.email) {
+    if (isValid && user.username) {
       req.session.regenerate((err) => {
         if (err) return next(err);
         req.session.userId = user.id;
@@ -102,11 +102,21 @@ export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
 
   try {
     const { rows } = await query(
-      `select id, first_name, email from users where id = $1`,
+      `select id, first_name, last_name, username from users where id = $1`,
       [req.session.userId]
     );
 
-    const parsedUser = rows[0];
+    if (!rows?.[0]) {
+      throw createHttpError(404, "User not found");
+    }
+
+    const user = rows[0];
+
+    const parsedUser = {
+      firstName: user.first_name,
+      lastName: user.last_name,
+      ...user,
+    };
 
     if (!parsedUser) {
       throw createHttpError(401, "Unauthorized");

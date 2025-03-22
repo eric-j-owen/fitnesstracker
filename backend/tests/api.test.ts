@@ -66,16 +66,16 @@ describe("api tests", () => {
       const { rows } = await client.query("select id from users limit 1;");
       const { id } = rows[0];
       const userEdit = {
-        email: "updated@updated.com",
+        username: "updated@updated.com",
       };
       await apiReq.patch(`/api/users/${id}`).send(userEdit).expect(200);
 
       const checkUserUpdateResponse = await client.query(
-        `select email from users where id = ${id}`
+        `select username from users where id = ${id}`
       );
       expect(checkUserUpdateResponse.rows[0]).toHaveProperty(
-        "email",
-        userEdit.email
+        "username",
+        userEdit.username
       );
     });
   });
@@ -83,7 +83,7 @@ describe("api tests", () => {
   describe("api/auth", () => {
     const newUser = {
       first_name: "testuser",
-      email: "testuser@gmail.com",
+      username: "testuser@gmail.com",
       passwordRaw: "thisisahashedpassword",
     };
     test("POST /register should create a new user", async () => {
@@ -93,15 +93,15 @@ describe("api tests", () => {
         .expect(201);
 
       const { rows } = await client.query(
-        `select email from users where id = ${response.body.id}`
+        `select username from users where id = ${response.body.id}`
       );
-      expect(rows[0]).toHaveProperty("email", newUser.email);
+      expect(rows[0]).toHaveProperty("username", newUser.username);
     });
 
     test("POST /login", async () => {
       await apiReq
         .post("/api/users/login")
-        .send({ email: newUser.email, passwordRaw: newUser.passwordRaw })
+        .send({ username: newUser.username, passwordRaw: newUser.passwordRaw })
         .expect(200);
     });
   });
