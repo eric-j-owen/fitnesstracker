@@ -5,6 +5,7 @@ import {
   logoutUser,
   registerUser,
 } from "./auth.api";
+import toast from "react-hot-toast";
 
 export const useAuth = () => {
   const queryClient = useQueryClient();
@@ -19,9 +20,11 @@ export const useAuth = () => {
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (user) => {
+      toast.success("Welcome!");
       queryClient.setQueryData(["auth-user"], user);
     },
     onError: () => {
+      toast.error("Incorrect password or username");
       queryClient.setQueryData(["auth-user"], null);
     },
   });
@@ -29,6 +32,7 @@ export const useAuth = () => {
   const registerMutation = useMutation({
     mutationFn: registerUser,
     onSuccess: (user) => {
+      toast.success("Registration Successful");
       queryClient.setQueryData(["auth-user"], user);
     },
     onError: () => {
@@ -39,6 +43,7 @@ export const useAuth = () => {
   const logoutMutation = useMutation({
     mutationFn: logoutUser,
     onSuccess: () => {
+      toast.success("Log out success");
       queryClient.setQueryData(["auth-user"], null);
       queryClient.clear();
     },

@@ -1,8 +1,4 @@
-import {
-  AuthenticatedUser,
-  LoginUserData,
-  RegisterUserData,
-} from "./auth.schemas";
+import { AuthenticatedUser, LoginUserData, RegisterUserData } from "../schemas";
 import { fetchData } from "../client";
 import { UnauthorizedError } from "../errors";
 
