@@ -42,6 +42,7 @@ migrationsUp.set(
         last_name text,
         username text not null unique,
         password_hash text not null,
+        avatar_url text,
         user_role text check (user_role in ('basic', 'trainer')) default 'basic',
         created_at timestamptz default current_timestamp,
         updated_at timestamptz default current_timestamp

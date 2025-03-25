@@ -8,7 +8,7 @@ export const useUserApi = () => {
     mutationFn: updateUser,
     onSuccess: () => {
       toast.success("Profile updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["user-auth"] });
+      queryClient.invalidateQueries({ queryKey: ["auth-user"] });
     },
     onError: (err) => {
       console.error(err);
