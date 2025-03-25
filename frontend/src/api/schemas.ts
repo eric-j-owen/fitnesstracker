@@ -6,6 +6,10 @@ export const registerUserSchema = z
     username: z
       .string()
       .min(3, "Username must be at least 3 chracters")
+      .regex(/^[a-zA-Z0-9_-]+$/, {
+        message:
+          "Username can only contain letters, numbers, underscores, and hyphens",
+      })
       .max(255),
     passwordRaw: z
       .string()
@@ -26,8 +30,8 @@ export const registerUserSchema = z
   );
 
 export const loginUserSchema = z.object({
-  username: registerUserSchema.innerType().shape.username,
-  passwordRaw: registerUserSchema.innerType().shape.passwordRaw,
+  username: z.string().max(255).trim().min(1, "Username is required."),
+  passwordRaw: z.string().max(255).trim().min(1, "Password is required."),
 });
 
 export const authenticatedUserSchema = z.object({

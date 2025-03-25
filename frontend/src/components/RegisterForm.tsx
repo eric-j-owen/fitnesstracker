@@ -38,7 +38,7 @@ export default function RegisterForm() {
       <form.AppField
         name="username"
         children={(field) => (
-          <field.FormField label="username" type="username" />
+          <field.FormField label="Username" type="username" />
         )}
       />
 
@@ -57,7 +57,7 @@ export default function RegisterForm() {
       />
 
       <form.AppForm>
-        <form.SubscribeButton label="Log in" />
+        <form.SubscribeButton label="Register" />
       </form.AppForm>
     </form>
   );

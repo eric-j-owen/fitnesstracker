@@ -23,6 +23,7 @@ export default function LoginForm() {
 
   return (
     <form
+      noValidate
       onSubmit={(e) => {
         e.preventDefault();
         form.handleSubmit();
@@ -30,9 +31,7 @@ export default function LoginForm() {
     >
       <form.AppField
         name="username"
-        children={(field) => (
-          <field.FormField label="username" type="username" />
-        )}
+        children={(field) => <field.FormField label="Username" type="text" />}
       />
 
       <form.AppField
