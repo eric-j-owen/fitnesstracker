@@ -4,9 +4,12 @@ import LoginForm from "../components/LoginForm";
 export default function LoginPage() {
   return (
     <div>
-      <h1>Log in</h1>
+      <h1 className="">Log in</h1>
       <p>
-        Don't have an account? <Link to={"/register"}>Register</Link>
+        Don't have an account? Register{" "}
+        <Link className="link link-accent" to={"/register"}>
+          here
+        </Link>
       </p>
       <LoginForm />
     </div>

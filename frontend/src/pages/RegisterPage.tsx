@@ -6,9 +6,12 @@ export default function Register() {
     <div>
       <h1>Register</h1>
       <p>
-        Already have an account? <Link to={"/login"}>Log in</Link>
+        Already a member? Log in{" "}
+        <Link className="link link-accent" to={"/login"}>
+          here
+        </Link>
+        <RegisterForm />
       </p>
-      <RegisterForm />
     </div>
   );
 }

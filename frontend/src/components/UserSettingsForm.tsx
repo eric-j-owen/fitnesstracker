@@ -37,18 +37,22 @@ export const UserSettingsForm = () => {
     >
       <form.AppField
         name="firstName"
-        children={(field) => <field.FormField label="First name" type="text" />}
+        children={(field) => (
+          <field.FormField label="First name" type="text" showLabel={true} />
+        )}
       />
 
       <form.AppField
         name="lastName"
-        children={(field) => <field.FormField label="Last name" type="text" />}
+        children={(field) => (
+          <field.FormField label="Last name" type="text" showLabel={true} />
+        )}
       />
 
       <form.AppField
         name="username"
         children={(field) => (
-          <field.FormField label="username" type="username" />
+          <field.FormField label="username" type="username" showLabel={true} />
         )}
       />
 

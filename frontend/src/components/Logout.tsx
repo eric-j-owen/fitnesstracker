@@ -10,9 +10,9 @@ export default function Logout() {
       await logout();
       navigate("/");
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
-  return <button onClick={handleLogout}>logout</button>;
+  return <button onClick={handleLogout}>Logout</button>;
 }
