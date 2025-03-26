@@ -62,8 +62,8 @@ migrationsUp.set(
 );
 
 migrationsUp.set(
-  "create-nutrition-table",
-  `create table if not exists nutrition (
+  "create-macros-table",
+  `create table if not exists macros (
       id serial primary key,
       user_id int not null references users(id) on delete cascade,
       calories int not null,
@@ -110,6 +110,5 @@ migrationsUp.set(
       target_value decimal(5, 2) not null
     );`
 );
-
 
 if (import.meta.url === `file://${process.argv[1]}`) runMigrationsAll();
