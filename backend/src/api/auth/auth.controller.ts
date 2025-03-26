@@ -1,12 +1,10 @@
-import type { RequestHandler } from "express";
 import { query } from "../../db/index.js";
-import type {
-  RegisterUserBody,
-  LoginUserBody,
-  User,
-} from "../users/user.schemas.js";
 import createHttpError from "http-errors";
 import argon2 from "argon2";
+
+import type { RequestHandler } from "express";
+import type { RegisterUserBody, LoginUserBody } from "./auth.schemas.js";
+import type { User } from "../users/user.schemas.js";
 
 declare module "express-session" {
   interface SessionData {

@@ -6,9 +6,6 @@ import { requireAuth } from "../../middleware/auth.js";
 
 const router = Router();
 
-router.get("/", Controller.getUsers);
-
-router.get("/:id", validate(UserRequestParamsSchema), Controller.getUser);
 router.patch(
   "/:id",
   validate(UpdateUserSchema),
