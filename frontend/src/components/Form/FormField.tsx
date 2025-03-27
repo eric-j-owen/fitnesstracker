@@ -30,14 +30,17 @@ export function FormField({
     validateClass = "input-error";
 
   return (
-    <>
+    <div className="form-control w-full mb-4">
       {showLabel && (
         <label htmlFor={field.name} className="block text-sm font-medium mb-1">
           {label}
         </label>
       )}
       <div className="w-full">
-        <label className={`input ${validateClass}`} htmlFor={field.name}>
+        <label
+          className={`input ${validateClass} input-bordered w-full flex items-center gap-2`}
+          htmlFor={field.name}
+        >
           {!showLabel && icon}
           <input
             aria-label={label}
@@ -51,6 +54,6 @@ export function FormField({
         </label>
       </div>
       <FormErrors field={field} />
-    </>
+    </div>
   );
 }

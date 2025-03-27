@@ -1,10 +1,10 @@
+import FormLayout from "../components/Form/FormLayout";
 import { UserSettingsForm } from "../components/UserSettingsForm";
 
 export const UserSettingsPage = () => {
   return (
-    <div>
-      <h1>Update Profile</h1>
+    <FormLayout title="Update Profile">
       <UserSettingsForm />
-    </div>
+    </FormLayout>
   );
 };

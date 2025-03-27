@@ -8,9 +8,9 @@ export function validate(schema: ZodSchema): RequestHandler {
         params: req.params,
         body: req.body,
       });
+      next();
     } catch (error) {
       next(error);
     }
-    next();
   };
 }

@@ -10,13 +10,12 @@ import { createClient } from "redis";
 import mountRoutes from "./api/index.routes.js";
 import { errorHandler } from "./middleware/globalErrorHandler.js";
 import crypto from "node:crypto";
-
 import type { Request } from "express";
 
 const app = express();
 
 const redisClient = createClient({
-  url: "redis://redis:6379",
+  url: "redis://localhost:6379",
 });
 
 redisClient.connect().catch(console.error);

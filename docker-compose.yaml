@@ -22,44 +22,48 @@ services:
   redis:
     image: redis:7.2-alpine
     restart: always
+    ports:
+      - 6379:6379
 
   #################
   #  backend
   #################
-  backend:
-    build: ./backend
-    env_file: ./backend/.env
-    # user: node
-    develop:
-      watch:
-        - action: rebuild
-          path: .
-          target: /app
-          ignore:
-            - node_modules/
-            - .git/
-    depends_on:
-      - db
-      - redis
-    ports:
-      - 3000:3000
+  # backend:
+  #   build: ./backend
+  #   env_file: ./backend/.env
+
+  #   # user: node
+  #   develop:
+  #     watch:
+  #       - action: rebuild
+  #         path: .
+  #         target: /app
+  #         ignore:
+  #           - node_modules/
+  #           - .git/
+  #   depends_on:
+  #     - db
+  #     - redis
+  #   ports:
+  #     - 3000:3000
 
   #################
   #  frontend
   #################
-  frontend:
-    build: ./frontend
-    ports:
-      - 5173:5173
-    env_file: ./frontend/.env
-    develop:
-      watch:
-        - action: rebuild
-          path: .
-          target: /app
-          ignore:
-            - node_modules/
-            - .git/
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - 5173:5173
+  #   env_file: ./frontend/.env
+
+  #   develop:
+  #     watch:
+  #       - action: rebuild
+  #         path: .
+  #         target: /app
+  #         ignore:
+  #           - node_modules/
+  #           - .git/
 
 volumes:
   workout_tracker_db_volume:

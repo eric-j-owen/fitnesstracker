@@ -32,7 +32,19 @@ export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
 
   // db errors
   else if (error instanceof DatabaseError) {
-    response.message = error.message;
+    switch (error.code) {
+      case "23505":
+        response.status = 409;
+        response.message = "Duplicate entry detected";
+        break;
+      case "23503":
+        response.status = 404;
+        response.message = "Related resource not found";
+        break;
+      default:
+        response.status = 500;
+        response.message = "Database operation failed";
+    }
   } else if (error instanceof TypeError) {
     console.error(error);
     // response.status = error;
@@ -40,13 +52,11 @@ export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
   }
 
   if (process.env.NODE_ENV === "development") {
-    console.error({
+    res.status(response.status).json({
       status: response.status,
       message: response.message,
-      stack: error.stack,
-      ...error,
+      issues: response.issues,
+      // stack: error.stack,
     });
-
-    res.status(response.status).json({ ...response });
   }
 };
