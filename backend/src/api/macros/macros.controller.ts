@@ -19,8 +19,7 @@ export const getMacrosLogs: RequestHandler = async (req, res, next) => {
       [id, limit, offset]
     );
 
-    if (rows.length) res.status(200).json(rows[0]);
-    else throw createHttpError(404, "No macro logs found for this user.");
+    res.status(200).json(rows);
   } catch (err) {
     next(err);
   }
@@ -32,13 +31,14 @@ export const logMacros: RequestHandler<
   LogMacrosBodyType
 > = async (req, res, next) => {
   const id = req.session.userId;
-  const { calories, protein, carbs, fats } = req.body;
+  const { calories, protein, carbs, fats, date } = req.body;
+
   try {
     const { rows } = await query(
       `
         insert into macros 
             (user_id, calories, protein, carbs, fats, date) 
-        values ($1, $2, $3, $4, $5, current_date)
+        values ($1, $2, $3, $4, $5, $6)
         on conflict (user_id, date) 
         do update set 
             calories = excluded.calories,
@@ -46,11 +46,10 @@ export const logMacros: RequestHandler<
             carbs = excluded.carbs,
             fats = excluded.fats 
         returning *;`,
-      [id, calories, protein, carbs, fats]
+      [id, calories, protein, carbs, fats, date]
     );
 
-    if (rows.length) res.status(201).json(rows[0]);
-    else throw createHttpError(500, "Failed to log macros");
+    res.status(201).json(rows[0]);
   } catch (error) {
     next(error);
   }

@@ -55,8 +55,8 @@ export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
     res.status(response.status).json({
       status: response.status,
       message: response.message,
-      stack: error.stack,
       issues: response.issues,
+      // stack: error.stack,
     });
   }
 };

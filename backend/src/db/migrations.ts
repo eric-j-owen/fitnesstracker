@@ -56,7 +56,7 @@ migrationsUp.set(
       user_id int not null references users(id) on delete cascade,
       type text not null check (type in ('weight')),
       value DECIMAL(8,2) not null,
-      date date not null default current_date,
+      date timestamptz not null default current_timestamp,
       unique (user_id, date, type)
   );`
 );
@@ -70,7 +70,7 @@ migrationsUp.set(
       protein int not null,
       carbs int not null,
       fats int not null,
-      date date not null default current_date,
+      date date not null,
       unique (user_id, date)
   );`
 );
