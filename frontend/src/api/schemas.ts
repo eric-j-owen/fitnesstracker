@@ -62,6 +62,7 @@ export const macrosSchema = z.object({
   protein: z.coerce.number().positive().max(20000),
   carbs: z.coerce.number().positive().max(20000),
   fats: z.coerce.number().positive().max(20000),
+  date: z.string(),
 });
 
 export type MacrosData = z.infer<typeof macrosSchema>;

@@ -10,8 +10,8 @@ export default function Register() {
         <Link className="link link-accent" to={"/login"}>
           here
         </Link>
-        <RegisterForm />
       </p>
+      <RegisterForm />
     </div>
   );
 }

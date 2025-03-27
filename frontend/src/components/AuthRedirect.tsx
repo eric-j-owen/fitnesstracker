@@ -9,7 +9,7 @@ export function AuthRedirect() {
   }
 
   if (isError) {
-    return <div>An error has occurred</div>;
+    return <Outlet />;
   }
 
   if (isAuthenticated) {

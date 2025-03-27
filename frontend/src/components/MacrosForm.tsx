@@ -3,18 +3,20 @@ import { macrosSchema } from "../api/schemas";
 import { useAppForm } from "./Form/form-context";
 
 interface MacroFormProps {
-  modalRef: React.RefObject<HTMLDialogElement>;
+  modalRef: React.RefObject<HTMLDialogElement | null>;
 }
 
 export default function MacroForm({ modalRef }: MacroFormProps) {
   const { logMacros } = useMacros();
+  const today = new Date().toISOString().split("T")[0];
 
   const form = useAppForm({
     defaultValues: {
-      calories: "",
-      protein: "",
-      carbs: "",
-      fats: "",
+      date: today,
+      calories: 0,
+      protein: 0,
+      carbs: 0,
+      fats: 0,
     },
 
     validators: {
@@ -35,6 +37,13 @@ export default function MacroForm({ modalRef }: MacroFormProps) {
         form.handleSubmit();
       }}
     >
+      <form.AppField
+        name="date"
+        children={(field) => (
+          <field.FormField label="Date" type="date" showLabel={true} />
+        )}
+      />
+
       <form.AppField
         name="calories"
         children={(field) => (

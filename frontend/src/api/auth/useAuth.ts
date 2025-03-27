@@ -13,8 +13,9 @@ export const useAuth = () => {
   const userQuery = useQuery({
     queryKey: ["auth-user"],
     queryFn: getAuthenticatedUser,
-    throwOnError: false,
-    // retry: false,
+    retry: 1,
+    retryOnMount: false,
+    staleTime: 5 * 60 * 1000,
   });
 
   const loginMutation = useMutation({
@@ -22,6 +23,7 @@ export const useAuth = () => {
     onSuccess: (user) => {
       toast.success("Welcome!");
       queryClient.setQueryData(["auth-user"], user);
+      queryClient.invalidateQueries({ queryKey: ["auth-user"] });
     },
     onError: () => {
       toast.error("Incorrect password or username");
@@ -51,7 +53,7 @@ export const useAuth = () => {
 
   return {
     user: userQuery.data,
-    isLoading: userQuery.isLoading,
+    isLoading: userQuery.isLoading && !userQuery.isError,
     isAuthenticated: !!userQuery.data,
     isError: userQuery.isError,
     login: loginMutation.mutateAsync,

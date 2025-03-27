@@ -1,17 +1,13 @@
-import { useRef } from "react";
-
 interface ModalProps {
   modalId: string;
   title: string;
-  todaysDate: Date;
   children?: React.ReactNode;
-  modalRef: React.RefObject<HTMLDialogElement>;
+  modalRef: React.RefObject<HTMLDialogElement | null>;
 }
 
 const Modal: React.FC<ModalProps> = ({
   modalId,
   title,
-  todaysDate,
   children,
   modalRef,
 }) => {
@@ -28,9 +24,7 @@ const Modal: React.FC<ModalProps> = ({
             </button>
           </form>
           <div>
-            <h3 className="font-bold text-lg">
-              {title} for {todaysDate.toLocaleDateString()}
-            </h3>
+            <h3 className="font-bold text-lg">{title}</h3>
           </div>
           {children}
         </div>
