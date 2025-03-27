@@ -57,6 +57,14 @@ export const updatePasswordSchema = z
     }
   );
 
+export const macrosSchema = z.object({
+  calories: z.coerce.number().positive().max(20000),
+  protein: z.coerce.number().positive().max(20000),
+  carbs: z.coerce.number().positive().max(20000),
+  fats: z.coerce.number().positive().max(20000),
+});
+
+export type MacrosData = z.infer<typeof macrosSchema>;
 export type LoginUserData = z.infer<typeof loginUserSchema>;
 export type RegisterUserData = z.infer<typeof registerUserSchema>;
 export type AuthenticatedUser = z.infer<typeof authenticatedUserSchema>;

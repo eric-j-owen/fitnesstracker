@@ -11,7 +11,6 @@ export const registerUser = async (
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-    credentials: "include",
   });
 };
 
@@ -24,23 +23,19 @@ export const loginUser = async (
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-    credentials: "include",
   });
 };
 
 export const logoutUser = async (): Promise<void> => {
   return await fetchData("/api/auth/logout", {
     method: "POST",
-    credentials: "include",
   });
 };
 
 export const getAuthenticatedUser =
   async (): Promise<AuthenticatedUser | null> => {
     try {
-      return await fetchData("/api/auth/me", {
-        credentials: "include",
-      });
+      return await fetchData("/api/auth/me");
     } catch (err) {
       if (err instanceof UnauthorizedError) {
         return null;
