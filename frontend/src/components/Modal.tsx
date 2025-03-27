@@ -3,6 +3,7 @@ interface ModalProps {
   title: string;
   children?: React.ReactNode;
   modalRef: React.RefObject<HTMLDialogElement | null>;
+  className: string;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -10,10 +11,14 @@ const Modal: React.FC<ModalProps> = ({
   title,
   children,
   modalRef,
+  className,
 }) => {
   return (
     <>
-      <button className="btn" onClick={() => modalRef.current?.showModal()}>
+      <button
+        className={className}
+        onClick={() => modalRef.current?.showModal()}
+      >
         {title}
       </button>
       <dialog id={modalId} ref={modalRef} className="modal">
@@ -23,13 +28,10 @@ const Modal: React.FC<ModalProps> = ({
               ✕
             </button>
           </form>
-          <div>
-            <h3 className="font-bold text-lg">{title}</h3>
-          </div>
-          {children}
+          <div className="mt-10">{children}</div>
         </div>
         <form method="dialog" className="modal-backdrop">
-          <button></button>
+          <button />
         </form>
       </dialog>
     </>

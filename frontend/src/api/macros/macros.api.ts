@@ -18,6 +18,6 @@ export const logMacros = async (data: MacrosData): Promise<MacrosResponse> => {
   });
 };
 
-export const getMacrosLogs = async () => {
+export const getMacrosLogs = async (): Promise<MacrosResponse[]> => {
   return await fetchData("/api/macros");
 };
