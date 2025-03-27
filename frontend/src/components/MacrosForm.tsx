@@ -5,6 +5,7 @@ import { useAppForm } from "./Form/form-context";
 interface MacroFormProps {
   modalRef: React.RefObject<HTMLDialogElement>;
 }
+
 export default function MacroForm({ modalRef }: MacroFormProps) {
   const { logMacros } = useMacros();
 
