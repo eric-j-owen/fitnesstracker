@@ -1,5 +1,5 @@
 import { fetchData } from "../client";
-import { MacrosData } from "../schemas";
+import { MacrosFormData } from "../schemas";
 
 interface MacrosResponse {
   id: number;
@@ -11,7 +11,9 @@ interface MacrosResponse {
   date: string;
 }
 
-export const logMacros = async (data: MacrosData): Promise<MacrosResponse> => {
+export const logMacros = async (
+  data: MacrosFormData
+): Promise<MacrosResponse> => {
   return await fetchData("/api/macros", {
     method: "POST",
     body: JSON.stringify(data),

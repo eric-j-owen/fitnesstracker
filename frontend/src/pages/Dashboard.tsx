@@ -1,4 +1,4 @@
-import MacrosDisplay from "../components/MacrosDisplay";
+import MacrosDisplay from "../components/Macros/MacrosDisplay";
 
 export default function Dashboard() {
   return (

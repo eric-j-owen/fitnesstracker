@@ -27,9 +27,9 @@ export const UpdateUserSchema = z.object({
     lastName: z.string().trim().max(255).optional(),
     username: UserSchema.shape.username.optional(),
     userRole: z.enum(["basic", "trainer"]).default("basic").optional(),
-    targetProtein: z.number().positive().optional(),
-    targetCarbs: z.number().positive().optional(),
-    targetFats: z.number().positive().optional(),
+    targetProtein: z.number().min(0).optional(),
+    targetCarbs: z.number().min(0).optional(),
+    targetFats: z.number().min(0).optional(),
   }),
 });
 

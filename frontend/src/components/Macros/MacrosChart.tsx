@@ -8,7 +8,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { MacrosData } from "../api/schemas";
+import { MacrosFormData } from "../../api/schemas";
 
 ChartJS.register(
   CategoryScale,
@@ -23,7 +23,7 @@ export const options = {
   plugins: {
     title: {
       display: true,
-      text: "Macros",
+      text: "Last 5 Days of Logs",
     },
   },
   responsive: true,
@@ -37,23 +37,19 @@ export const options = {
   },
 };
 
-interface BarChartProps {
-  data: MacrosData[];
+interface MacrosChartProps {
+  data: MacrosFormData[];
   isLoadingQuery: boolean;
   isErrorQuery: boolean;
 }
 
-function BarChart({ data, isLoadingQuery, isErrorQuery }: BarChartProps) {
+function MacrosChart({ data, isLoadingQuery, isErrorQuery }: MacrosChartProps) {
   if (isLoadingQuery) {
     return <div>Loading...</div>;
   }
 
   if (isErrorQuery) {
     return <div>Error</div>;
-  }
-
-  if (!data || data.length === 0) {
-    return <div>No data available.</div>;
   }
 
   const labels = data.map((record) => record.date.split("T")[0]);
@@ -87,4 +83,4 @@ function BarChart({ data, isLoadingQuery, isErrorQuery }: BarChartProps) {
   );
 }
 
-export default BarChart;
+export default MacrosChart;
