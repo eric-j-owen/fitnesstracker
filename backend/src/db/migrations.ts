@@ -44,7 +44,6 @@ migrationsUp.set(
         password_hash text not null,
         avatar_url text,
         user_role text check (user_role in ('basic', 'trainer')) default 'basic',
-        target_calories int,
         target_protein int,
         target_carbs int,
         target_fats int,

@@ -35,10 +35,12 @@ export const loginUserSchema = z.object({
 });
 
 export const authenticatedUserSchema = z.object({
-  id: z.string().optional(),
   firstName: registerUserSchema.innerType().shape.firstName,
   lastName: z.string(),
   username: registerUserSchema.innerType().shape.username,
+  targetProtein: z.coerce.number().positive(),
+  targetCarbs: z.coerce.number().positive(),
+  targetFats: z.coerce.number().positive(),
 });
 
 export const updatePasswordSchema = z

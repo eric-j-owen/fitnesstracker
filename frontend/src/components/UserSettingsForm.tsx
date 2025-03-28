@@ -9,14 +9,17 @@ export const UserSettingsForm = () => {
   const { update } = useUserApi();
 
   if (!user) {
-    console.log("hello");
     throw new UnauthorizedError();
   }
+
   const form = useAppForm({
     defaultValues: {
       firstName: user.firstName,
       lastName: user.lastName || "",
       username: user.username,
+      targetProtein: user.targetProtein || 0,
+      targetCarbs: user.targetCarbs || 0,
+      targetFats: user.targetFats || 0,
     },
 
     validators: {
@@ -24,10 +27,53 @@ export const UserSettingsForm = () => {
     },
 
     onSubmit: async ({ value }) => {
-      const updateData = { id: user.id, ...value };
-      await update.mutateAsync(updateData);
+      const formattedData = {
+        ...value,
+        targetProtein: Number(value.targetProtein),
+        targetCarbs: Number(value.targetCarbs),
+        targetFats: Number(value.targetFats),
+      };
+      await update.mutateAsync(formattedData);
     },
   });
+
+  interface formDataType {
+    name:
+      | "firstName"
+      | "lastName"
+      | "username"
+      | "targetProtein"
+      | "targetCarbs"
+      | "targetFats";
+    label: string;
+    type: string;
+    showLabel: boolean;
+  }
+
+  const renderFormData: formDataType[] = [
+    { name: "firstName", label: "First name", type: "text", showLabel: true },
+    { name: "lastName", label: "Last name", type: "text", showLabel: true },
+    { name: "username", label: "Username", type: "username", showLabel: true },
+    {
+      name: "targetProtein",
+      label: "Target Protein (g)",
+      type: "number",
+      showLabel: true,
+    },
+    {
+      name: "targetCarbs",
+      label: "Target Carbs (g)",
+      type: "number",
+      showLabel: true,
+    },
+    {
+      name: "targetFats",
+      label: "Target Fats (g)",
+      type: "number",
+      showLabel: true,
+    },
+  ];
+
   return (
     <form
       onSubmit={(e) => {
@@ -35,26 +81,21 @@ export const UserSettingsForm = () => {
         form.handleSubmit();
       }}
     >
-      <form.AppField
-        name="firstName"
-        children={(field) => (
-          <field.FormField label="First name" type="text" showLabel={true} />
-        )}
-      />
-
-      <form.AppField
-        name="lastName"
-        children={(field) => (
-          <field.FormField label="Last name" type="text" showLabel={true} />
-        )}
-      />
-
-      <form.AppField
-        name="username"
-        children={(field) => (
-          <field.FormField label="username" type="username" showLabel={true} />
-        )}
-      />
+      {renderFormData.map((data) => {
+        return (
+          <form.AppField
+            key={data.name}
+            name={data.name}
+            children={(field) => (
+              <field.FormField
+                label={data.label}
+                type={data.type}
+                showLabel={data.showLabel}
+              />
+            )}
+          />
+        );
+      })}
 
       <form.AppForm>
         <form.SubscribeButton label="Update" />
