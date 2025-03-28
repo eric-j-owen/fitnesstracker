@@ -98,17 +98,4 @@ migrationsUp.set(
     );`
 );
 
-migrationsUp.set(
-  "create-targets-table",
-  `create table if not exists targets (
-      id serial primary key,
-      user_id int not null references users(id) on delete cascade,
-      target_type text not null check (target_type in ('macro', 'metric', 'exercise')),
-      exercise_id int references exercises(id) on delete cascade,
-      macro_type text check (macro_type in ('calories', 'protein', 'carbs', 'fats')),
-      metric_type text check (metric_type in ('weight')),
-      target_value decimal(5, 2) not null
-    );`
-);
-
 if (import.meta.url === `file://${process.argv[1]}`) runMigrationsAll();
