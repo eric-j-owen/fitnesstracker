@@ -5,18 +5,18 @@ import type { LogMacrosBodyType } from "./macros.routes.js";
 
 export const getMacrosLogs: RequestHandler = async (req, res, next) => {
   const id = req.session.userId;
-  const page = Number(req.query.page) || 1;
-  const limit = Number(req.query.limit) || 5;
-  const offset = (page - 1) * limit;
 
   try {
     const { rows } = await query(
       `
-        select * from macros 
-        where user_id = $1 
-        order by date desc 
-        limit $2 offset $3;`,
-      [id, limit, offset]
+        select * from (
+            select * from macros 
+            where user_id = $1 
+            order by date desc 
+            limit 5
+          ) as recent_macros
+        order by date asc;`,
+      [id]
     );
 
     res.status(200).json(rows);

@@ -9,11 +9,6 @@ export const useMacros = () => {
   const macrosQuery = useQuery<MacrosFormData[]>({
     queryKey: ["macros"],
     queryFn: getMacrosLogs,
-    select: (data) => {
-      return data.sort((a, b) => {
-        return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
-      });
-    },
   });
 
   const logMacrosMutation = useMutation({
