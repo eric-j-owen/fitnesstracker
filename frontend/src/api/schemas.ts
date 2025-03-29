@@ -67,6 +67,13 @@ export const macrosFormSchema = z.object({
   date: z.string(),
 });
 
+export const metricsFormSchema = z.object({
+  type: z.string(),
+  val: z.coerce.number().positive().max(20000),
+  date: z.string(),
+});
+
+export type MetricsFormData = z.infer<typeof metricsFormSchema>;
 export type MacrosFormData = z.infer<typeof macrosFormSchema>;
 export type LoginUserData = z.infer<typeof loginUserSchema>;
 export type RegisterUserData = z.infer<typeof registerUserSchema>;

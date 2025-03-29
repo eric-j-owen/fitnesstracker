@@ -57,9 +57,9 @@ migrationsUp.set(
   `create table if not exists metrics (
       id serial primary key,
       user_id int not null references users(id) on delete cascade,
-      type text not null check (type in ('weight')),
+      type text not null check (type in ('Weight')),
       value DECIMAL(8,2) not null,
-      date timestamptz not null default current_timestamp,
+      date date not null,
       unique (user_id, date, type)
   );`
 );

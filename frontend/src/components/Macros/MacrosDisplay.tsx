@@ -15,21 +15,16 @@ function MacrosDisplay() {
   if (!user) throw new UnauthorizedError();
 
   if (isLoadingQuery) {
-    return <div className="alert alert-info">Loading...</div>;
+    return <div>Loading...</div>;
   }
   if (isErrorQuery) {
-    return <div className="alert alert-danger">Error</div>;
+    return <div>Error</div>;
   }
 
   return (
     <div>
       <div className="flex justify-end mb-4 ">
-        <Modal
-          modalId="macrosModal"
-          title="+"
-          modalRef={modalRef}
-          className="btn btn-outline btn-sm mb-5"
-        >
+        <Modal modalId="macrosModal" title="+" modalRef={modalRef}>
           <MacroForm modalRef={modalRef} />
         </Modal>
       </div>

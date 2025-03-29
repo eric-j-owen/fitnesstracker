@@ -72,7 +72,7 @@ function MacroProgressBars({ macros, user }: MacroProgressBarsProps) {
               field.target
             ) : (
               <div
-                className="tooltip"
+                className="tooltip tooltip-left"
                 data-tip="Set your target macros in Settings"
               >
                 <GoInfinity />
