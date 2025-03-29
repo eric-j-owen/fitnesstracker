@@ -19,8 +19,6 @@ function MacroProgressBars({ macros, user }: MacroProgressBarsProps) {
     log.date.startsWith(new Date().toISOString().split("T")[0])
   );
 
-  console.log(todaysLog);
-
   type MacroProgressConfigType = {
     id: "calories" | "protein" | "carbs" | "fats";
     label: string;
