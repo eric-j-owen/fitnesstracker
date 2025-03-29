@@ -1,19 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getMacrosLogs, logMacros } from "./macros.api";
 import toast from "react-hot-toast";
-import { MacrosData } from "../schemas";
+import { MacrosFormData } from "../schemas";
 
 export const useMacros = () => {
   const queryClient = useQueryClient();
 
-  const macrosQuery = useQuery<MacrosData[]>({
+  const macrosQuery = useQuery<MacrosFormData[]>({
     queryKey: ["macros"],
     queryFn: getMacrosLogs,
-    select: (data) => {
-      return data.sort((a, b) => {
-        return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
-      });
-    },
   });
 
   const logMacrosMutation = useMutation({

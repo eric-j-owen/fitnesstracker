@@ -1,4 +1,5 @@
-import MacrosDisplay from "../components/MacrosDisplay";
+import MacrosDisplay from "../components/Macros/MacrosDisplay";
+import MetricsDisplay from "../components/Metrics/MetricsDisplay";
 
 export default function Dashboard() {
   return (
@@ -15,13 +16,14 @@ export default function Dashboard() {
 
         <div className="card shadow-xl">
           <div className="card-body">
-            <h2 className="card-title">Workouts</h2>
+            <h2 className="card-title">Workout Schedule</h2>
           </div>
         </div>
 
         <div className="card shadow-xl">
           <div className="card-body">
             <h2 className="card-title">Metrics</h2>
+            <MetricsDisplay />
           </div>
         </div>
       </div>

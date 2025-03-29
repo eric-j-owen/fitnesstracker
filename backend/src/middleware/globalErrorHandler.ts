@@ -21,7 +21,9 @@ export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
   if (error instanceof ZodError) {
     response.status = 400;
     response.message = "Validation error";
-    response.issues = error.errors.map((issue) => issue.message);
+    response.issues = error.errors.map(
+      (issue) => issue.path.join(".") + ": " + issue.message
+    );
   }
 
   // errors from http-errors
@@ -32,6 +34,7 @@ export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
 
   // db errors
   else if (error instanceof DatabaseError) {
+    console.log(error);
     switch (error.code) {
       case "23505":
         response.status = 409;
@@ -51,6 +54,7 @@ export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
     response.message = error.message;
   }
 
+  console.log(error);
   if (process.env.NODE_ENV === "development") {
     res.status(response.status).json({
       status: response.status,

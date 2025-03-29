@@ -1,6 +1,6 @@
-import { useMacros } from "../api/macros/useMacros";
-import { macrosSchema } from "../api/schemas";
-import { useAppForm } from "./Form/form-context";
+import { useMacros } from "../../api/macros/useMacros";
+import { macrosFormSchema } from "../../api/schemas";
+import { useAppForm } from "../Form/form-context";
 
 interface MacroFormProps {
   modalRef: React.RefObject<HTMLDialogElement | null>;
@@ -20,7 +20,7 @@ export default function MacroForm({ modalRef }: MacroFormProps) {
     },
 
     validators: {
-      onChange: macrosSchema,
+      onChange: macrosFormSchema,
     },
 
     onSubmit: async ({ value }) => {

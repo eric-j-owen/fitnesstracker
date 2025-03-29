@@ -44,6 +44,9 @@ migrationsUp.set(
         password_hash text not null,
         avatar_url text,
         user_role text check (user_role in ('basic', 'trainer')) default 'basic',
+        target_protein int,
+        target_carbs int,
+        target_fats int,
         created_at timestamptz default current_timestamp,
         updated_at timestamptz default current_timestamp
     );`
@@ -54,9 +57,9 @@ migrationsUp.set(
   `create table if not exists metrics (
       id serial primary key,
       user_id int not null references users(id) on delete cascade,
-      type text not null check (type in ('weight')),
+      type text not null check (type in ('Weight')),
       value DECIMAL(8,2) not null,
-      date timestamptz not null default current_timestamp,
+      date date not null,
       unique (user_id, date, type)
   );`
 );
@@ -76,38 +79,26 @@ migrationsUp.set(
 );
 
 migrationsUp.set(
-  "create-exercises-table",
-  `create table if not exists exercises (
-      id serial primary key,
-      user_id int not null references users(id) on delete cascade,
-      exercise text not null,
-      unique(user_id, exercise)
-    );`
-);
-
-migrationsUp.set(
   "create-workouts-table",
   `create table if not exists workouts (
       id serial primary key,
       user_id int references users(id) on delete cascade,
-      exercise_id int references exercises(id) on delete cascade,
-      sets int not null check (sets > 0),
-      reps int not null check (reps > 0),
-      weight decimal(6,2) not null,
-      created_at timestamptz default now()
+      workout_name text not null,
+      days text not null,
+      created_at timestamptz default current_timestamp
     );`
 );
 
 migrationsUp.set(
-  "create-targets-table",
-  `create table if not exists targets (
+  "create-exercises-table",
+  `create table if not exists exercises (
       id serial primary key,
       user_id int not null references users(id) on delete cascade,
-      target_type text not null check (target_type in ('macro', 'metric', 'exercise')),
-      exercise_id int references exercises(id) on delete cascade,
-      macro_type text check (macro_type in ('calories', 'protein', 'carbs', 'fats')),
-      metric_type text check (metric_type in ('weight')),
-      target_value decimal(5, 2) not null
+      workout_id int references workouts(id) on delete cascade,
+      exercise_name text not null,
+      sets int not null check (sets > 0),
+      reps int not null check (reps > 0),
+      weight decimal(6,2) not null
     );`
 );
 

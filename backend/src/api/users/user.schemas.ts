@@ -22,27 +22,15 @@ export const UserRequestParamsSchema = z.object({
 });
 
 export const UpdateUserSchema = z.object({
-  params: UserRequestParamsSchema.shape.params,
-  body: z
-    .object({
-      firstName: z.string().trim().min(1).max(255).optional(),
-      lastName: z.string().trim().max(255).optional(),
-      username: UserSchema.shape.username.optional(),
-      userRole: z.enum(["basic", "trainer"]).default("basic").optional(),
-    })
-    .refine(
-      (data) => {
-        return (
-          data.firstName !== undefined ||
-          data.lastName !== undefined ||
-          data.username !== undefined ||
-          data.userRole !== undefined
-        );
-      },
-      {
-        message: "missing a field to update",
-      }
-    ),
+  body: z.object({
+    firstName: z.string().trim().min(1).max(255).optional(),
+    lastName: z.string().trim().max(255).optional(),
+    username: UserSchema.shape.username.optional(),
+    userRole: z.enum(["basic", "trainer"]).default("basic").optional(),
+    targetProtein: z.number().min(0).optional(),
+    targetCarbs: z.number().min(0).optional(),
+    targetFats: z.number().min(0).optional(),
+  }),
 });
 
 export type User = z.infer<typeof UserSchema>;

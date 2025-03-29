@@ -3,7 +3,6 @@ interface ModalProps {
   title: string;
   children?: React.ReactNode;
   modalRef: React.RefObject<HTMLDialogElement | null>;
-  className: string;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -11,12 +10,11 @@ const Modal: React.FC<ModalProps> = ({
   title,
   children,
   modalRef,
-  className,
 }) => {
   return (
     <>
       <button
-        className={className}
+        className="btn btn-outline btn-sm mb-5"
         onClick={() => modalRef.current?.showModal()}
       >
         {title}

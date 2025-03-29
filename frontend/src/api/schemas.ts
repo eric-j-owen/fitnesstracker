@@ -35,10 +35,12 @@ export const loginUserSchema = z.object({
 });
 
 export const authenticatedUserSchema = z.object({
-  id: z.string().optional(),
   firstName: registerUserSchema.innerType().shape.firstName,
   lastName: z.string(),
   username: registerUserSchema.innerType().shape.username,
+  targetProtein: z.coerce.number().min(0),
+  targetCarbs: z.coerce.number().min(0),
+  targetFats: z.coerce.number().min(0),
 });
 
 export const updatePasswordSchema = z
@@ -57,15 +59,22 @@ export const updatePasswordSchema = z
     }
   );
 
-export const macrosSchema = z.object({
-  calories: z.coerce.number().positive().max(20000),
-  protein: z.coerce.number().positive().max(20000),
-  carbs: z.coerce.number().positive().max(20000),
-  fats: z.coerce.number().positive().max(20000),
+export const macrosFormSchema = z.object({
+  calories: z.coerce.number().min(0).max(20000),
+  protein: z.coerce.number().min(0).max(20000),
+  carbs: z.coerce.number().min(0).max(20000),
+  fats: z.coerce.number().min(0).max(20000),
   date: z.string(),
 });
 
-export type MacrosData = z.infer<typeof macrosSchema>;
+export const metricsFormSchema = z.object({
+  type: z.string(),
+  val: z.coerce.number().positive().max(20000),
+  date: z.string(),
+});
+
+export type MetricsFormData = z.infer<typeof metricsFormSchema>;
+export type MacrosFormData = z.infer<typeof macrosFormSchema>;
 export type LoginUserData = z.infer<typeof loginUserSchema>;
 export type RegisterUserData = z.infer<typeof registerUserSchema>;
 export type AuthenticatedUser = z.infer<typeof authenticatedUserSchema>;

@@ -11,6 +11,7 @@ export const useUserApi = () => {
       queryClient.invalidateQueries({ queryKey: ["auth-user"] });
     },
     onError: (err) => {
+      toast.error("Failed to update profile");
       console.error(err);
     },
   });

@@ -100,7 +100,8 @@ export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
 
   try {
     const { rows } = await query(
-      `select id, first_name, last_name, username from users where id = $1`,
+      `select id, first_name, last_name, username, target_protein, target_carbs, target_fats 
+      from users where id = $1`,
       [req.session.userId]
     );
 
@@ -113,6 +114,9 @@ export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
     const parsedUser = {
       firstName: user.first_name,
       lastName: user.last_name,
+      targetProtein: user.target_protein,
+      targetCarbs: user.target_carbs,
+      targetFats: user.target_fats,
       ...user,
     };
 

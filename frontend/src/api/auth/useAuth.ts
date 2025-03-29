@@ -36,6 +36,7 @@ export const useAuth = () => {
     onSuccess: (user) => {
       toast.success("Registration Successful");
       queryClient.setQueryData(["auth-user"], user);
+      queryClient.invalidateQueries({ queryKey: ["auth-user"] });
     },
     onError: () => {
       queryClient.setQueryData(["auth-user"], null);

@@ -7,13 +7,13 @@ import { requireAuth } from "../../middleware/auth.js";
 const router = Router();
 
 router.patch(
-  "/:id",
+  "/",
   validate(UpdateUserSchema),
   requireAuth,
   Controller.updateUser
 );
 router.delete(
-  "/:id",
+  "/",
   validate(UserRequestParamsSchema),
   requireAuth,
   Controller.deleteUser
