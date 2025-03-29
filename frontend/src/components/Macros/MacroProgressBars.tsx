@@ -6,7 +6,6 @@ interface MacroProgressBarsProps {
   user: AuthenticatedUser;
 }
 function MacroProgressBars({ macros, user }: MacroProgressBarsProps) {
-  const latestLog = macros?.[macros.length - 1];
   const CALS_PER_G_PROTEIN = 4;
   const CALS_PER_G_CARBS = 4;
   const CALS_PER_G_FATS = 9;
@@ -15,6 +14,12 @@ function MacroProgressBars({ macros, user }: MacroProgressBarsProps) {
     user?.targetCarbs * CALS_PER_G_CARBS +
     user?.targetProtein * CALS_PER_G_PROTEIN +
     user?.targetFats * CALS_PER_G_FATS;
+
+  const todaysLog = macros?.find((log) =>
+    log.date.startsWith(new Date().toISOString().split("T")[0])
+  );
+
+  console.log(todaysLog);
 
   type MacroProgressConfigType = {
     id: "calories" | "protein" | "carbs" | "fats";
@@ -60,14 +65,14 @@ function MacroProgressBars({ macros, user }: MacroProgressBarsProps) {
         <div key={field.id} className="flex items-center gap-2">
           <progress
             className="progress"
-            value={latestLog?.[field.id] || 0}
+            value={todaysLog?.[field.id] || 0}
             max={String(field.target)}
             aria-labelledby={`${field.id}-label`}
             style={{ color: field.color }}
           ></progress>
 
           <div className="text-sm flex items-center w-1 mr-5">
-            {latestLog?.[field.id] || 0}/
+            {todaysLog?.[field.id] || 0}/
             {field.target ? (
               field.target
             ) : (

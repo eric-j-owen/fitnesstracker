@@ -36,11 +36,11 @@ export const logMetrics: RequestHandler<
   try {
     const { rows } = await query(
       `
-        insert into metrics (user_id, type, value, date) 
+        insert into metrics (user_id, type, val, date) 
         values ($1, $2, $3, $4)
         on conflict (user_id, type, date) 
         do update set 
-            value = excluded.value
+            val = excluded.val
         returning *;`,
       [id, type, val, date]
     );

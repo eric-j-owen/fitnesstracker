@@ -58,7 +58,7 @@ migrationsUp.set(
       id serial primary key,
       user_id int not null references users(id) on delete cascade,
       type text not null check (type in ('Weight')),
-      value DECIMAL(8,2) not null,
+      val DECIMAL(8,2) not null,
       date date not null,
       unique (user_id, date, type)
   );`

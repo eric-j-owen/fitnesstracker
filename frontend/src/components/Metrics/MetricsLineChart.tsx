@@ -60,7 +60,7 @@ export function MetricsLineChart({
     datasets: [
       {
         label: "Weight",
-        data: data.map((log) => log.value),
+        data: data.map((log) => log.val),
         borderColor: "rgb(53, 162, 235)",
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },

@@ -58,9 +58,9 @@ function MacrosChart({ data, isLoadingQuery, isErrorQuery }: MacrosChartProps) {
     labels,
     datasets: [
       {
-        label: "Protein",
-        data: data.map((record) => record.protein),
-        backgroundColor: "rgb(75, 192, 192)",
+        label: "Fats",
+        data: data.map((record) => record.fats),
+        backgroundColor: "rgb(255, 99, 132)",
       },
       {
         label: "Carbs",
@@ -69,9 +69,9 @@ function MacrosChart({ data, isLoadingQuery, isErrorQuery }: MacrosChartProps) {
       },
 
       {
-        label: "Fats",
-        data: data.map((record) => record.fats),
-        backgroundColor: "rgb(255, 99, 132)",
+        label: "Protein",
+        data: data.map((record) => record.protein),
+        backgroundColor: "rgb(75, 192, 192)",
       },
     ],
   };
