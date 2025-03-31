@@ -58,7 +58,7 @@ migrationsUp.set(
       id serial primary key,
       user_id int not null references users(id) on delete cascade,
       type text not null check (type in ('Weight')),
-      val DECIMAL(8,2) not null,
+      val decimal(6,2) not null,
       date date not null,
       unique (user_id, date, type)
   );`
@@ -84,8 +84,7 @@ migrationsUp.set(
       id serial primary key,
       user_id int references users(id) on delete cascade,
       workout_name text not null,
-      days text not null,
-      created_at timestamptz default current_timestamp
+      days text not null
     );`
 );
 
@@ -94,11 +93,22 @@ migrationsUp.set(
   `create table if not exists exercises (
       id serial primary key,
       user_id int not null references users(id) on delete cascade,
-      workout_id int references workouts(id) on delete cascade,
       exercise_name text not null,
+      exercise_type text not null check (exercise_type in ('strength', 'cardio'))
+    );`
+);
+
+migrationsUp.set(
+  "create-workout_exercises_link",
+  `create table if not exists workout_exercises_link (
+      primary key (workout id, exercise_id)
+      workout_id int references workouts(id) on delete cascade,
+      exercise_id int references exercises(id) on delete cascade,
       sets int not null check (sets > 0),
       reps int not null check (reps > 0),
-      weight decimal(6,2) not null
+      weight decimal(6,2) not null,
+      duration interval,
+      distance decimal(6,2)
     );`
 );
 
