@@ -1,6 +1,7 @@
 import type { RequestHandler } from "express";
 import { query } from "../../db/index.js";
 import { z } from "zod";
+import createHttpError from "http-errors";
 
 const exerciseParamsSchema = z.object({
   params: z.object({
@@ -8,7 +9,7 @@ const exerciseParamsSchema = z.object({
   }),
 });
 
-const exerciseBodychema = z.object({
+export const exerciseBodychema = z.object({
   body: z.object({
     exerciseName: z.string(),
     exerciseType: z.string(),
@@ -16,11 +17,15 @@ const exerciseBodychema = z.object({
 });
 
 type ExerciseParams = z.infer<typeof exerciseParamsSchema.shape.params>;
-type UpdateExerciseBody = z.infer<typeof exerciseBodychema.shape.body>;
+type ExerciseBody = z.infer<typeof exerciseBodychema.shape.body>;
 
-export const createExercise: RequestHandler = async (req, res, next) => {
+export const createExercise: RequestHandler<
+  unknown,
+  unknown,
+  ExerciseBody
+> = async (req, res, next) => {
   const userId = req.session.userId;
-  const { exercise_name, exercise_type } = req.body;
+  const { exerciseName, exerciseType } = req.body;
 
   try {
     const { rows } = await query(
@@ -29,7 +34,7 @@ export const createExercise: RequestHandler = async (req, res, next) => {
         values ($1, $2, $3)
         returning *;
         `,
-      [userId, exercise_name, exercise_type]
+      [userId, exerciseName, exerciseType.toLowerCase()]
     );
     res.status(201).json(rows[0]);
   } catch (error) {
@@ -48,7 +53,15 @@ export const getExercises: RequestHandler = async (req, res, next) => {
         `,
       [userId]
     );
-    res.status(200).json(rows);
+    const convertRows = rows.map((row) => {
+      return {
+        exerciseId: row.id,
+        exerciseType: row.exercise_type,
+        exerciseName: row.exercise_name,
+      };
+    });
+
+    res.status(200).json(convertRows);
   } catch (error) {
     next(error);
   }
@@ -57,7 +70,7 @@ export const getExercises: RequestHandler = async (req, res, next) => {
 export const updateExercise: RequestHandler<
   ExerciseParams,
   unknown,
-  UpdateExerciseBody
+  ExerciseBody
 > = async (req, res, next) => {
   const userId = req.session.userId;
   const { exerciseId } = req.params;
@@ -91,6 +104,7 @@ export const deleteExercise: RequestHandler<ExerciseParams> = async (
 ) => {
   const userId = req.session.userId;
   const { exerciseId } = req.params;
+  console.log("Deleting exercise with ID:", exerciseId, "for user ID:", userId);
 
   try {
     const { rows } = await query(
@@ -103,7 +117,7 @@ export const deleteExercise: RequestHandler<ExerciseParams> = async (
     );
 
     if (!rows.length) {
-      res.status(404).json({ message: "Exercise not found" });
+      throw createHttpError(404, "Exercise not found");
     }
 
     res.status(200).json({ message: "Exercise deleted successfully" });

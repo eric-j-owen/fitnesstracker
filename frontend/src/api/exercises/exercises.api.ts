@@ -1,6 +1,6 @@
 import { fetchData } from "../client";
 
-interface ExerciseCreateBody {
+export interface ExerciseCreateBody {
   exerciseName: string;
   exerciseType: string;
 }
@@ -29,7 +29,7 @@ export const createExercise = async (
 ): Promise<ExerciseResponse> => {
   return await fetchData("/api/exercises", {
     method: "POST",
-    body: JSON.stringify({ body }),
+    body: JSON.stringify(body),
   });
 };
 

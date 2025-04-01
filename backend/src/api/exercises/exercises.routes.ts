@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as controller from "./exercises.controller.js";
+import { validate } from "../../middleware/validate.js";
 
 // GET    /exercises
 // POST   /exercises
@@ -9,8 +10,12 @@ import * as controller from "./exercises.controller.js";
 const router = Router();
 
 router.get("/", controller.getExercises);
-router.post("/", controller.createExercise);
+router.post(
+  "/",
+  validate(controller.exerciseBodychema),
+  controller.createExercise
+);
 router.patch("/:id", controller.updateExercise);
-router.delete("/:id", controller.deleteExercise);
+router.delete("/:exerciseId", controller.deleteExercise);
 
 export default router;

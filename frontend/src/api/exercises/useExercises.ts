@@ -22,10 +22,23 @@ export const useExercises = () => {
     },
   });
 
+  const deleteExerciseMutation = useMutation({
+    mutationFn: api.deleteExercise,
+    onSuccess: () => {
+      toast.success("Exercise deleted");
+      queryClient.invalidateQueries({ queryKey: ["exercises"] });
+    },
+    onError: (err) => {
+      toast.error("Failed to delete exercise");
+      console.error(err);
+    },
+  });
+
   return {
     exercises: exerciseQuery.data,
-    isExercisesLoading: exerciseQuery.isLoading,
-    isExercisesError: exerciseQuery.isError,
+    isQueryLoading: exerciseQuery.isLoading,
+    isQueryError: exerciseQuery.isError,
     createExercise: createExerciseMutation.mutateAsync,
+    deleteExercise: deleteExerciseMutation.mutateAsync,
   };
 };

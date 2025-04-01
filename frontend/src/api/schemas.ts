@@ -73,6 +73,11 @@ export const metricsFormSchema = z.object({
   date: z.string(),
 });
 
+export const exerciseFormSchema = z.object({
+  exerciseName: z.string().nonempty("Exercise name is required").max(255),
+  exerciseType: z.enum(["strength", "cardio"]),
+});
+
 export type MetricsFormData = z.infer<typeof metricsFormSchema>;
 export type MacrosFormData = z.infer<typeof macrosFormSchema>;
 export type LoginUserData = z.infer<typeof loginUserSchema>;
