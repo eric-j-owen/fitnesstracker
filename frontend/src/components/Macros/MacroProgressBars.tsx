@@ -58,7 +58,7 @@ function MacroProgressBars({ macros, user }: MacroProgressBarsProps) {
   ];
 
   return (
-    <div className="flex flex-col gap-1 ">
+    <div className="flex flex-col gap-1 w-full">
       {MacroProgressConfig.map((field) => (
         <div key={field.id} className="flex items-center gap-2">
           <progress
@@ -69,7 +69,7 @@ function MacroProgressBars({ macros, user }: MacroProgressBarsProps) {
             style={{ color: field.color }}
           ></progress>
 
-          <div className="text-sm flex items-center w-1 mr-5">
+          <div className="text-sm flex items-center  w-17">
             {todaysLog?.[field.id] || 0}/
             {field.target ? (
               field.target
