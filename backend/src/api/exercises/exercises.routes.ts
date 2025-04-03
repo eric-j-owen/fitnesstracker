@@ -15,7 +15,7 @@ router.post(
   validate(controller.exerciseBodychema),
   controller.createExercise
 );
-router.patch("/:id", controller.updateExercise);
+router.patch("/:exerciseId", controller.updateExercise);
 router.delete("/:exerciseId", controller.deleteExercise);
 
 export default router;
