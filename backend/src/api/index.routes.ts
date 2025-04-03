@@ -1,11 +1,12 @@
 import createHttpError from "http-errors";
+import type { Express } from "express";
+import { requireAuth } from "../middleware/auth.js";
 import userRouter from "./users/user.routes.js";
 import authRouter from "./auth/auth.routes.js";
 import macrosRouter from "./macros/macros.routes.js";
 import metricsRouter from "./metrics/metrics.routes.js";
 import exerciseRouter from "./exercises/exercises.routes.js";
-import type { Express } from "express";
-import { requireAuth } from "../middleware/auth.js";
+import workoutRouter from "./workouts/workouts.routes.js";
 
 export default function mountRoutes(app: Express) {
   app.get("/health", (req, res) => {
@@ -17,6 +18,7 @@ export default function mountRoutes(app: Express) {
   app.use("/api/macros", macrosRouter);
   app.use("/api/metrics", metricsRouter);
   app.use("/api/exercises", requireAuth, exerciseRouter);
+  app.use("/api/workouts", requireAuth, workoutRouter);
 
   app.use((req, res, next) => {
     next(createHttpError(404, `${req.path} Endpoint not found`));
