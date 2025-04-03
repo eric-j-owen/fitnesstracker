@@ -11,11 +11,11 @@ function ExercisesTab() {
   const exerciseTags = [
     {
       tag: "strength",
-      color: "bg-sky-800 ",
+      color: "bg-sky-400 ",
     },
     {
       tag: "cardio",
-      color: "bg-pink-800 ",
+      color: "bg-green-600 ",
     },
   ];
 
