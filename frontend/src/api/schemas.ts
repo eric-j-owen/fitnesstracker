@@ -78,6 +78,24 @@ export const exerciseFormSchema = z.object({
   exerciseType: z.enum(["strength", "cardio"]),
 });
 
+const exerciseSchema = z.object({
+  exerciseId: z.string().nonempty(),
+  sets: z.number().min(1, "Sets must be at least 1"),
+  reps: z.number().min(1, "Reps must be at least 1"),
+  weight: z.number().optional(),
+  duration: z.string().optional(),
+  distance: z.number().optional(),
+});
+
+export const workoutFormSchema = z.object({
+  workoutName: z.string().nonempty("Workout name is required"),
+  days: z.string().nonempty("Days are required"),
+  exercises: z.array(exerciseSchema),
+});
+
+export type Exercise = z.infer<typeof exerciseSchema>;
+export type WorkoutFormValues = z.infer<typeof workoutFormSchema>;
+
 export type MetricsFormData = z.infer<typeof metricsFormSchema>;
 export type MacrosFormData = z.infer<typeof macrosFormSchema>;
 export type LoginUserData = z.infer<typeof loginUserSchema>;

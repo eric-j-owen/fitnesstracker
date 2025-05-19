@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 import { query } from "../../db/index.js";
-import { ro } from "@faker-js/faker";
+import createHttpError from "http-errors";
 
 export const getWorkouts: RequestHandler = async (req, res, next) => {
   const id = req.session.userId;
@@ -27,6 +27,39 @@ export const createWorkout: RequestHandler = async (req, res, next) => {
       [userId, workoutName, days]
     );
     res.send(201).json(rows[0]);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const addExerciseToWorkout: RequestHandler = async (req, res, next) => {
+  const userId = req.session.userId;
+  if (!userId) throw createHttpError(401, "Unauthorized");
+
+  const { wid } = req.params;
+  const { eid, sets, reps, weight, duration, distance } = req.body;
+  try {
+    const checkWorkoutExists = await query(
+      `
+        select id from workouts where id = $1 and user_id = $2`,
+      [wid, userId]
+    );
+
+    if (!checkWorkoutExists.rows.length) {
+      throw createHttpError(404, "workout not found");
+    }
+
+    await query(
+      ` 
+        insert into 
+        workout_exercise_link (
+            workout_id, exercise_id, sets, reps, weight, duration, distance
+        ) values ($1, $2, $3, $4, $5, $6, $7);
+    `,
+      [wid, eid, sets, reps, weight, duration, distance]
+    );
+
+    res.sendStatus(201);
   } catch (error) {
     next(error);
   }

@@ -15,7 +15,6 @@ export const useAuth = () => {
     queryFn: getAuthenticatedUser,
     retry: 1,
     retryOnMount: false,
-    staleTime: 5 * 60 * 1000,
   });
 
   const loginMutation = useMutation({
