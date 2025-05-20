@@ -1,6 +1,13 @@
 import app from "./app.js";
-import { query } from "./db/index.js";
+import AppDataSource from "./db/data-source.js";
 
 const PORT = Number(process.env.PORT) || 3001;
 
-app.listen(PORT, () => console.log(`server listening on port ${PORT}`));
+AppDataSource.initialize()
+  .then(() => {
+    console.log("Data Source has been initialized!");
+    app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+  })
+  .catch((err) => {
+    console.error("Error during Data Source initialization:", err);
+  });
