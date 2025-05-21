@@ -2,8 +2,7 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import type { DataSourceOptions } from "typeorm";
 import { pgConnection } from "./config.js";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import * as entities from "./entities/index.js";
 
 export const dataSourceOptions: DataSourceOptions = {
   type: "postgres",
@@ -14,13 +13,7 @@ export const dataSourceOptions: DataSourceOptions = {
   database: pgConnection.database,
   synchronize: true,
   logging: true,
-  entities: [
-    path.join(
-      path.dirname(fileURLToPath(import.meta.url)),
-      "entities",
-      "*.entity.{js,ts}"
-    ),
-  ],
+  entities: [entities.User, entities.Metric],
 };
 
 const AppDataSource = new DataSource(dataSourceOptions);

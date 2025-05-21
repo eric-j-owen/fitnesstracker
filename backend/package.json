@@ -6,9 +6,7 @@
   "scripts": {
     "test": "vitest",
     "build": "tsc",
-    "dev": "node dist/src/server.js",
-    "migrate": "node dist/src/db/migrations.js",
-    "seed": "node dist/src/db/seeder.js"
+    "dev": "node dist/src/server.js"
   },
   "keywords": [],
   "author": "",

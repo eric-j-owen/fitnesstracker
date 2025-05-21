@@ -4,7 +4,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
+import type { Metric } from "./metric.entity.js";
 
 @Entity("users")
 export class User {
@@ -71,4 +73,8 @@ export class User {
     onUpdate: "CURRENT_TIMESTAMP",
   })
   updatedAt!: Date;
+
+  //relations
+  @OneToMany("Metric", (metric: Metric) => metric.user)
+  metrics!: Metric[];
 }
