@@ -7,23 +7,12 @@ import {
   OneToMany,
 } from "typeorm";
 import type { Metric } from "./metric.entity.js";
+import type { Macro } from "./macro.entity.js";
+import type { Workout } from "./workout.entity.js";
+import type { Exercise } from "./exercise.entity.js";
 
 @Entity("users")
 export class User {
-  /*
-   id serial primary key,
-        first_name text not null,
-        last_name text,
-        username text not null unique,
-        password_hash text not null,
-        avatar_url text,
-        user_role text check (user_role in ('basic', 'trainer')) default 'basic',
-        target_protein int,
-        target_carbs int,
-        target_fats int,
-        created_at timestamptz default current_timestamp,
-        updated_at timestamptz default current_timestamp
-  */
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -77,4 +66,13 @@ export class User {
   //relations
   @OneToMany("Metric", (metric: Metric) => metric.user)
   metrics!: Metric[];
+
+  @OneToMany("Macro", (macro: Macro) => macro.user)
+  macros!: Macro[];
+
+  @OneToMany("Workout", (workout: Workout) => workout.user)
+  workouts!: Workout[];
+
+  @OneToMany("Exercise", (exercise: Exercise) => exercise.user)
+  exercises!: Exercise[];
 }

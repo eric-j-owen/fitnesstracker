@@ -8,23 +8,30 @@ import {
 } from "typeorm";
 import type { User } from "./user.entity.js";
 
-@Entity("metrics")
-@Unique(["user", "date", "type"])
-export class Metric {
+@Entity("macros")
+@Unique(["user", "date"])
+export class Macro {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: "enum", enum: ["weight"] })
-  type!: "weight";
+  @Column({ type: "int" })
+  calories!: number;
 
-  @Column({ type: "decimal", precision: 6, scale: 2 })
-  val!: number;
+  @Column({ type: "int" })
+  protein!: number;
+
+  @Column({ type: "int" })
+  carbs!: number;
+
+  @Column({ type: "int" })
+  fats!: number;
 
   @Column({ type: "date" })
   date!: Date;
 
   //relations
-  @ManyToOne("User", (user: User) => user.metrics, {
+
+  @ManyToOne("User", (user: User) => user.macros, {
     nullable: false,
     onDelete: "CASCADE",
   })

@@ -4,7 +4,7 @@ import request from "supertest";
 import { Client } from "pg";
 import { pgConnection } from "../src/db/config.js";
 import { UserSchema } from "../src/api/users/user.schemas.js";
-import { seedDatabase } from "../src/db/seeder.js";
+// import { seedDatabase } from "../src/db/seeder.js";
 
 describe("api tests", () => {
   const apiReq = request(`${process.env.TEST_URL}`);
@@ -17,12 +17,12 @@ describe("api tests", () => {
     });
 
     await client.connect();
-    await seedDatabase();
+    // await seedDatabase();
   });
 
   afterAll(async () => {
     // await client.query("truncate table users restart identity;");
-    await seedDatabase();
+    // await seedDatabase();
     await client.end();
   });
 

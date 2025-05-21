@@ -4,27 +4,22 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  Unique,
 } from "typeorm";
 import type { User } from "./user.entity.js";
 
-@Entity("metrics")
-@Unique(["user", "date", "type"])
-export class Metric {
+@Entity("workouts")
+export class Workout {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: "enum", enum: ["weight"] })
-  type!: "weight";
+  @Column({ name: "workout_name", type: "text" })
+  workoutName!: string;
 
-  @Column({ type: "decimal", precision: 6, scale: 2 })
-  val!: number;
-
-  @Column({ type: "date" })
-  date!: Date;
+  @Column({ type: "text", array: true, default: "{}" })
+  days!: string[];
 
   //relations
-  @ManyToOne("User", (user: User) => user.metrics, {
+  @ManyToOne("User", (user: User) => user.workouts, {
     nullable: false,
     onDelete: "CASCADE",
   })
