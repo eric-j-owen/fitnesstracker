@@ -3,14 +3,19 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import type { User } from "./user.entity.js";
+import type { WorkoutExercisesLink } from "./workoutExerciseLink.entity.js";
 
 @Entity("workouts")
 export class Workout {
   @PrimaryGeneratedColumn()
   id!: number;
+
+  @Column({ name: "user_id" })
+  userId!: number;
 
   @Column({ name: "workout_name", type: "text" })
   workoutName!: string;
@@ -25,5 +30,10 @@ export class Workout {
   })
   @JoinColumn({ name: "user_id" })
   user!: User;
-  userId!: number;
+
+  @OneToMany(
+    "WorkoutExercisesLink",
+    (workoutExercisesLink: WorkoutExercisesLink) => workoutExercisesLink.workout
+  )
+  workoutExerciseLinks!: WorkoutExercisesLink[];
 }

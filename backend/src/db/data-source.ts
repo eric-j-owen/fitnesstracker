@@ -19,6 +19,7 @@ export const dataSourceOptions: DataSourceOptions = {
     entities.Macro,
     entities.Workout,
     entities.Exercise,
+    entities.WorkoutExercisesLink,
   ],
 };
 
