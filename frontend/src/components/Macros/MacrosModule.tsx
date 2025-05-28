@@ -7,7 +7,7 @@ import MacrosChart from "./MacrosChart";
 import MacroProgressBars from "./MacroProgressBars";
 import { UnauthorizedError } from "../../api/errors";
 
-function MacrosDisplay() {
+function MacrosModule() {
   const modalRef = useRef<HTMLDialogElement>(null);
   const { macros, isLoadingQuery, isErrorQuery } = useMacros();
   const { user } = useAuth();
@@ -44,4 +44,4 @@ function MacrosDisplay() {
   );
 }
 
-export default MacrosDisplay;
+export default MacrosModule;

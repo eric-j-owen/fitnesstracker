@@ -1,10 +1,11 @@
-import { query } from "../../db/index.js";
 import createHttpError from "http-errors";
 import argon2 from "argon2";
-
+import { User } from "../../db/entities/user.entity.js";
+import AppDataSource from "../../db/data-source.js";
 import type { RequestHandler } from "express";
 import type { RegisterUserBody, LoginUserBody } from "./auth.schemas.js";
-import type { User } from "../users/user.schemas.js";
+
+const userRepo = AppDataSource.getRepository(User);
 
 declare module "express-session" {
   interface SessionData {
@@ -21,22 +22,20 @@ export const registerUser: RequestHandler<
 
   try {
     const hash = await argon2.hash(passwordRaw);
-    const { rows } = await query(
-      `
-      insert into users(first_name, username, password_hash)
-      values($1, $2, $3)
-      returning id;  
-    `,
-      [firstName, username, hash]
-    );
+    const user = userRepo.create({
+      firstName,
+      username,
+      passwordHash: hash,
+    });
 
-    const user: User = rows[0];
+    const savedUser = await userRepo.save(user);
+
     req.session.regenerate((err) => {
       if (err) return next(err);
-      req.session.userId = user.id;
+      req.session.userId = savedUser.id;
       req.session.save((err) => {
         if (err) return next(err);
-        res.status(200).json(user.id);
+        res.status(200).json(savedUser.id);
       });
     });
   } catch (error) {
@@ -52,18 +51,20 @@ export const loginUser: RequestHandler<
   const { username, passwordRaw } = req.body;
 
   try {
-    const { rows } = await query(
-      `
-      select id, username, first_name, password_hash from users where username = $1
-      `,
-      [username]
-    );
+    //find user by username
+    const user = await userRepo.findOne({
+      where: { username },
+      select: ["id", "username", "firstName", "passwordHash"],
+    });
 
-    const user: User = rows[0];
-    if (!user) throw createHttpError(401, "invalid credentials");
+    if (!user) {
+      throw createHttpError(401, "invalid credentials");
+    }
 
-    const isValid = await argon2.verify(user.password_hash, passwordRaw);
+    //verify pass
+    const isValid = await argon2.verify(user.passwordHash, passwordRaw);
 
+    //create session
     if (isValid && user.username) {
       req.session.regenerate((err) => {
         if (err) return next(err);
@@ -99,32 +100,24 @@ export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
   }
 
   try {
-    const { rows } = await query(
-      `select id, first_name, last_name, username, target_protein, target_carbs, target_fats 
-      from users where id = $1`,
-      [req.session.userId]
-    );
+    const user = await userRepo.findOne({
+      where: { id: req.session.userId },
+      select: [
+        "id",
+        "firstName",
+        "lastName",
+        "username",
+        "targetProtein",
+        "targetCarbs",
+        "targetFats",
+      ],
+    });
 
-    if (!rows?.[0]) {
+    if (!user) {
       throw createHttpError(404, "User not found");
     }
 
-    const user = rows[0];
-
-    const parsedUser = {
-      firstName: user.first_name,
-      lastName: user.last_name,
-      targetProtein: user.target_protein,
-      targetCarbs: user.target_carbs,
-      targetFats: user.target_fats,
-      ...user,
-    };
-
-    if (!parsedUser) {
-      throw createHttpError(401, "Unauthorized");
-    }
-
-    res.status(200).json(parsedUser);
+    res.status(200).json(user);
   } catch (error) {
     next(error);
   }

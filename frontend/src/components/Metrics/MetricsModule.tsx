@@ -4,7 +4,7 @@ import MetricsForm from "./MetricsForm";
 import { MetricsLineChart } from "./MetricsLineChart";
 import Modal from "../Modal";
 
-function MetricsDisplay() {
+function MetricsModule() {
   const { metrics, isLoadingQuery, isErrorQuery } = useMetrics();
   const metricModalRef = useRef<HTMLDialogElement>(null);
 
@@ -29,4 +29,4 @@ function MetricsDisplay() {
   );
 }
 
-export default MetricsDisplay;
+export default MetricsModule;

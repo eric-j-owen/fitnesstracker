@@ -6,9 +6,7 @@
   "scripts": {
     "test": "vitest",
     "build": "tsc",
-    "dev": "node dist/src/server.js",
-    "migrate": "node dist/src/db/migrations.js",
-    "seed": "node dist/src/db/seeder.js"
+    "dev": "node dist/src/server.js"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +24,8 @@
     "morgan": "^1.10.0",
     "pg": "^8.13.3",
     "redis": "^4.7.0",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.24",
     "zod": "^3.24.2"
   },
   "devDependencies": {

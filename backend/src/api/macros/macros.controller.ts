@@ -1,25 +1,22 @@
 import type { RequestHandler } from "express";
-import { query } from "../../db/index.js";
-import createHttpError from "http-errors";
 import type { LogMacrosBodyType } from "./macros.routes.js";
+import AppDataSource from "../../db/data-source.js";
+import { Macro } from "../../db/entities/macro.entity.js";
+
+const macrosRepo = AppDataSource.getRepository(Macro);
 
 export const getMacrosLogs: RequestHandler = async (req, res, next) => {
-  const id = req.session.userId;
+  const userId = req.session.userId;
 
   try {
-    const { rows } = await query(
-      `
-        select * from (
-            select * from macros 
-            where user_id = $1 
-            order by date desc 
-            limit 5
-          ) as recent_macros
-        order by date asc;`,
-      [id]
-    );
+    const result = await macrosRepo
+      .createQueryBuilder("macros")
+      .where("macros.userId = :userId", { userId })
+      .orderBy("macros.date", "ASC")
+      .limit(5)
+      .getMany();
 
-    res.status(200).json(rows);
+    res.status(200).json(result);
   } catch (err) {
     next(err);
   }
@@ -30,26 +27,26 @@ export const logMacros: RequestHandler<
   unknown,
   LogMacrosBodyType
 > = async (req, res, next) => {
-  const id = req.session.userId;
+  const userId = req.session.userId;
   const { calories, protein, carbs, fats, date } = req.body;
 
   try {
-    const { rows } = await query(
-      `
-        insert into macros 
-            (user_id, calories, protein, carbs, fats, date) 
-        values ($1, $2, $3, $4, $5, $6)
-        on conflict (user_id, date) 
-        do update set 
-            calories = excluded.calories,
-            protein = excluded.protein,
-            carbs = excluded.carbs,
-            fats = excluded.fats 
-        returning *;`,
-      [id, calories, protein, carbs, fats, date]
-    );
+    const result = await macrosRepo
+      .createQueryBuilder()
+      .insert()
+      .into("macros")
+      .values({
+        userId,
+        calories,
+        protein,
+        carbs,
+        fats,
+        date: date,
+      })
+      .orUpdate(["calories", "protein", "carbs", "fats"], ["user_id", "date"])
+      .execute();
 
-    res.status(201).json(rows[0]);
+    res.status(201).json(result);
   } catch (error) {
     next(error);
   }

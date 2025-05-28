@@ -34,7 +34,7 @@ export default function Navbar() {
                 </div>
                 <ul
                   tabIndex={0}
-                  className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                  className="dropdown-content menu bg-base-300 rounded-box z-1 w-52 p-2 shadow-lg "
                 >
                   <li>
                     <Link to="/settings">Settings</Link>

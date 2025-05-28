@@ -32,8 +32,11 @@ export function FormField({
   return (
     <div className="form-control w-full mb-4">
       {showLabel && (
-        <label htmlFor={field.name} className="block text-sm font-medium mb-1">
-          {label}
+        <label
+          htmlFor={field.name}
+          className="label block text-sm font-medium mb-1"
+        >
+          <span className="label-text">{label}</span>
         </label>
       )}
       <div className="w-full">

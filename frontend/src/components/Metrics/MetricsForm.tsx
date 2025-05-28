@@ -7,13 +7,13 @@ interface MetricsFormProps {
 }
 
 export default function MetricsForm({ modalRef }: MetricsFormProps) {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toLocaleDateString("en-CA");
   const { logMetrics } = useMetrics();
 
   const form = useAppForm({
     defaultValues: {
       date: today,
-      type: "Weight",
+      type: "weight",
       val: 0,
     },
 
@@ -45,11 +45,22 @@ export default function MetricsForm({ modalRef }: MetricsFormProps) {
           <field.FormField label="Date" type="date" showLabel={true} />
         )}
       />
-
       <form.AppField
         name="type"
         children={(field) => (
-          <field.FormField label="Type" type="text" showLabel={true} />
+          <div className="form-control w-full">
+            <label className="label">
+              <span className="label-text">Type</span>
+            </label>
+
+            <select
+              className="select select-bordered w-full"
+              value={field.state.value}
+              onChange={(e) => field.handleChange(e.target.value)}
+            >
+              <option value="weight">Weight</option>
+            </select>
+          </div>
         )}
       />
 
