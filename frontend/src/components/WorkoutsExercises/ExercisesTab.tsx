@@ -65,11 +65,11 @@ function ExercisesTab() {
             )}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-base-200">
           {filteredExercises && filteredExercises.length ? (
             filteredExercises.map((exercise) => {
               return (
-                <tr key={exercise.exerciseId} className="hover:bg-base-200">
+                <tr key={exercise.id} className="hover:bg-base-200">
                   <td>{exercise.exerciseName}</td>
                   <td>
                     <button
@@ -86,7 +86,7 @@ function ExercisesTab() {
                     </button>
                     <button
                       className="btn btn-ghost btn-sm text-error"
-                      onClick={() => deleteExercise(exercise.exerciseId)}
+                      onClick={() => deleteExercise(exercise.id)}
                     >
                       x
                     </button>
@@ -96,7 +96,10 @@ function ExercisesTab() {
             })
           ) : (
             <tr>
-              <td> No exercises added yet</td>
+              <td colSpan={3} className="text-center text-gray-400 italic">
+                {" "}
+                No exercises added yet
+              </td>
             </tr>
           )}
         </tbody>

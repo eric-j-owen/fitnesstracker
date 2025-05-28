@@ -36,6 +36,12 @@ function AddExerciseForm({ onComplete }: AddExerciseFormProps) {
               onChange={(e) => field.handleChange(e.target.value)}
               placeholder="Exercise name"
               autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  form.handleSubmit();
+                }
+              }}
             />
           )}
         />

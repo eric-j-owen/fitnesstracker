@@ -6,20 +6,20 @@ export interface ExerciseCreateBody {
 }
 
 interface ExerciseUpdateBody extends ExerciseCreateBody {
-  exerciseId: number;
+  id: number;
 }
 
 interface ExerciseResponse extends ExerciseCreateBody {
+  id: number;
   userId: number;
-  exerciseId: number;
 }
 
 export const getExercises = async (): Promise<ExerciseResponse[]> => {
   return await fetchData("/api/exercises");
 };
 
-export const deleteExercise = async (exerciseId: number): Promise<void> => {
-  return await fetchData(`/api/exercises/${exerciseId}`, {
+export const deleteExercise = async (id: number): Promise<void> => {
+  return await fetchData(`/api/exercises/${id}`, {
     method: "DELETE",
   });
 };
@@ -36,7 +36,7 @@ export const createExercise = async (
 export const updateExercise = async (
   body: ExerciseUpdateBody
 ): Promise<ExerciseResponse> => {
-  return await fetchData(`/api/exercises/${body.exerciseId}`, {
+  return await fetchData(`/api/exercises/${body.id}`, {
     method: "PATCH",
     body: JSON.stringify(body),
   });
