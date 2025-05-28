@@ -11,7 +11,20 @@
 
 import { Router } from "express";
 import * as controller from "./workouts.controller.js";
-// import { validate } from "../middlewares/validate.middleware";
+import { validate } from "../../middleware/validate.js";
+import { z } from "zod";
+
+const paramsSchema = z.object({
+  params: z.object({
+    id: z.string().regex(/^[1-9]\d*$/, "Invalid exercise id"),
+  }),
+});
+
+const workoutBodySchema = z.object({
+  body: z.object({}),
+});
+
+export type WorkoutParams = z.infer<typeof paramsSchema.shape.params>;
 
 const router = Router();
 

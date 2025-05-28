@@ -1,7 +1,6 @@
 import { Router } from "express";
 import * as Controller from "./metrics.controller.js";
 import { validate } from "../../middleware/validate.js";
-import { requireAuth } from "../../middleware/auth.js";
 import { z } from "zod";
 
 const router = Router();
@@ -19,7 +18,7 @@ const logMetricSchema = z.object({
 
 export type LogMetricSchema = z.infer<typeof logMetricSchema.shape.body>;
 
-router.get("/", requireAuth, Controller.getMetrics);
-router.post("/", requireAuth, validate(logMetricSchema), Controller.logMetrics);
+router.get("/", Controller.getMetrics);
+router.post("/", validate(logMetricSchema), Controller.logMetrics);
 
 export default router;

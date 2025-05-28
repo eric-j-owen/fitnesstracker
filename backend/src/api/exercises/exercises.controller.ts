@@ -30,17 +30,14 @@ export const createExercise: RequestHandler<
   const { exerciseName, exerciseType } = req.body;
 
   try {
-    const result = await exercisesRepo
-      .createQueryBuilder()
-      .insert()
-      .into("exercises")
-      .values({
-        userId,
-        exerciseName,
-        exerciseTag: exerciseType,
-      })
-      .execute();
-    res.status(201).json(result);
+    const exercise = exercisesRepo.create({
+      userId,
+      exerciseName,
+      exerciseTag: exerciseType,
+    });
+
+    const { id } = await exercisesRepo.save(exercise);
+    res.status(201).json({ id });
   } catch (error) {
     next(error);
   }
@@ -50,10 +47,7 @@ export const getExercises: RequestHandler = async (req, res, next) => {
   const userId = req.session.userId;
 
   try {
-    const result = await exercisesRepo
-      .createQueryBuilder("exercises")
-      .where("exercises.userId = :userId", { userId })
-      .getMany();
+    const result = await exercisesRepo.find({ where: { userId } });
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -80,7 +74,7 @@ export const updateExercise: RequestHandler<
       .where("id = :id AND userId = :userId", { id, userId })
       .execute();
 
-    if (!result.affected) {
+    if (result.affected === 0) {
       res.status(404).json({ message: "Exercise not found" });
     }
 
@@ -96,17 +90,12 @@ export const deleteExercise: RequestHandler<ExerciseParams> = async (
   next
 ) => {
   const userId = req.session.userId;
-  const { id } = req.params;
+  const id = parseInt(req.params.id);
 
   try {
-    const result = await exercisesRepo
-      .createQueryBuilder()
-      .delete()
-      .from("exercises")
-      .where("id = :id AND userId = :userId", { id, userId })
-      .execute();
-
-    if (!result.affected) {
+    const result = await exercisesRepo.delete({ id, userId });
+    console.log(result);
+    if (result.affected === 0) {
       throw createHttpError(404, "Exercise not found");
     }
 

@@ -13,10 +13,10 @@ export default function mountRoutes(app: Express) {
     res.sendStatus(200);
   });
 
-  app.use("/api/users", userRouter);
+  app.use("/api/users", requireAuth, userRouter);
   app.use("/api/auth", authRouter);
-  app.use("/api/macros", macrosRouter);
-  app.use("/api/metrics", metricsRouter);
+  app.use("/api/macros", requireAuth, macrosRouter);
+  app.use("/api/metrics", requireAuth, metricsRouter);
   app.use("/api/exercises", requireAuth, exerciseRouter);
   app.use("/api/workouts", requireAuth, workoutRouter);
 
