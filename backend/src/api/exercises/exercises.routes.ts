@@ -12,10 +12,10 @@ const router = Router();
 router.get("/", controller.getExercises);
 router.post(
   "/",
-  validate(controller.exerciseBodychema),
+  validate(controller.exerciseBodySchema),
   controller.createExercise
 );
-router.patch("/:exerciseId", controller.updateExercise);
-router.delete("/:exerciseId", controller.deleteExercise);
+router.patch("/:id", controller.updateExercise);
+router.delete("/:id", controller.deleteExercise);
 
 export default router;
