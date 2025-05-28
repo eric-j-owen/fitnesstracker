@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import type { UpdateUserBody, UserRequestParams } from "./user.schemas.js";
+import type { IdParam, UpdateUserBody } from "../../types/index.js";
 import createHttpError from "http-errors";
 import AppDataSource from "../../db/data-source.js";
 import { User } from "../../db/entities/user.entity.js";
@@ -21,7 +21,7 @@ export const deleteUser: RequestHandler = async (req, res, next) => {
 };
 
 export const updateUser: RequestHandler<
-  UserRequestParams,
+  IdParam,
   unknown,
   UpdateUserBody,
   unknown

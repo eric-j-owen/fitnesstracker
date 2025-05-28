@@ -3,10 +3,11 @@ import argon2 from "argon2";
 import { User } from "../../db/entities/user.entity.js";
 import AppDataSource from "../../db/data-source.js";
 import type { RequestHandler } from "express";
-import type { RegisterUserBody, LoginUserBody } from "./auth.schemas.js";
+import type { RegisterUserBody, LoginUserBody } from "../../types/index.js";
 
 const userRepo = AppDataSource.getRepository(User);
 
+// extend Express session to include userId
 declare module "express-session" {
   interface SessionData {
     userId?: number;

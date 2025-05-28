@@ -1,6 +1,7 @@
 import { Router } from "express";
 import * as controller from "./exercises.controller.js";
 import { validate } from "../../middleware/validate.js";
+import { exerciseBodySchema, idParamSchema } from "../../schemas/index.js";
 
 // GET    /exercises
 // POST   /exercises
@@ -10,12 +11,9 @@ import { validate } from "../../middleware/validate.js";
 const router = Router();
 
 router.get("/", controller.getExercises);
-router.post(
-  "/",
-  validate(controller.exerciseBodySchema),
-  controller.createExercise
-);
-router.patch("/:id", controller.updateExercise);
-router.delete("/:id", controller.deleteExercise);
+router.post("/", validate(exerciseBodySchema), controller.createExercise);
+
+router.patch("/:id", validate(idParamSchema), controller.updateExercise);
+router.delete("/:id", validate(idParamSchema), controller.deleteExercise);
 
 export default router;

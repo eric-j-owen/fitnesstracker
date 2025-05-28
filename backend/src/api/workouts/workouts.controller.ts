@@ -3,7 +3,7 @@ import createHttpError from "http-errors";
 import AppDataSource from "../../db/data-source.js";
 import { Workout } from "../../db/entities/workout.entity.js";
 import { WorkoutExercisesLink } from "../../db/entities/workoutExerciseLink.entity.js";
-import type { WorkoutParams } from "./workouts.routes.js";
+import type { IdParam } from "../../types/index.js";
 
 const workoutRepository = AppDataSource.getRepository(Workout);
 const workoutExerciseLinkRepository =
@@ -36,7 +36,7 @@ export const createWorkout: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const addExerciseToWorkout: RequestHandler<WorkoutParams> = async (
+export const addExerciseToWorkout: RequestHandler<IdParam> = async (
   req,
   res,
   next
@@ -45,8 +45,6 @@ export const addExerciseToWorkout: RequestHandler<WorkoutParams> = async (
 
   const workoutId = parseInt(req.params.id);
   const { exerciseId, sets, reps, weight, duration, distance } = req.body;
-
-  if (!workoutId) throw createHttpError(400, "no wid");
 
   try {
     const checkWorkoutExists = await workoutRepository.exists({

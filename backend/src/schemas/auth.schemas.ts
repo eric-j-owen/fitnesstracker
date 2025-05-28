@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { UserSchema } from "../users/user.schemas.js";
+import { UserSchema } from "./user.schemas.js";
 
 export const registerUserSchema = z.object({
   body: z.object({
@@ -16,6 +16,3 @@ export const LoginSchema = z.object({
     passwordRaw: z.string().max(255).trim().min(1),
   }),
 });
-
-export type RegisterUserBody = z.infer<typeof registerUserSchema.shape.body>;
-export type LoginUserBody = z.infer<typeof LoginSchema.shape.body>;

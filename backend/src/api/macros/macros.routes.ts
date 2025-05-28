@@ -2,24 +2,12 @@ import { Router } from "express";
 import * as Controller from "./macros.controller.js";
 import { validate } from "../../middleware/validate.js";
 import { requireAuth } from "../../middleware/auth.js";
-import { date, z } from "zod";
+import { logMacrosBodySchema } from "../../schemas/index.js";
 
 const router = Router();
 
 // POST /api/macros
 // GET  /api/macros
-
-const logMacrosBodySchema = z.object({
-  body: z.object({
-    calories: z.coerce.number().min(0).max(20000),
-    protein: z.coerce.number().min(0).max(20000),
-    carbs: z.coerce.number().min(0).max(20000),
-    fats: z.coerce.number().min(0).max(20000),
-    date: z.string().optional(),
-  }),
-});
-
-export type LogMacrosBodyType = z.infer<typeof logMacrosBodySchema.shape.body>;
 
 router.get("/", requireAuth, Controller.getMacrosLogs);
 router.post(
