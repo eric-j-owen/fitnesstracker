@@ -7,13 +7,13 @@ interface MetricsFormProps {
 }
 
 export default function MetricsForm({ modalRef }: MetricsFormProps) {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date().toLocaleDateString("en-CA");
   const { logMetrics } = useMetrics();
 
   const form = useAppForm({
     defaultValues: {
       date: today,
-      type: "Weight",
+      type: "weight",
       val: 0,
     },
 
