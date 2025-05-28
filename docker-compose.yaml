@@ -8,17 +8,9 @@ services:
     restart: always
     shm_size: 128mb
     volumes:
-      - workout_tracker_db_volume:/var/lib/postgresql/data
+      - fitness_tracker_db_volume:/var/lib/postgresql/data
     ports:
       - 5432:5432
-
-  adminer:
-    image: adminer
-    restart: always
-    depends_on:
-      - db
-    ports:
-      - 8080:8080
   redis:
     image: redis:7.2-alpine
     restart: always
@@ -66,4 +58,4 @@ services:
   #           - .git/
 
 volumes:
-  workout_tracker_db_volume:
+  fitness_tracker_db_volume:
