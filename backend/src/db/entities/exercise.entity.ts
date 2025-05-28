@@ -1,11 +1,3 @@
-// "create-exercises-table",
-//   `create table if not exists exercises (
-//       id serial primary key,
-//       user_id int not null references users(id) on delete cascade,
-//       exercise_name text not null,
-//       exercise_type text not null check (exercise_type in ('strength', 'cardio'))
-//     );`;
-
 import {
   Column,
   Entity,

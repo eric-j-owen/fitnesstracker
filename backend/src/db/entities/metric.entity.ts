@@ -14,6 +14,9 @@ export class Metric {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @Column({ name: "user_id" })
+  userId!: number;
+
   @Column({ type: "enum", enum: ["weight"] })
   type!: "weight";
 
@@ -21,7 +24,7 @@ export class Metric {
   val!: number;
 
   @Column({ type: "date" })
-  date!: Date;
+  date!: string;
 
   //relations
   @ManyToOne("User", (user: User) => user.metrics, {
@@ -30,5 +33,4 @@ export class Metric {
   })
   @JoinColumn({ name: "user_id" })
   user!: User;
-  userId!: number;
 }

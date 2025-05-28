@@ -11,7 +11,7 @@ const router = Router();
 
 const logMetricSchema = z.object({
   body: z.object({
-    type: z.enum(["Weight"]),
+    type: z.enum(["weight"]),
     val: z.number().min(0),
     date: z.string(),
   }),
