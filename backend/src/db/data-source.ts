@@ -1,16 +1,15 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import type { DataSourceOptions } from "typeorm";
-import { pgConnection } from "./config.js";
 import * as entities from "./entities/_index.js";
 
 export const dataSourceOptions: DataSourceOptions = {
   type: "postgres",
-  host: pgConnection.host,
-  port: pgConnection.port,
-  username: pgConnection.user,
-  password: pgConnection.password,
-  database: pgConnection.database,
+  host: process.env.POSTGRES_HOST,
+  port: Number(process.env.POSTGRES_PORT),
+  username: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DB,
   synchronize: true,
   logging: true,
   entities: [

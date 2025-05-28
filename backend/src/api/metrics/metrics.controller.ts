@@ -1,10 +1,7 @@
 import type { RequestHandler } from "express";
-import { query } from "../../db/index.js";
-import createHttpError from "http-errors";
 import type { LogMetricSchema } from "./metrics.routes.js";
 import AppDataSource from "../../db/data-source.js";
 import { Metric } from "../../db/entities/metric.entity.js";
-import { createQueryBuilder } from "typeorm";
 
 const metricsRepo = AppDataSource.getRepository(Metric);
 

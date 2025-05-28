@@ -9,7 +9,7 @@ import {
 import type { User } from "./user.entity.js";
 
 @Entity("metrics")
-@Unique(["user", "date", "type"])
+@Unique(["userId", "date", "type"])
 export class Metric {
   @PrimaryGeneratedColumn()
   id!: number;

@@ -9,10 +9,13 @@ import {
 import type { User } from "./user.entity.js";
 
 @Entity("macros")
-@Unique(["user", "date"])
+@Unique(["userId", "date"])
 export class Macro {
   @PrimaryGeneratedColumn()
   id!: number;
+
+  @Column({ name: "user_id" })
+  userId!: number;
 
   @Column({ type: "int" })
   calories!: number;
@@ -37,5 +40,4 @@ export class Macro {
   })
   @JoinColumn({ name: "user_id" })
   user!: User;
-  userId!: number;
 }
