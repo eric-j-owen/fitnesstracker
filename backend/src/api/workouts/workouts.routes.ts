@@ -12,26 +12,14 @@
 import { Router } from "express";
 import * as controller from "./workouts.controller.js";
 import { validate } from "../../middleware/validate.js";
-import { z } from "zod";
-
-const paramsSchema = z.object({
-  params: z.object({
-    id: z.string().regex(/^[1-9]\d*$/, "Invalid exercise id"),
-  }),
-});
-
-const workoutBodySchema = z.object({
-  body: z.object({}),
-});
-
-export type WorkoutParams = z.infer<typeof paramsSchema.shape.params>;
+import { idParamSchema } from "../../schemas/api.schemas.js";
 
 const router = Router();
 
 router.get("/", controller.getWorkouts);
 router.post("/", controller.createWorkout);
 
-router.get("/:wid");
+router.get("/:wid", validate(idParamSchema));
 router.patch("/:wid");
 router.delete("/:wid");
 

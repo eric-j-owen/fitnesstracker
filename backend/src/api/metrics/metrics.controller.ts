@@ -1,7 +1,7 @@
 import type { RequestHandler } from "express";
-import type { LogMetricSchema } from "./metrics.routes.js";
 import AppDataSource from "../../db/data-source.js";
 import { Metric } from "../../db/entities/metric.entity.js";
+import type { LogMetric } from "../../schemas/api.types.js";
 
 const metricsRepo = AppDataSource.getRepository(Metric);
 
@@ -21,11 +21,11 @@ export const getMetrics: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const logMetrics: RequestHandler<
-  unknown,
-  unknown,
-  LogMetricSchema
-> = async (req, res, next) => {
+export const logMetrics: RequestHandler<unknown, unknown, LogMetric> = async (
+  req,
+  res,
+  next
+) => {
   const userId = req.session.userId;
   const { type, val, date } = req.body;
   console.log(date);

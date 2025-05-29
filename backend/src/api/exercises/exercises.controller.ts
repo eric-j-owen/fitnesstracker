@@ -1,26 +1,11 @@
 import type { RequestHandler } from "express";
-import { z } from "zod";
 import createHttpError from "http-errors";
 import AppDataSource from "../../db/data-source.js";
 import { Exercise } from "../../db/entities/exercise.entity.js";
-
-const exerciseParamsSchema = z.object({
-  params: z.object({
-    id: z.string().regex(/^[1-9]\d*$/, "Invalid exercise id"),
-  }),
-});
-
-export const exerciseBodySchema = z.object({
-  body: z.object({
-    exerciseName: z.string(),
-    exerciseType: z.string(),
-  }),
-});
-
-type ExerciseParams = z.infer<typeof exerciseParamsSchema.shape.params>;
-type ExerciseBody = z.infer<typeof exerciseBodySchema.shape.body>;
+import type { ExerciseBody, IdParam } from "../../schemas/api.types.js";
 
 const exercisesRepo = AppDataSource.getRepository(Exercise);
+
 export const createExercise: RequestHandler<
   unknown,
   unknown,
@@ -55,7 +40,7 @@ export const getExercises: RequestHandler = async (req, res, next) => {
 };
 
 export const updateExercise: RequestHandler<
-  ExerciseParams,
+  IdParam,
   unknown,
   ExerciseBody
 > = async (req, res, next) => {
@@ -84,7 +69,7 @@ export const updateExercise: RequestHandler<
   }
 };
 
-export const deleteExercise: RequestHandler<ExerciseParams> = async (
+export const deleteExercise: RequestHandler<IdParam> = async (
   req,
   res,
   next

@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import type { LogMacrosBodyType } from "./macros.routes.js";
+import type { LogMacrosBody } from "../../schemas/api.types.js";
 import AppDataSource from "../../db/data-source.js";
 import { Macro } from "../../db/entities/macro.entity.js";
 
@@ -25,7 +25,7 @@ export const getMacrosLogs: RequestHandler = async (req, res, next) => {
 export const logMacros: RequestHandler<
   unknown,
   unknown,
-  LogMacrosBodyType
+  LogMacrosBody
 > = async (req, res, next) => {
   const userId = req.session.userId;
   const { calories, protein, carbs, fats, date } = req.body;
