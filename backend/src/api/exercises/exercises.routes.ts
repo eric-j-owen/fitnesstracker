@@ -1,7 +1,10 @@
 import { Router } from "express";
 import * as controller from "./exercises.controller.js";
 import { validate } from "../../middleware/validate.js";
-import { exerciseBodySchema, idParamSchema } from "../../schemas/index.js";
+import {
+  exerciseBodySchema,
+  idParamSchema,
+} from "../../schemas/api.schemas.js";
 
 // GET    /exercises
 // POST   /exercises

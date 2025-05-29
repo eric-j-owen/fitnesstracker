@@ -2,7 +2,7 @@ import type { RequestHandler } from "express";
 import createHttpError from "http-errors";
 import AppDataSource from "../../db/data-source.js";
 import { Exercise } from "../../db/entities/exercise.entity.js";
-import type { ExerciseBody, IdParam } from "../../types/index.js";
+import type { ExerciseBody, IdParam } from "../../schemas/api.types.js";
 
 const exercisesRepo = AppDataSource.getRepository(Exercise);
 

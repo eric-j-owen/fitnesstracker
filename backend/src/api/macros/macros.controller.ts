@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import type { LogMacrosBody } from "../../types/index.js";
+import type { LogMacrosBody } from "../../schemas/api.types.js";
 import AppDataSource from "../../db/data-source.js";
 import { Macro } from "../../db/entities/macro.entity.js";
 

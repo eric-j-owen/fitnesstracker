@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import type { IdParam, UpdateUserBody } from "../../types/index.js";
+import type { IdParam, UpdateUserBody } from "../../schemas/api.types.js";
 import createHttpError from "http-errors";
 import AppDataSource from "../../db/data-source.js";
 import { User } from "../../db/entities/user.entity.js";
@@ -11,7 +11,7 @@ export const deleteUser: RequestHandler = async (req, res, next) => {
   try {
     const result = await userRepo.delete({ id });
 
-    if (!result.affected) {
+    if (result.affected === 0) {
       throw createHttpError(404, "Not found.");
     }
     res.sendStatus(204);
@@ -29,7 +29,7 @@ export const updateUser: RequestHandler<
   const id = req.session.userId;
 
   try {
-    const existingUser = await userRepo.findOne({ where: { id } });
+    const existingUser = await userRepo.exists({ where: { id } });
     if (!existingUser) {
       throw createHttpError(404, "Not found.");
     }

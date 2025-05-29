@@ -12,7 +12,7 @@
 import { Router } from "express";
 import * as controller from "./workouts.controller.js";
 import { validate } from "../../middleware/validate.js";
-import { idParamSchema } from "../../schemas/index.js";
+import { idParamSchema } from "../../schemas/api.schemas.js";
 
 const router = Router();
 

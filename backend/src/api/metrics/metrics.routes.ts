@@ -1,7 +1,7 @@
 import { Router } from "express";
 import * as Controller from "./metrics.controller.js";
 import { validate } from "../../middleware/validate.js";
-import { logMetricSchema } from "../../schemas/index.js";
+import { logMetricSchema } from "../../schemas/api.schemas.js";
 
 const router = Router();
 

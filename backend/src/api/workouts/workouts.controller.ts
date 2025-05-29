@@ -3,7 +3,7 @@ import createHttpError from "http-errors";
 import AppDataSource from "../../db/data-source.js";
 import { Workout } from "../../db/entities/workout.entity.js";
 import { WorkoutExercisesLink } from "../../db/entities/workoutExerciseLink.entity.js";
-import type { IdParam } from "../../types/index.js";
+import type { IdParam } from "../../schemas/api.types.js";
 
 const workoutRepository = AppDataSource.getRepository(Workout);
 const workoutExerciseLinkRepository =

@@ -3,7 +3,10 @@ import argon2 from "argon2";
 import { User } from "../../db/entities/user.entity.js";
 import AppDataSource from "../../db/data-source.js";
 import type { RequestHandler } from "express";
-import type { RegisterUserBody, LoginUserBody } from "../../types/index.js";
+import type {
+  RegisterUserBody,
+  LoginUserBody,
+} from "../../schemas/api.types.js";
 
 const userRepo = AppDataSource.getRepository(User);
 
