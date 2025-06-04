@@ -5,9 +5,9 @@ import { CiEdit } from "react-icons/ci";
 import Modal from "../Modal";
 
 function WorkoutsTab() {
-  const { workouts } = useWorkouts();
+  const { workouts, deleteWorkout } = useWorkouts();
   const workoutModelRef = useRef<HTMLDialogElement>(null);
-
+  console.log(workouts);
   return (
     <div className="h-100 overflow-x-auto">
       <div className="flex justify-end">
@@ -20,24 +20,15 @@ function WorkoutsTab() {
         </Modal>
       </div>
       <table className="table table-pin-rows table-pin-cols table-fixed ">
-        {workouts && (
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-        )}
-
         <tbody>
           {workouts && workouts.length ? (
             workouts.map((workout) => {
               return (
                 <tr
-                  key={workout.workoutId}
+                  key={workout.id}
                   className="hover:bg-base-200 cursor-pointer"
                 >
-                  <td>{workout.workoutName}</td>
+                  <td>{workout.name}</td>
                   <td className="flex gap-2">
                     <button
                       className="btn btn-ghost btn-sm"
@@ -47,7 +38,7 @@ function WorkoutsTab() {
                     </button>
                     <button
                       className="btn btn-ghost btn-sm text-error"
-                      onClick={() => console.log("delete workout")}
+                      onClick={() => deleteWorkout(workout.id)}
                     >
                       x
                     </button>

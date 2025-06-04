@@ -2,7 +2,7 @@ import { UnauthorizedError } from "./errors";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-export const fetchData = async <T>(
+export const fetchClient = async <T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<T> => {

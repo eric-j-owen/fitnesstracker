@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getMetricsLogs, logMetrics } from "./metrics.api";
 import toast from "react-hot-toast";
-import { MetricsFormData } from "../schemas";
+import { MetricsFormData } from "../api.schemas";
 
 export const useMetrics = () => {
   const queryClient = useQueryClient();

@@ -1,7 +1,7 @@
 import type { RequestHandler } from "express";
 import AppDataSource from "../../db/data-source.js";
 import { Metric } from "../../db/entities/metric.entity.js";
-import type { LogMetric } from "../../schemas/api.types.js";
+import type { LogMetric } from "../api.types.js";
 
 const metricsRepo = AppDataSource.getRepository(Metric);
 

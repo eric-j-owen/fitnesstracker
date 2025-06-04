@@ -1,4 +1,4 @@
-import { registerUserSchema } from "../api/schemas";
+import { registerUserSchema } from "../api/api.schemas";
 import { useAuth } from "../api/auth/useAuth";
 import { useAppForm } from "./Form/form-context";
 

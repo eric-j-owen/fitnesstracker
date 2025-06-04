@@ -3,9 +3,10 @@ import createHttpError from "http-errors";
 import AppDataSource from "../../db/data-source.js";
 import { Workout } from "../../db/entities/workout.entity.js";
 import { WorkoutExercisesLink } from "../../db/entities/workoutExerciseLink.entity.js";
-import type { IdParam } from "../../schemas/api.types.js";
+import type { IdParam } from "../api.types.js";
 
 const workoutRepository = AppDataSource.getRepository(Workout);
+
 const workoutExerciseLinkRepository =
   AppDataSource.getRepository(WorkoutExercisesLink);
 
@@ -31,6 +32,25 @@ export const createWorkout: RequestHandler = async (req, res, next) => {
 
     const { id } = await workoutRepository.save(workout);
     res.status(201).json({ id });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteWorkout: RequestHandler<IdParam> = async (
+  req,
+  res,
+  next
+) => {
+  const userId = req.session.userId;
+  const id = parseInt(req.params.id);
+  console.log(id);
+  try {
+    const result = await workoutRepository.delete({ userId, id });
+    if (result.affected === 0) {
+      throw createHttpError(404, "Workout not found");
+    }
+    res.status(200).json({ message: "Workout deleted successfully" });
   } catch (error) {
     next(error);
   }

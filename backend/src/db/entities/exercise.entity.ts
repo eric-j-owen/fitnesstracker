@@ -17,11 +17,11 @@ export class Exercise {
   @Column({ name: "user_id" })
   userId!: number;
 
-  @Column({ name: "exercise_name", type: "text" })
-  exerciseName!: string;
+  @Column({ type: "text" })
+  name!: string;
 
-  @Column({ name: "exercise_tag", type: "text" })
-  exerciseTag!: string;
+  @Column({ type: "text" })
+  tag!: string;
 
   //relations
   @ManyToOne("User", (user: User) => user.exercises, {

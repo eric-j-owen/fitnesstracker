@@ -9,7 +9,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { MetricsFormData } from "../../api/schemas";
+import { MetricsFormData } from "../../api/api.schemas";
 
 ChartJS.register(
   CategoryScale,

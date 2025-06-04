@@ -8,46 +8,35 @@ function ExercisesTab() {
   const [isAddingExercise, setIsAddingExercise] = useState(false);
   const [currentFilter, setCurrentFilter] = useState<string | null>(null);
 
-  const exerciseTags = [
-    {
-      tag: "strength",
-      color: "bg-sky-400 ",
-    },
-    {
-      tag: "cardio",
-      color: "bg-green-600 ",
-    },
-  ];
-
-  const getTagColor = (type: string) => {
-    const tag = exerciseTags.find((obj) => obj.tag === type);
-    return tag?.color;
-  };
-
   const filteredExercises = currentFilter
-    ? exercises?.filter((exercise) => exercise.exerciseType === currentFilter)
+    ? exercises?.filter((exercise) => exercise.tag === currentFilter)
     : exercises;
 
   return (
     <div className="h-100 overflow-x-auto">
       <div className="flex gap-1 items-center mb-1">
-        <button
-          className={`${currentFilter === null ? "btn-active" : ""} btn btn-sm`}
-          onClick={() => setCurrentFilter(null)}
-        >
+        <button className={`btn`} onClick={() => setCurrentFilter(null)}>
           Reset
         </button>
-        {exerciseTags.map((tag) => (
-          <button
-            key={tag.tag}
-            className={`${currentFilter === tag.tag ? "btn-active" : ""} ${
-              tag.color
-            } btn btn-xs`}
-            onClick={() => setCurrentFilter(tag.tag)}
-          >
-            {tag.tag}
-          </button>
-        ))}
+        {exercises &&
+          exercises
+            .reduce((tags: string[], exercise) => {
+              if (!tags.includes(exercise.tag)) {
+                tags.push(exercise.tag);
+              }
+              return tags;
+            }, [])
+            .map((tag) => (
+              <button
+                key={tag}
+                className={`${
+                  currentFilter === tag ? "bg-teal-500" : ""
+                } btn btn-xs border-teal-500`}
+                onClick={() => setCurrentFilter(tag)}
+              >
+                {tag}
+              </button>
+            ))}
       </div>
       <table className="table table-pin-rows table-pin-cols table-fixed">
         <thead>
@@ -70,14 +59,13 @@ function ExercisesTab() {
             filteredExercises.map((exercise) => {
               return (
                 <tr key={exercise.id} className="hover:bg-base-200">
-                  <td>{exercise.exerciseName}</td>
+                  <td>{exercise.name}</td>
                   <td>
                     <button
-                      className={`px-2 py-1 rounded-full w-fit text-xs ${getTagColor(
-                        exercise.exerciseType
-                      )}`}
+                      className={`btn btn-xs border-teal-500`}
+                      onClick={() => setCurrentFilter(exercise.tag)}
                     >
-                      {exercise.exerciseType}
+                      {exercise.tag}
                     </button>
                   </td>
                   <td className="flex gap-2">
@@ -103,13 +91,6 @@ function ExercisesTab() {
             </tr>
           )}
         </tbody>
-        <tfoot>
-          <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Actions</th>
-          </tr>
-        </tfoot>
       </table>
     </div>
   );

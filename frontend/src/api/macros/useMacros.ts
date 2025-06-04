@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getMacrosLogs, logMacros } from "./macros.api";
 import toast from "react-hot-toast";
-import { MacrosFormData } from "../schemas";
+import { MacrosFormData } from "../api.schemas";
 
 export const useMacros = () => {
   const queryClient = useQueryClient();

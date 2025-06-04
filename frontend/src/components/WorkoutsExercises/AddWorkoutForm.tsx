@@ -1,78 +1,92 @@
 import { useWorkouts } from "../../api/workouts/useWorkouts";
-import { Exercise, workoutFormSchema } from "../../api/schemas";
+import { workoutFormSchema } from "../../api/api.schemas";
 import { useAppForm } from "../Form/form-context";
 
 interface AddWorkoutFormProps {
   modalRef: React.RefObject<HTMLDialogElement | null>;
 }
+
+const DAYS = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
 function AddWorkoutForm({ modalRef }: AddWorkoutFormProps) {
   const { createWorkout } = useWorkouts();
 
   const form = useAppForm({
     defaultValues: {
       workoutName: "",
-      days: "",
-      exercises: [] as Exercise[],
+      days: [] as string[],
     },
 
     validators: {
       onChange: workoutFormSchema,
     },
+
+    onSubmit: async ({ value }) => {
+      await createWorkout({
+        workoutName: value.workoutName,
+        days: value.days,
+      });
+      modalRef.current?.close();
+    },
   });
-  return <form></form>;
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+    >
+      <form.AppField
+        name="workoutName"
+        children={(field) => (
+          <field.FormField label="Workout Name" type="text" />
+        )}
+      />
+
+      <form.AppField
+        name="days"
+        children={(field) => (
+          <div>
+            <label>Days</label>
+            <div>
+              {DAYS.map((day) => (
+                <label key={day} className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    checked={field.state.value.includes(day)}
+                    onChange={(e) => {
+                      const currentDays = field.state.value;
+                      if (e.target.checked) {
+                        field.handleChange([...currentDays, day]);
+                      } else {
+                        field.handleChange(
+                          currentDays.filter((d) => d !== day)
+                        );
+                      }
+                    }}
+                  />
+                  <span className="text-sm">{day}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+      />
+
+      <form.AppForm>
+        <form.SubscribeButton label="Submit" />
+      </form.AppForm>
+    </form>
+  );
 }
 
 export default AddWorkoutForm;
-
-/*
-
-import React, { useState } from 'react';
-import { createFormHook } from '@tanstack/react-form';
-
-const { useAppForm } = createFormHook();
-
-const DynamicForm = () => {
-  const [fields, setFields] = useState([{ id: Date.now(), value: '' }]);
-  const form = useAppForm({
-    defaultValues: {
-      dynamicFields: fields,
-    },
-    onSubmit: (data) => {
-      console.log(data);
-    },
-  });
-
-  const addField = () => {
-    setFields([...fields, { id: Date.now(), value: '' }]);
-  };
-
-  const removeField = (id) => {
-    setFields(fields.filter(field => field.id !== id));
-  };
-
-  return (
-    <form onSubmit={form.handleSubmit}>
-      {fields.map((field) => (
-        <div key={field.id}>
-          <input
-            type="text"
-            value={field.value}
-            onChange={(e) => {
-              const newFields = fields.map(f => 
-                f.id === field.id ? { ...f, value: e.target.value } : f
-              );
-              setFields(newFields);
-            }}
-          />
-          <button type="button" onClick={() => removeField(field.id)}>Remove</button>
-        </div>
-      ))}
-      <button type="button" onClick={addField}>Add Field</button>
-      <button type="submit">Submit</button>
-    </form>
-  );
-};
-
-export default DynamicForm; 
-
-*/

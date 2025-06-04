@@ -1,5 +1,5 @@
 import { useMacros } from "../../api/macros/useMacros";
-import { macrosFormSchema } from "../../api/schemas";
+import { macrosFormSchema } from "../../api/api.schemas";
 import { useAppForm } from "../Form/form-context";
 
 interface MacroFormProps {

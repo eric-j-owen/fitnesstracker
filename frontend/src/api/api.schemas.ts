@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+//auth
 export const registerUserSchema = z
   .object({
     firstName: z.string().trim().min(1, "First name is required").max(255),
@@ -59,6 +60,7 @@ export const updatePasswordSchema = z
     }
   );
 
+//macros
 export const macrosFormSchema = z.object({
   calories: z.coerce.number().min(0).max(20000),
   protein: z.coerce.number().min(0).max(20000),
@@ -67,19 +69,23 @@ export const macrosFormSchema = z.object({
   date: z.string(),
 });
 
+//metrics
 export const metricsFormSchema = z.object({
   type: z.string(),
   val: z.coerce.number().positive().max(20000),
   date: z.string(),
 });
 
-export const exerciseFormSchema = z.object({
-  exerciseName: z.string().nonempty("Exercise name is required").max(255),
-  exerciseType: z.enum(["strength", "cardio"]),
+//exercises
+export const exerciseCreateSchema = z.object({
+  name: z.string().nonempty("Exercise name is required").max(255),
+  tag: z.string(),
 });
 
-const exerciseSchema = z.object({
-  exerciseId: z.string().nonempty(),
+export const exerciseSchema = z.object({
+  id: z.number(),
+  name: exerciseCreateSchema.shape.name,
+  tag: exerciseCreateSchema.shape.tag,
   sets: z.number().min(1, "Sets must be at least 1"),
   reps: z.number().min(1, "Reps must be at least 1"),
   weight: z.number().optional(),
@@ -87,17 +93,9 @@ const exerciseSchema = z.object({
   distance: z.number().optional(),
 });
 
+//workouts
 export const workoutFormSchema = z.object({
-  workoutName: z.string().nonempty("Workout name is required"),
-  days: z.string().nonempty("Days are required"),
-  exercises: z.array(exerciseSchema),
+  id: z.number(),
+  name: z.string().nonempty("Workout name is required"),
+  days: z.array(z.string()),
 });
-
-export type Exercise = z.infer<typeof exerciseSchema>;
-export type WorkoutFormValues = z.infer<typeof workoutFormSchema>;
-
-export type MetricsFormData = z.infer<typeof metricsFormSchema>;
-export type MacrosFormData = z.infer<typeof macrosFormSchema>;
-export type LoginUserData = z.infer<typeof loginUserSchema>;
-export type RegisterUserData = z.infer<typeof registerUserSchema>;
-export type AuthenticatedUser = z.infer<typeof authenticatedUserSchema>;

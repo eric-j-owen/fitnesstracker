@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import type * as s from "../schemas/index.js";
+import type * as s from "./api.schemas.js";
 
 export type IdParam = z.infer<typeof s.idParamSchema.shape.params>;
 

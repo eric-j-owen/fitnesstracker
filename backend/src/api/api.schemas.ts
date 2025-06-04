@@ -10,7 +10,7 @@ export const idParamSchema = z.object({
 //user
 export const UserSchema = z.object({
   id: z.number(),
-  firstName: z.string(),
+  firstName: z.string().min(1).max(255),
   lastName: z.string().optional(),
   username: z
     .string()
@@ -29,9 +29,9 @@ export const UpdateUserSchema = z.object({
     lastName: z.string().trim().max(255).optional(),
     username: UserSchema.shape.username.optional(),
     userRole: z.enum(["basic", "trainer"]).default("basic").optional(),
-    targetProtein: z.number().min(0).optional(),
-    targetCarbs: z.number().min(0).optional(),
-    targetFats: z.number().min(0).optional(),
+    targetProtein: z.number().min(0).max(20000).optional(),
+    targetCarbs: z.number().min(0).max(20000).optional(),
+    targetFats: z.number().min(0).max(20000).optional(),
   }),
 });
 
@@ -48,7 +48,7 @@ export const registerUserSchema = z.object({
 export const LoginSchema = z.object({
   body: z.object({
     username: UserSchema.shape.username,
-    passwordRaw: z.string().max(255).trim().min(1),
+    passwordRaw: z.string().max(255).min(1),
   }),
 });
 
@@ -67,7 +67,7 @@ export const logMacrosBodySchema = z.object({
 export const logMetricSchema = z.object({
   body: z.object({
     type: z.enum(["weight"]),
-    val: z.number().min(0),
+    val: z.number().min(0).max(20000),
     date: z.string(),
   }),
 });
@@ -75,12 +75,14 @@ export const logMetricSchema = z.object({
 //exercises
 export const exerciseBodySchema = z.object({
   body: z.object({
-    exerciseName: z.string(),
-    exerciseType: z.string(),
+    name: z.string().max(255),
+    tag: z.string().max(255),
   }),
 });
 
 //workouts
 export const workoutBodySchema = z.object({
-  body: z.object({}),
+  body: z.object({
+    workoutName: z.string().min(1).max(255),
+  }),
 });

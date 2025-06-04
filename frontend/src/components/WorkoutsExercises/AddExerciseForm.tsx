@@ -1,21 +1,22 @@
 import { useForm } from "@tanstack/react-form";
 import { useExercises } from "../../api/exercises/useExercises";
-import { exerciseFormSchema } from "../../api/schemas";
+import { exerciseCreateSchema } from "../../api/api.schemas";
 
 interface AddExerciseFormProps {
   onComplete: () => void;
 }
+
 function AddExerciseForm({ onComplete }: AddExerciseFormProps) {
   const { createExercise } = useExercises();
 
   const form = useForm({
     defaultValues: {
-      exerciseName: "",
-      exerciseType: "strength",
+      name: "",
+      tag: "",
     },
 
     validators: {
-      onChange: exerciseFormSchema,
+      onChange: exerciseCreateSchema,
     },
 
     onSubmit: async ({ value }) => {
@@ -27,14 +28,14 @@ function AddExerciseForm({ onComplete }: AddExerciseFormProps) {
     <>
       <th>
         <form.Field
-          name="exerciseName"
+          name="name"
           children={(field) => (
             <input
               type="text"
-              className="input input-sm input-bordered w-full"
+              className="input"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
-              placeholder="Exercise name"
+              placeholder="Name"
               autoFocus
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -49,17 +50,22 @@ function AddExerciseForm({ onComplete }: AddExerciseFormProps) {
 
       <th>
         <form.Field
-          name="exerciseType"
+          name="tag"
           children={(field) => (
             <>
-              <select
-                className="select select-sm  w-full text-sm"
+              <input
+                type="text"
+                className="input"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-              >
-                <option value="strength">Strength</option>
-                <option value="cardio">Cardio</option>
-              </select>
+                placeholder="Tag"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    form.handleSubmit();
+                  }
+                }}
+              />
             </>
           )}
         />

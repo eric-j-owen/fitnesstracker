@@ -1,5 +1,5 @@
 import { useAuth } from "../api/auth/useAuth";
-import { loginUserSchema } from "../api/schemas";
+import { loginUserSchema } from "../api/api.schemas";
 import { useAppForm } from "./Form/form-context";
 
 export default function LoginForm() {

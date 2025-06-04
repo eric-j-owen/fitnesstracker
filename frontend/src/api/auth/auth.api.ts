@@ -1,11 +1,15 @@
-import { AuthenticatedUser, LoginUserData, RegisterUserData } from "../schemas";
-import { fetchData } from "../client";
+import {
+  AuthenticatedUser,
+  LoginUserData,
+  RegisterUserData,
+} from "../api.types";
+import { fetchClient } from "../client";
 import { UnauthorizedError } from "../errors";
 
 export const registerUser = async (
   data: RegisterUserData
 ): Promise<{ id: string }> => {
-  return await fetchData("/api/auth/register", {
+  return await fetchClient("/api/auth/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -17,7 +21,7 @@ export const registerUser = async (
 export const loginUser = async (
   data: LoginUserData
 ): Promise<{ id: string }> => {
-  return await fetchData("/api/auth/login", {
+  return await fetchClient("/api/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -27,7 +31,7 @@ export const loginUser = async (
 };
 
 export const logoutUser = async (): Promise<void> => {
-  return await fetchData("/api/auth/logout", {
+  return await fetchClient("/api/auth/logout", {
     method: "POST",
   });
 };
@@ -35,7 +39,7 @@ export const logoutUser = async (): Promise<void> => {
 export const getAuthenticatedUser =
   async (): Promise<AuthenticatedUser | null> => {
     try {
-      return await fetchData("/api/auth/me");
+      return await fetchClient("/api/auth/me");
     } catch (err) {
       if (err instanceof UnauthorizedError) {
         return null;

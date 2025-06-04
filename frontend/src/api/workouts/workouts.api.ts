@@ -1,10 +1,5 @@
-import { fetchData } from "../client";
-
-interface WorkoutReqBody {
-  userId: number;
-  workoutName: string;
-  days: string[];
-}
+import { fetchClient } from "../client";
+import type { WorkoutFormValues } from "../api.types";
 
 interface AddExerciseToWorkout {
   exerciseId: number;
@@ -16,26 +11,32 @@ interface AddExerciseToWorkout {
 }
 
 interface WorkoutResponse extends AddExerciseToWorkout {
-  workoutId: number;
-  workoutName: string;
+  id: number;
+  name: string;
 }
 
 export const getWorkouts = async (): Promise<WorkoutResponse[]> => {
-  return await fetchData("/api/workouts");
+  return await fetchClient("/api/workouts");
 };
 
-export const createWorkout = async (body: WorkoutReqBody) => {
-  return await fetchData("/api/workouts", {
+export const createWorkout = async (body: WorkoutFormValues) => {
+  return await fetchClient("/api/workouts", {
     method: "POST",
     body: JSON.stringify(body),
   });
 };
 
+export const deleteWorkout = async (id: number) => {
+  return await fetchClient(`/api/workouts/${id}`, {
+    method: "DELETE",
+  });
+};
+
 export const addExerciseToWorkout = async (
-  workoutId: number,
+  id: number,
   body: AddExerciseToWorkout
 ) => {
-  return await fetchData(`/api/workouts/${workoutId}/exercises`, {
+  return await fetchClient(`/api/workouts/${id}/exercises`, {
     method: "POST",
     body: JSON.stringify(body),
   });

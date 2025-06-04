@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import type { IdParam, UpdateUserBody } from "../../schemas/api.types.js";
+import type { IdParam, UpdateUserBody } from "../api.types.js";
 import createHttpError from "http-errors";
 import AppDataSource from "../../db/data-source.js";
 import { User } from "../../db/entities/user.entity.js";
