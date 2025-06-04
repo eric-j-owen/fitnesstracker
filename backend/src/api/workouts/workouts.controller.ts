@@ -22,11 +22,11 @@ export const getWorkouts: RequestHandler = async (req, res, next) => {
 
 export const createWorkout: RequestHandler = async (req, res, next) => {
   const userId = req.session.userId;
-  const { workoutName, days } = req.body;
+  const { name, days } = req.body;
   try {
     const workout = workoutRepository.create({
       userId,
-      workoutName,
+      name,
       days,
     });
 
@@ -51,6 +51,32 @@ export const deleteWorkout: RequestHandler<IdParam> = async (
       throw createHttpError(404, "Workout not found");
     }
     res.status(200).json({ message: "Workout deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const editWorkout: RequestHandler<IdParam> = async (req, res, next) => {
+  const userId = req.session.userId;
+  const id = parseInt(req.params.id);
+  const { name, days } = req.body;
+
+  try {
+    const exists = await workoutRepository.exists({ where: { id, userId } });
+    if (!exists) {
+      throw createHttpError(404, "Workout not found");
+    }
+
+    const result = await workoutRepository.update(
+      { id, userId },
+      { name, days }
+    );
+
+    if (result.affected === 0) {
+      throw createHttpError(500, "Failed to update workout");
+    }
+
+    res.status(200).json({ msg: "Workout updated" });
   } catch (error) {
     next(error);
   }

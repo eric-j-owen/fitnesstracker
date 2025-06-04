@@ -6,7 +6,7 @@ interface AddExerciseFormProps {
   onComplete: () => void;
 }
 
-function AddExerciseForm({ onComplete }: AddExerciseFormProps) {
+function ExerciseForm({ onComplete }: AddExerciseFormProps) {
   const { createExercise } = useExercises();
 
   const form = useForm({
@@ -91,4 +91,4 @@ function AddExerciseForm({ onComplete }: AddExerciseFormProps) {
   );
 }
 
-export default AddExerciseForm;
+export default ExerciseForm;

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useExercises } from "../../api/exercises/useExercises";
-import AddExerciseForm from "./AddExerciseForm";
+import ExerciseForm from "./AddExerciseForm";
 import { CiEdit } from "react-icons/ci";
 
 function ExercisesTab() {
@@ -42,7 +42,7 @@ function ExercisesTab() {
         <thead>
           <tr>
             {isAddingExercise ? (
-              <AddExerciseForm onComplete={() => setIsAddingExercise(false)} />
+              <ExerciseForm onComplete={() => setIsAddingExercise(false)} />
             ) : (
               <th
                 colSpan={3}

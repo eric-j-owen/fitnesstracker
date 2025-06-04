@@ -18,3 +18,4 @@ export type Exercise = z.infer<typeof s.exerciseSchema>;
 
 //workouts
 export type WorkoutFormValues = z.infer<typeof s.workoutFormSchema>;
+export type WorkoutType = z.infer<typeof s.workoutSchema>;

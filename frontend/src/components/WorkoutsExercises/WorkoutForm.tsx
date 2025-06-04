@@ -1,9 +1,11 @@
 import { useWorkouts } from "../../api/workouts/useWorkouts";
 import { workoutFormSchema } from "../../api/api.schemas";
 import { useAppForm } from "../Form/form-context";
+import { WorkoutFormValues, WorkoutType } from "../../api/api.types";
 
-interface AddWorkoutFormProps {
+interface WorkoutFormProps {
   modalRef: React.RefObject<HTMLDialogElement | null>;
+  workout?: WorkoutType;
 }
 
 const DAYS = [
@@ -16,13 +18,13 @@ const DAYS = [
   "Sunday",
 ];
 
-function AddWorkoutForm({ modalRef }: AddWorkoutFormProps) {
-  const { createWorkout } = useWorkouts();
+function WorkoutForm({ modalRef, workout }: WorkoutFormProps) {
+  const { createWorkout, updateWorkout } = useWorkouts();
 
   const form = useAppForm({
     defaultValues: {
-      workoutName: "",
-      days: [] as string[],
+      name: workout?.name || "",
+      days: workout?.days || ([] as string[]),
     },
 
     validators: {
@@ -30,10 +32,12 @@ function AddWorkoutForm({ modalRef }: AddWorkoutFormProps) {
     },
 
     onSubmit: async ({ value }) => {
-      await createWorkout({
-        workoutName: value.workoutName,
-        days: value.days,
-      });
+      if (workout) {
+        await updateWorkout({ id: workout.id, body: value });
+      } else {
+        await createWorkout(value);
+      }
+      form.reset();
       modalRef.current?.close();
     },
   });
@@ -46,7 +50,7 @@ function AddWorkoutForm({ modalRef }: AddWorkoutFormProps) {
       }}
     >
       <form.AppField
-        name="workoutName"
+        name="name"
         children={(field) => (
           <field.FormField label="Workout Name" type="text" />
         )}
@@ -89,4 +93,4 @@ function AddWorkoutForm({ modalRef }: AddWorkoutFormProps) {
   );
 }
 
-export default AddWorkoutForm;
+export default WorkoutForm;

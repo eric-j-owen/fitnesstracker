@@ -83,6 +83,7 @@ export const exerciseBodySchema = z.object({
 //workouts
 export const workoutBodySchema = z.object({
   body: z.object({
-    workoutName: z.string().min(1).max(255),
+    name: z.string().min(1).max(255),
+    days: z.array(z.string()),
   }),
 });

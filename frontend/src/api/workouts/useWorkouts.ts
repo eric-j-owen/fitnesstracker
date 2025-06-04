@@ -15,7 +15,7 @@ export const useWorkouts = () => {
     mutationFn: api.createWorkout,
     onSuccess: () => {
       toast.success("Workout created successfully");
-      queryClient.invalidateQueries({ queryKey: KEY });
+      queryClient.invalidateQueries({ queryKey: [KEY] });
     },
 
     onError: (err) => {
@@ -28,10 +28,23 @@ export const useWorkouts = () => {
     mutationFn: api.deleteWorkout,
     onSuccess: () => {
       toast.success("Workout deleted");
-      queryClient.invalidateQueries({ queryKey: KEY });
+      queryClient.invalidateQueries({ queryKey: [KEY] });
     },
     onError: (err) => {
       toast.error("Failed to delete workout");
+      console.error(err);
+    },
+  });
+
+  const updateWorkoutMutation = useMutation({
+    mutationFn: api.updateWorkout,
+    onSuccess: () => {
+      toast.success("Workout updated");
+      queryClient.invalidateQueries({ queryKey: [KEY] });
+    },
+
+    onError: (err) => {
+      toast.error("Failed to update workout");
       console.error(err);
     },
   });
@@ -40,5 +53,6 @@ export const useWorkouts = () => {
     workouts: workoutsQuery.data,
     createWorkout: createWorkoutMutation.mutateAsync,
     deleteWorkout: deleteWorkoutMutation.mutateAsync,
+    updateWorkout: updateWorkoutMutation.mutateAsync,
   };
 };

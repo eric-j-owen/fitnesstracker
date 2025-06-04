@@ -94,8 +94,22 @@ export const exerciseSchema = z.object({
 });
 
 //workouts
-export const workoutFormSchema = z.object({
+export const workoutSchema = z.object({
   id: z.number(),
+  name: z.string(),
+  days: z.array(z.string()),
+});
+
+export const workoutFormSchema = z.object({
   name: z.string().nonempty("Workout name is required"),
   days: z.array(z.string()),
+});
+
+export const addExerciseToWorkoutSchema = z.object({
+  eid: z.number(),
+  sets: z.number(),
+  reps: z.number(),
+  weight: z.number(),
+  duration: z.number(),
+  distance: z.number(),
 });

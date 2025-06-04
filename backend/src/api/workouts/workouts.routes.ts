@@ -19,12 +19,12 @@ const router = Router();
 router.get("/", controller.getWorkouts);
 router.post("/", controller.createWorkout);
 
-router.get("/:wid", validate(idParamSchema));
-router.patch("/:wid");
-router.delete("/:wid", validate(idParamSchema));
+router.delete("/:id", validate(idParamSchema), controller.deleteWorkout);
+router.patch("/:id", controller.editWorkout);
+// router.get("/:id", validate(idParamSchema));
 
-router.post("/:wid/exercises");
-router.patch("/:wid/exercises/:eid");
-router.delete("/:wid/exercises/:eid");
+// router.post("/:id/exercises");
+// router.patch("/:id/exercises/:eid");
+// router.delete("/:id/exercises/:eid");
 
 export default router;
