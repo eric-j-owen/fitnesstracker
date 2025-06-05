@@ -77,15 +77,22 @@ export const metricsFormSchema = z.object({
 });
 
 //exercises
-export const exerciseCreateSchema = z.object({
+export const exerciseSchema = z.object({
+  id: z.number(),
   name: z.string().nonempty("Exercise name is required").max(255),
   tag: z.string(),
 });
 
-export const exerciseSchema = z.object({
+export const exerciseFormSchema = z.object({
+  name: z.string().nonempty("Exercise name is required"),
+  tag: z.string(),
+});
+
+export const exerciseWorkoutSchema = z.object({
   id: z.number(),
-  name: exerciseCreateSchema.shape.name,
-  tag: exerciseCreateSchema.shape.tag,
+  workoutId: z.number(),
+  name: exerciseSchema.shape.name,
+  tag: exerciseSchema.shape.tag,
   sets: z.number().min(1, "Sets must be at least 1"),
   reps: z.number().min(1, "Reps must be at least 1"),
   weight: z.number().optional(),

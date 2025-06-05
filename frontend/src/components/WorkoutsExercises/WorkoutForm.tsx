@@ -1,7 +1,7 @@
 import { useWorkouts } from "../../api/workouts/useWorkouts";
 import { workoutFormSchema } from "../../api/api.schemas";
 import { useAppForm } from "../Form/form-context";
-import { WorkoutFormValues, WorkoutType } from "../../api/api.types";
+import { WorkoutType } from "../../api/api.types";
 
 interface WorkoutFormProps {
   modalRef: React.RefObject<HTMLDialogElement | null>;
@@ -24,7 +24,7 @@ function WorkoutForm({ modalRef, workout }: WorkoutFormProps) {
   const form = useAppForm({
     defaultValues: {
       name: workout?.name || "",
-      days: workout?.days || ([] as string[]),
+      days: workout?.days || [],
     },
 
     validators: {
@@ -37,8 +37,9 @@ function WorkoutForm({ modalRef, workout }: WorkoutFormProps) {
       } else {
         await createWorkout(value);
       }
-      form.reset();
+
       modalRef.current?.close();
+      form.reset();
     },
   });
 

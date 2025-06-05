@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useWorkouts } from "../../api/workouts/useWorkouts";
 import WorkoutForm from "./WorkoutForm";
 import { CiEdit } from "react-icons/ci";
@@ -13,12 +13,29 @@ function WorkoutsTab() {
 
   const workoutModelRef = useRef<HTMLDialogElement>(null);
 
+  //clears the form when state updates, fixes issue where unsubmitted edits show when creating new workout
+  useEffect(() => {
+    const dialogElement = workoutModelRef.current;
+
+    const handleDialogClose = () => {
+      setEditingWorkout(undefined);
+    };
+
+    if (dialogElement) {
+      dialogElement.addEventListener("close", handleDialogClose);
+
+      return () => {
+        dialogElement.removeEventListener("close", handleDialogClose);
+      };
+    }
+  }, []);
+
   return (
     <div className="h-100 overflow-x-auto">
       <div className="flex justify-end">
         <Modal
           modalId="workout-modal"
-          title={editingWorkout ? "Edit Workout" : "+ Create Workout"}
+          title="+ Create Workout"
           modalRef={workoutModelRef}
         >
           <WorkoutForm modalRef={workoutModelRef} workout={editingWorkout} />

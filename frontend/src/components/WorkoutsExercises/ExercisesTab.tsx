@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { useExercises } from "../../api/exercises/useExercises";
-import ExerciseForm from "./AddExerciseForm";
+import ExerciseForm from "./ExerciseForm";
 import { CiEdit } from "react-icons/ci";
+import { ExerciseType } from "../../api/api.types";
 
 function ExercisesTab() {
   const { exercises, deleteExercise } = useExercises();
   const [isAddingExercise, setIsAddingExercise] = useState(false);
+  const [editingExercise, setEditingExercise] = useState<
+    ExerciseType | undefined
+  >(undefined);
   const [currentFilter, setCurrentFilter] = useState<string | null>(null);
 
+  //filters exercises based on a tag
   const filteredExercises = currentFilter
     ? exercises?.filter((exercise) => exercise.tag === currentFilter)
     : exercises;
@@ -18,14 +23,20 @@ function ExercisesTab() {
         <button className={`btn`} onClick={() => setCurrentFilter(null)}>
           Reset
         </button>
+
+        {/* creates buttons for each unique tag */}
         {exercises &&
           exercises
+
+            // finds unique tags
             .reduce((tags: string[], exercise) => {
               if (!tags.includes(exercise.tag)) {
                 tags.push(exercise.tag);
               }
               return tags;
             }, [])
+
+            // returns a button for each
             .map((tag) => (
               <button
                 key={tag}
@@ -38,8 +49,10 @@ function ExercisesTab() {
               </button>
             ))}
       </div>
+
       <table className="table table-pin-rows table-pin-cols table-fixed">
         <thead>
+          {/* add exercise table button */}
           <tr>
             {isAddingExercise ? (
               <ExerciseForm onComplete={() => setIsAddingExercise(false)} />
@@ -57,9 +70,21 @@ function ExercisesTab() {
         <tbody className="bg-base-200">
           {filteredExercises && filteredExercises.length ? (
             filteredExercises.map((exercise) => {
+              if (editingExercise && editingExercise.id === exercise.id) {
+                return (
+                  <tr key={exercise.id}>
+                    <ExerciseForm
+                      exercise={editingExercise}
+                      onComplete={() => setEditingExercise(undefined)}
+                    />
+                  </tr>
+                );
+              }
               return (
                 <tr key={exercise.id} className="hover:bg-base-200">
                   <td>{exercise.name}</td>
+
+                  {/* display exercise tag */}
                   <td>
                     <button
                       className={`btn btn-xs border-teal-500`}
@@ -68,8 +93,13 @@ function ExercisesTab() {
                       {exercise.tag}
                     </button>
                   </td>
+
+                  {/* action buttons */}
                   <td className="flex gap-2">
-                    <button className="btn btn-ghost btn-sm">
+                    <button
+                      className="btn btn-ghost btn-sm"
+                      onClick={() => setEditingExercise(exercise)}
+                    >
                       <CiEdit />
                     </button>
                     <button

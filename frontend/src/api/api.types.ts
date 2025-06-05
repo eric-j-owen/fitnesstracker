@@ -13,8 +13,9 @@ export type MacrosFormData = z.infer<typeof s.macrosFormSchema>;
 export type MetricsFormData = z.infer<typeof s.metricsFormSchema>;
 
 //exercies
-export type ExerciseCreate = z.infer<typeof s.exerciseCreateSchema>;
-export type Exercise = z.infer<typeof s.exerciseSchema>;
+export type ExerciseType = z.infer<typeof s.exerciseSchema>;
+export type ExerciseFormValues = z.infer<typeof s.exerciseFormSchema>;
+export type ExerciseWorkoutLink = z.infer<typeof s.exerciseWorkoutSchema>;
 
 //workouts
 export type WorkoutFormValues = z.infer<typeof s.workoutFormSchema>;
