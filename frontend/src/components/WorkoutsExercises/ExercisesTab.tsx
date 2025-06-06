@@ -19,7 +19,8 @@ function ExercisesTab() {
 
   return (
     <div className="h-100 overflow-x-auto">
-      <div className="flex gap-1 items-center mb-1">
+      {/* tags table header */}
+      <div className="flex gap-1 items-center mb-1 flex flex-wrap">
         <button className={`btn`} onClick={() => setCurrentFilter(null)}>
           Reset
         </button>
@@ -87,7 +88,7 @@ function ExercisesTab() {
                   {/* display exercise tag */}
                   <td>
                     <button
-                      className={`btn btn-xs border-teal-500`}
+                      className={`btn btn-xs border-teal-500 `}
                       onClick={() => setCurrentFilter(exercise.tag)}
                     >
                       {exercise.tag}

@@ -25,6 +25,14 @@ export const useExercises = () => {
 
   const deleteExerciseMutation = useMutation({
     mutationFn: api.deleteExercise,
+    onSuccess: () => {
+      toast.success("Exercise deleted");
+      queryClient.invalidateQueries({ queryKey: [EXERCISE_KEY] });
+    },
+    onError: (err) => {
+      toast.error("Failed to delete exercise");
+      console.error(err);
+    },
   });
 
   const updateExerciseMutation = useMutation({
