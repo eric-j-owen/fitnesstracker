@@ -1,13 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getMacrosLogs, logMacros } from "./macros.api";
 import toast from "react-hot-toast";
-import { MacrosFormData } from "../api.schemas";
+import { MacrosFormData } from "../api.types";
+import { MACROS_KEY } from "../../consts";
 
 export const useMacros = () => {
   const queryClient = useQueryClient();
 
   const macrosQuery = useQuery<MacrosFormData[]>({
-    queryKey: ["macros"],
+    queryKey: [MACROS_KEY],
     queryFn: getMacrosLogs,
   });
 
@@ -15,7 +16,7 @@ export const useMacros = () => {
     mutationFn: logMacros,
     onSuccess: () => {
       toast.success("Macros logged successfully");
-      queryClient.invalidateQueries({ queryKey: ["macros"] });
+      queryClient.invalidateQueries({ queryKey: [MACROS_KEY] });
     },
     onError: (err) => {
       toast.error("Failed to log macros");

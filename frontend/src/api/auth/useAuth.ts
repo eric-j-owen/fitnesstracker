@@ -6,12 +6,13 @@ import {
   registerUser,
 } from "./auth.api";
 import toast from "react-hot-toast";
+import { AUTH_KEY } from "../../consts";
 
 export const useAuth = () => {
   const queryClient = useQueryClient();
 
   const userQuery = useQuery({
-    queryKey: ["auth-user"],
+    queryKey: [AUTH_KEY],
     queryFn: getAuthenticatedUser,
     retry: 1,
     retryOnMount: false,
@@ -21,12 +22,12 @@ export const useAuth = () => {
     mutationFn: loginUser,
     onSuccess: (user) => {
       toast.success("Welcome!");
-      queryClient.setQueryData(["auth-user"], user);
-      queryClient.invalidateQueries({ queryKey: ["auth-user"] });
+      queryClient.setQueryData([AUTH_KEY], user);
+      queryClient.invalidateQueries({ queryKey: [AUTH_KEY] });
     },
     onError: () => {
       toast.error("Incorrect password or username");
-      queryClient.setQueryData(["auth-user"], null);
+      queryClient.setQueryData([AUTH_KEY], null);
     },
   });
 
@@ -34,11 +35,11 @@ export const useAuth = () => {
     mutationFn: registerUser,
     onSuccess: (user) => {
       toast.success("Registration Successful");
-      queryClient.setQueryData(["auth-user"], user);
-      queryClient.invalidateQueries({ queryKey: ["auth-user"] });
+      queryClient.setQueryData([AUTH_KEY], user);
+      queryClient.invalidateQueries({ queryKey: [AUTH_KEY] });
     },
     onError: () => {
-      queryClient.setQueryData(["auth-user"], null);
+      queryClient.setQueryData([AUTH_KEY], null);
     },
   });
 
@@ -46,7 +47,7 @@ export const useAuth = () => {
     mutationFn: logoutUser,
     onSuccess: () => {
       toast.success("Log out success");
-      queryClient.setQueryData(["auth-user"], null);
+      queryClient.setQueryData([AUTH_KEY], null);
       queryClient.clear();
     },
   });

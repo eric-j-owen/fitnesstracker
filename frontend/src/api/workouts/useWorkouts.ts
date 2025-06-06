@@ -1,21 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as api from "./workouts.api";
 import toast from "react-hot-toast";
+import { WORKOUTS_KEY } from "../../consts";
 
 export const useWorkouts = () => {
-  const KEY = ["workouts"];
   const queryClient = useQueryClient();
 
   const workoutsQuery = useQuery({
     queryFn: api.getWorkouts,
-    queryKey: [KEY],
+    queryKey: [WORKOUTS_KEY],
   });
 
   const createWorkoutMutation = useMutation({
     mutationFn: api.createWorkout,
     onSuccess: () => {
       toast.success("Workout created successfully");
-      queryClient.invalidateQueries({ queryKey: [KEY] });
+      queryClient.invalidateQueries({ queryKey: [WORKOUTS_KEY] });
     },
 
     onError: (err) => {
@@ -28,7 +28,7 @@ export const useWorkouts = () => {
     mutationFn: api.deleteWorkout,
     onSuccess: () => {
       toast.success("Workout deleted");
-      queryClient.invalidateQueries({ queryKey: [KEY] });
+      queryClient.invalidateQueries({ queryKey: [WORKOUTS_KEY] });
     },
     onError: (err) => {
       toast.error("Failed to delete workout");
@@ -40,7 +40,7 @@ export const useWorkouts = () => {
     mutationFn: api.updateWorkout,
     onSuccess: () => {
       toast.success("Workout updated");
-      queryClient.invalidateQueries({ queryKey: [KEY] });
+      queryClient.invalidateQueries({ queryKey: [WORKOUTS_KEY] });
     },
 
     onError: (err) => {

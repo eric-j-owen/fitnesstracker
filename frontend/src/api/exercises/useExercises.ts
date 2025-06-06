@@ -1,14 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as api from "./exercises.api";
 import toast from "react-hot-toast";
-
-const KEY = "exercises";
+import { EXERCISE_KEY } from "../../consts";
 
 export const useExercises = () => {
   const queryClient = useQueryClient();
 
   const exerciseQuery = useQuery({
-    queryKey: [KEY],
+    queryKey: [EXERCISE_KEY],
     queryFn: api.getExercises,
   });
 
@@ -16,7 +15,7 @@ export const useExercises = () => {
     mutationFn: api.createExercise,
     onSuccess: () => {
       toast.success("Exercise created");
-      queryClient.invalidateQueries({ queryKey: [KEY] });
+      queryClient.invalidateQueries({ queryKey: [EXERCISE_KEY] });
     },
     onError: (err) => {
       toast.error("Failed to create exercise");
@@ -32,7 +31,7 @@ export const useExercises = () => {
     mutationFn: api.updateExercise,
     onSuccess: () => {
       toast.success("Exercise updated");
-      queryClient.invalidateQueries({ queryKey: [KEY] });
+      queryClient.invalidateQueries({ queryKey: [EXERCISE_KEY] });
     },
     onError: (err) => {
       toast.error("Failed to update exercise");

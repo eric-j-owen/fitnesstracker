@@ -2,21 +2,12 @@ import { useWorkouts } from "../../api/workouts/useWorkouts";
 import { workoutFormSchema } from "../../api/api.schemas";
 import { useAppForm } from "../Form/form-context";
 import { WorkoutType } from "../../api/api.types";
+import { DAYS } from "../../consts";
 
 interface WorkoutFormProps {
   modalRef: React.RefObject<HTMLDialogElement | null>;
   workout?: WorkoutType;
 }
-
-const DAYS = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
 
 function WorkoutForm({ modalRef, workout }: WorkoutFormProps) {
   const { createWorkout, updateWorkout } = useWorkouts();

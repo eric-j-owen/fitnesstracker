@@ -9,7 +9,7 @@ function WorkoutsTab() {
   const [editingWorkout, setEditingWorkout] = useState<WorkoutType | undefined>(
     undefined
   );
-  const { workouts, deleteWorkout } = useWorkouts();
+  const { workouts: workouts, deleteWorkout } = useWorkouts();
 
   const workoutModelRef = useRef<HTMLDialogElement>(null);
 
