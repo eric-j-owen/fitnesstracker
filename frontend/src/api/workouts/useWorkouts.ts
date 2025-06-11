@@ -49,10 +49,24 @@ export const useWorkouts = () => {
     },
   });
 
+  const addExerciseToWorkoutMutation = useMutation({
+    mutationFn: api.addExerciseToWorkout,
+    onSuccess: () => {
+      toast.success("Exercise added");
+      queryClient.invalidateQueries({ queryKey: [WORKOUTS_KEY] });
+    },
+
+    onError: (err) => {
+      toast.error("Failed to add exercise");
+      console.error(err);
+    },
+  });
+
   return {
     workouts: workoutsQuery.data,
     createWorkout: createWorkoutMutation.mutateAsync,
     deleteWorkout: deleteWorkoutMutation.mutateAsync,
     updateWorkout: updateWorkoutMutation.mutateAsync,
+    addExerciseToWorkout: addExerciseToWorkoutMutation.mutateAsync,
   };
 };

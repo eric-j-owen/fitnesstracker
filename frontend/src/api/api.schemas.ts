@@ -113,7 +113,7 @@ export const workoutFormSchema = z.object({
 });
 
 export const addExerciseToWorkoutSchema = z.object({
-  eid: z.number(),
+  exerciseId: z.number(),
   sets: z.number(),
   reps: z.number(),
   weight: z.number(),

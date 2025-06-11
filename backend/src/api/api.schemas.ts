@@ -87,3 +87,17 @@ export const workoutBodySchema = z.object({
     days: z.array(z.string()),
   }),
 });
+
+export const addExerciseToWorkoutBodySchema = z.object({
+  body: z.object({
+    exerciseId: z.number().positive(),
+    sets: z.number().min(1),
+    reps: z.number().min(1),
+    weight: z.number().min(0).optional(),
+    duration: z.string().optional(),
+    distance: z.number().min(0).optional(),
+  }),
+  params: z.object({
+    id: z.string().regex(/^[1-9]\d*$/, "Invalid workout id"),
+  }),
+});

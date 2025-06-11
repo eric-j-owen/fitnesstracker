@@ -1,24 +1,35 @@
+import { useEffect } from "react";
+
 interface ModalProps {
   modalId: string;
-  title: string;
   children?: React.ReactNode;
   modalRef: React.RefObject<HTMLDialogElement | null>;
+  onClose: () => void;
 }
 
 const Modal: React.FC<ModalProps> = ({
   modalId,
-  title,
   children,
   modalRef,
+  onClose,
 }) => {
+  useEffect(() => {
+    const dialogElement = modalRef.current;
+
+    if (dialogElement && onClose) {
+      const handleDialogClose = () => {
+        onClose();
+      };
+
+      dialogElement.addEventListener("close", handleDialogClose);
+      return () => {
+        dialogElement.removeEventListener("close", handleDialogClose);
+      };
+    }
+  }, [modalRef, onClose]);
+
   return (
     <>
-      <button
-        className="btn btn-outline btn-sm mb-5"
-        onClick={() => modalRef.current?.showModal()}
-      >
-        {title}
-      </button>
       <dialog id={modalId} ref={modalRef} className="modal">
         <div className="modal-box">
           <form method="dialog">

@@ -88,7 +88,6 @@ export const addExerciseToWorkout: RequestHandler<IdParam> = async (
   next
 ) => {
   const userId = req.session.userId;
-
   const workoutId = parseInt(req.params.id);
   const { exerciseId, sets, reps, weight, duration, distance } = req.body;
 
@@ -113,7 +112,7 @@ export const addExerciseToWorkout: RequestHandler<IdParam> = async (
 
     await workoutExerciseLinkRepository.save(workoutExerciseLink);
 
-    res.sendStatus(201);
+    res.status(201).json(workoutExerciseLink);
   } catch (error) {
     next(error);
   }

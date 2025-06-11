@@ -9,55 +9,57 @@ function WorkoutsTab() {
   const [editingWorkout, setEditingWorkout] = useState<WorkoutType | undefined>(
     undefined
   );
+  const [viewingWorkout, setViewingWorkout] = useState<WorkoutType | undefined>(
+    undefined
+  );
+
   const { workouts: workouts, deleteWorkout } = useWorkouts();
 
-  const workoutModelRef = useRef<HTMLDialogElement>(null);
+  const workoutFormModelRef = useRef<HTMLDialogElement>(null);
+  const workoutDetailsModalRef = useRef<HTMLDialogElement>(null);
 
-  //clears the form when state updates, fixes issue where unsubmitted edits show when creating new workout
+  //rerender -> is viewingWorkout set -> is modal ref available -> show modal
   useEffect(() => {
-    const dialogElement = workoutModelRef.current;
-
-    const handleDialogClose = () => {
-      setEditingWorkout(undefined);
-    };
-
-    if (dialogElement) {
-      dialogElement.addEventListener("close", handleDialogClose);
-
-      return () => {
-        dialogElement.removeEventListener("close", handleDialogClose);
-      };
+    if (viewingWorkout && workoutDetailsModalRef.current) {
+      workoutDetailsModalRef.current.showModal();
     }
-  }, []);
+  }, [viewingWorkout]);
 
   return (
     <div className="h-100 overflow-x-auto">
-      <div className="flex justify-end">
-        <Modal
-          modalId="workout-modal"
-          title="+ Create Workout"
-          modalRef={workoutModelRef}
+      <div className="m-4">
+        <button
+          className="w-full btn cursor-pointer"
+          onClick={() => workoutFormModelRef.current?.showModal()}
         >
-          <WorkoutForm modalRef={workoutModelRef} workout={editingWorkout} />
-        </Modal>
+          + Create Workout
+        </button>
       </div>
       <table className="table table-pin-rows table-pin-cols table-fixed ">
         <tbody>
+          {/* workouts */}
+
           {workouts && workouts.length ? (
             workouts.map((workout) => {
               return (
-                <tr
-                  key={workout.id}
-                  className="hover:bg-base-200 cursor-pointer"
-                >
-                  <td>{workout.name}</td>
+                <tr key={workout.id}>
+                  <td
+                    className="hover:bg-base-200 cursor-pointer"
+                    onClick={() => {
+                      setViewingWorkout(workout);
+                    }}
+                  >
+                    {workout.name}
+                  </td>
+
+                  {/* action buttons */}
 
                   <td className="flex gap-2">
                     <button
                       className="btn btn-ghost btn-sm"
                       onClick={() => {
                         setEditingWorkout(workout);
-                        workoutModelRef.current?.showModal();
+                        workoutFormModelRef.current?.showModal();
                       }}
                     >
                       <CiEdit />
@@ -80,6 +82,39 @@ function WorkoutsTab() {
           )}
         </tbody>
       </table>
+
+      {/* modals */}
+
+      {/* workout form modal */}
+      <Modal
+        modalId="workout-form-modal"
+        modalRef={workoutFormModelRef}
+        onClose={() => setEditingWorkout(undefined)}
+      >
+        <WorkoutForm modalRef={workoutFormModelRef} workout={editingWorkout} />
+      </Modal>
+
+      {/* workout details modal */}
+      {viewingWorkout && (
+        <Modal
+          modalId="workout-details-modal"
+          modalRef={workoutDetailsModalRef}
+          onClose={() => setViewingWorkout(undefined)}
+        >
+          <div>
+            <h2 className="font-bold mb-4 text-center">
+              {viewingWorkout.name}
+            </h2>
+            <p className="py-1">
+              <strong>Scheduled for:</strong>{" "}
+              {viewingWorkout.days.join(", ") ||
+                "Not scheduled for any specific days"}
+            </p>
+            <h4 className="font-semibold mt-4 mb-2">Exercises:</h4>
+            <p className="italic text-sm">Exercise details</p>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

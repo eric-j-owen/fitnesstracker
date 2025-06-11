@@ -23,7 +23,7 @@ router.delete("/:id", validate(idParamSchema), controller.deleteWorkout);
 router.patch("/:id", controller.editWorkout);
 // router.get("/:id", validate(idParamSchema));
 
-// router.post("/:id/exercises");
+router.post("/:id/exercises", controller.addExerciseToWorkout);
 // router.patch("/:id/exercises/:eid");
 // router.delete("/:id/exercises/:eid");
 

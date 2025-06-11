@@ -1,5 +1,9 @@
 import { fetchClient } from "../client";
-import type { WorkoutFormValues, WorkoutType } from "../api.types";
+import type {
+  addExerciseToWorkoutType,
+  WorkoutFormValues,
+  WorkoutType,
+} from "../api.types";
 
 export const getWorkouts = async (): Promise<WorkoutType[]> => {
   return await fetchClient("/api/workouts");
@@ -31,12 +35,15 @@ export const updateWorkout = async ({
   });
 };
 
-// export const addExerciseToWorkout = async (
-//   id: number,
-//   body: AddExerciseToWorkout
-// ) => {
-//   return await fetchClient(`/api/workouts/${id}/exercises`, {
-//     method: "POST",
-//     body: JSON.stringify(body),
-//   });
-// };
+export const addExerciseToWorkout = async ({
+  workoutId,
+  body,
+}: {
+  workoutId: number;
+  body: addExerciseToWorkoutType;
+}) => {
+  return await fetchClient(`/api/workouts/${workoutId}/exercises`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+};
