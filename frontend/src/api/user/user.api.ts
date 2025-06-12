@@ -1,14 +1,11 @@
-import { fetchData } from "../client";
-import { AuthenticatedUser } from "../schemas";
+import { fetchClient } from "../client";
+import { AuthenticatedUser } from "../api.types";
 
 export const updateUser = async (
   data: AuthenticatedUser
 ): Promise<{ id: string }> => {
-  return await fetchData(`/api/users/`, {
+  return await fetchClient(`/api/users/`, {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(data),
   });
 };

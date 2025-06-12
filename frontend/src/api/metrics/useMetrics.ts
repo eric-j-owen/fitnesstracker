@@ -1,13 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getMetricsLogs, logMetrics } from "./metrics.api";
 import toast from "react-hot-toast";
-import { MetricsFormData } from "../schemas";
+import { MetricsFormData } from "../api.types";
+import { METRICS_KEY } from "../../consts";
 
 export const useMetrics = () => {
   const queryClient = useQueryClient();
 
   const metricsQuery = useQuery<MetricsFormData[]>({
-    queryKey: ["metrics"],
+    queryKey: [METRICS_KEY],
     queryFn: getMetricsLogs,
   });
 
@@ -15,7 +16,7 @@ export const useMetrics = () => {
     mutationFn: logMetrics,
     onSuccess: () => {
       toast.success("Metric logged successfully");
-      queryClient.invalidateQueries({ queryKey: ["metrics"] });
+      queryClient.invalidateQueries({ queryKey: [METRICS_KEY] });
     },
     onError: (err) => {
       toast.error("Failed to log metric");

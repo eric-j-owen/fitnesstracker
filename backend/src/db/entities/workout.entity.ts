@@ -17,8 +17,8 @@ export class Workout {
   @Column({ name: "user_id" })
   userId!: number;
 
-  @Column({ name: "workout_name", type: "text" })
-  workoutName!: string;
+  @Column({ type: "text" })
+  name!: string;
 
   @Column({ type: "text", array: true, default: "{}" })
   days!: string[];

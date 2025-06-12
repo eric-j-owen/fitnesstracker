@@ -1,59 +1,62 @@
 import { useState } from "react";
 import { useExercises } from "../../api/exercises/useExercises";
-import AddExerciseForm from "./AddExerciseForm";
+import ExerciseForm from "./ExerciseForm";
 import { CiEdit } from "react-icons/ci";
+import { ExerciseType } from "../../api/api.types";
 
 function ExercisesTab() {
   const { exercises, deleteExercise } = useExercises();
   const [isAddingExercise, setIsAddingExercise] = useState(false);
+  const [editingExercise, setEditingExercise] = useState<
+    ExerciseType | undefined
+  >(undefined);
   const [currentFilter, setCurrentFilter] = useState<string | null>(null);
 
-  const exerciseTags = [
-    {
-      tag: "strength",
-      color: "bg-sky-400 ",
-    },
-    {
-      tag: "cardio",
-      color: "bg-green-600 ",
-    },
-  ];
-
-  const getTagColor = (type: string) => {
-    const tag = exerciseTags.find((obj) => obj.tag === type);
-    return tag?.color;
-  };
-
+  //filters exercises based on a tag
   const filteredExercises = currentFilter
-    ? exercises?.filter((exercise) => exercise.exerciseType === currentFilter)
+    ? exercises?.filter((exercise) => exercise.tag === currentFilter)
     : exercises;
 
   return (
     <div className="h-100 overflow-x-auto">
-      <div className="flex gap-1 items-center mb-1">
-        <button
-          className={`${currentFilter === null ? "btn-active" : ""} btn btn-sm`}
-          onClick={() => setCurrentFilter(null)}
-        >
+      {/* tags table header */}
+      <div className="flex gap-1 items-center mb-1 flex flex-wrap">
+        <button className={`btn`} onClick={() => setCurrentFilter(null)}>
           Reset
         </button>
-        {exerciseTags.map((tag) => (
-          <button
-            key={tag.tag}
-            className={`${currentFilter === tag.tag ? "btn-active" : ""} ${
-              tag.color
-            } btn btn-xs`}
-            onClick={() => setCurrentFilter(tag.tag)}
-          >
-            {tag.tag}
-          </button>
-        ))}
+
+        {/* creates buttons for each unique tag */}
+        {exercises &&
+          exercises
+
+            // finds unique tags
+            .reduce((tags: string[], exercise) => {
+              if (!tags.includes(exercise.tag)) {
+                tags.push(exercise.tag);
+              }
+              return tags;
+            }, [])
+
+            // returns a button for each
+            .map((tag) => (
+              <button
+                key={tag}
+                className={`${
+                  currentFilter === tag ? "bg-teal-500" : ""
+                } btn btn-xs border-teal-500`}
+                onClick={() => setCurrentFilter(tag)}
+              >
+                {tag}
+              </button>
+            ))}
       </div>
+
       <table className="table table-pin-rows table-pin-cols table-fixed">
         <thead>
+          {/* add exercise table button */}
           <tr>
             {isAddingExercise ? (
-              <AddExerciseForm onComplete={() => setIsAddingExercise(false)} />
+              <ExerciseForm onComplete={() => setIsAddingExercise(false)} />
             ) : (
               <th
                 colSpan={3}
@@ -68,20 +71,36 @@ function ExercisesTab() {
         <tbody className="bg-base-200">
           {filteredExercises && filteredExercises.length ? (
             filteredExercises.map((exercise) => {
+              if (editingExercise && editingExercise.id === exercise.id) {
+                return (
+                  <tr key={exercise.id}>
+                    <ExerciseForm
+                      exercise={editingExercise}
+                      onComplete={() => setEditingExercise(undefined)}
+                    />
+                  </tr>
+                );
+              }
               return (
                 <tr key={exercise.id} className="hover:bg-base-200">
-                  <td>{exercise.exerciseName}</td>
+                  <td>{exercise.name}</td>
+
+                  {/* display exercise tag */}
                   <td>
                     <button
-                      className={`px-2 py-1 rounded-full w-fit text-xs ${getTagColor(
-                        exercise.exerciseType
-                      )}`}
+                      className={`btn btn-xs border-teal-500 `}
+                      onClick={() => setCurrentFilter(exercise.tag)}
                     >
-                      {exercise.exerciseType}
+                      {exercise.tag}
                     </button>
                   </td>
+
+                  {/* action buttons */}
                   <td className="flex gap-2">
-                    <button className="btn btn-ghost btn-sm">
+                    <button
+                      className="btn btn-ghost btn-sm"
+                      onClick={() => setEditingExercise(exercise)}
+                    >
                       <CiEdit />
                     </button>
                     <button
@@ -103,13 +122,6 @@ function ExercisesTab() {
             </tr>
           )}
         </tbody>
-        <tfoot>
-          <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Actions</th>
-          </tr>
-        </tfoot>
       </table>
     </div>
   );

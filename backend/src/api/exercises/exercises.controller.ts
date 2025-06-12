@@ -2,7 +2,7 @@ import type { RequestHandler } from "express";
 import createHttpError from "http-errors";
 import AppDataSource from "../../db/data-source.js";
 import { Exercise } from "../../db/entities/exercise.entity.js";
-import type { ExerciseBody, IdParam } from "../../schemas/api.types.js";
+import type { ExerciseBody, IdParam } from "../api.types.js";
 
 const exercisesRepo = AppDataSource.getRepository(Exercise);
 
@@ -12,13 +12,13 @@ export const createExercise: RequestHandler<
   ExerciseBody
 > = async (req, res, next) => {
   const userId = req.session.userId;
-  const { exerciseName, exerciseType } = req.body;
+  const { name, tag } = req.body;
 
   try {
     const exercise = exercisesRepo.create({
       userId,
-      exerciseName,
-      exerciseTag: exerciseType,
+      name,
+      tag,
     });
 
     const { id } = await exercisesRepo.save(exercise);
@@ -46,15 +46,15 @@ export const updateExercise: RequestHandler<
 > = async (req, res, next) => {
   const userId = req.session.userId;
   const { id } = req.params;
-  const { exerciseName, exerciseType } = req.body;
+  const { name, tag } = req.body;
 
   try {
     const result = await exercisesRepo
       .createQueryBuilder()
       .update("exercises")
       .set({
-        exerciseName,
-        exerciseTag: exerciseType,
+        name,
+        tag,
       })
       .where("id = :id AND userId = :userId", { id, userId })
       .execute();
@@ -79,7 +79,6 @@ export const deleteExercise: RequestHandler<IdParam> = async (
 
   try {
     const result = await exercisesRepo.delete({ id, userId });
-    console.log(result);
     if (result.affected === 0) {
       throw createHttpError(404, "Exercise not found");
     }

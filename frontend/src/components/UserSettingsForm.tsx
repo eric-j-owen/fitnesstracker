@@ -1,6 +1,6 @@
 import { useAuth } from "../api/auth/useAuth";
 import { UnauthorizedError } from "../api/errors";
-import { authenticatedUserSchema } from "../api/schemas";
+import { authenticatedUserSchema } from "../api/api.schemas";
 import { useUserApi } from "../api/user/useUserApi";
 import { useAppForm } from "./Form/form-context";
 

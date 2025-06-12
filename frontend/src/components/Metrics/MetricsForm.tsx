@@ -1,4 +1,4 @@
-import { metricsFormSchema } from "../../api/schemas";
+import { metricsFormSchema } from "../../api/api.schemas";
 import { useAppForm } from "../Form/form-context";
 import { useMetrics } from "../../api/metrics/useMetrics";
 

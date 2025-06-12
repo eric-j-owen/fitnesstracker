@@ -1,5 +1,5 @@
-import { fetchData } from "../client";
-import { MetricsFormData } from "../schemas";
+import { fetchClient } from "../client";
+import { MetricsFormData } from "../api.types";
 
 interface MetricsResponse {
   id: number;
@@ -12,12 +12,12 @@ interface MetricsResponse {
 export const logMetrics = async (
   data: MetricsFormData
 ): Promise<MetricsResponse> => {
-  return await fetchData("/api/metrics", {
+  return await fetchClient("/api/metrics", {
     method: "POST",
     body: JSON.stringify(data),
   });
 };
 
 export const getMetricsLogs = async (): Promise<MetricsResponse[]> => {
-  return await fetchData("/api/metrics");
+  return await fetchClient("/api/metrics");
 };

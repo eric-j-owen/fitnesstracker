@@ -1,41 +1,48 @@
-import { fetchData } from "../client";
+import { fetchClient } from "../client";
+import type {
+  addExerciseToWorkoutType,
+  WorkoutFormValues,
+  WorkoutType,
+} from "../api.types";
 
-interface WorkoutReqBody {
-  userId: number;
-  workoutName: string;
-  days: string[];
-}
-
-interface AddExerciseToWorkout {
-  exerciseId: number;
-  sets?: number;
-  reps?: number;
-  weight?: number;
-  duration?: number;
-  distance?: number;
-}
-
-interface WorkoutResponse extends AddExerciseToWorkout {
-  workoutId: number;
-  workoutName: string;
-}
-
-export const getWorkouts = async (): Promise<WorkoutResponse[]> => {
-  return await fetchData("/api/workouts");
+export const getWorkouts = async (): Promise<WorkoutType[]> => {
+  return await fetchClient("/api/workouts");
 };
 
-export const createWorkout = async (body: WorkoutReqBody) => {
-  return await fetchData("/api/workouts", {
+export const createWorkout = async (body: WorkoutFormValues) => {
+  return await fetchClient("/api/workouts", {
     method: "POST",
     body: JSON.stringify(body),
   });
 };
 
-export const addExerciseToWorkout = async (
-  workoutId: number,
-  body: AddExerciseToWorkout
-) => {
-  return await fetchData(`/api/workouts/${workoutId}/exercises`, {
+export const deleteWorkout = async (id: number) => {
+  return await fetchClient(`/api/workouts/${id}`, {
+    method: "DELETE",
+  });
+};
+
+export const updateWorkout = async ({
+  id,
+  body,
+}: {
+  id: number;
+  body: WorkoutFormValues;
+}) => {
+  return await fetchClient(`/api/workouts/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+  });
+};
+
+export const addExerciseToWorkout = async ({
+  workoutId,
+  body,
+}: {
+  workoutId: number;
+  body: addExerciseToWorkoutType;
+}) => {
+  return await fetchClient(`/api/workouts/${workoutId}/exercises`, {
     method: "POST",
     body: JSON.stringify(body),
   });

@@ -1,5 +1,5 @@
-import { fetchData } from "../client";
-import { MacrosFormData } from "../schemas";
+import { fetchClient } from "../client";
+import { MacrosFormData } from "../api.schemas";
 
 interface MacrosResponse {
   id: number;
@@ -14,12 +14,12 @@ interface MacrosResponse {
 export const logMacros = async (
   data: MacrosFormData
 ): Promise<MacrosResponse> => {
-  return await fetchData("/api/macros", {
+  return await fetchClient("/api/macros", {
     method: "POST",
     body: JSON.stringify(data),
   });
 };
 
 export const getMacrosLogs = async (): Promise<MacrosResponse[]> => {
-  return await fetchData("/api/macros");
+  return await fetchClient("/api/macros");
 };
