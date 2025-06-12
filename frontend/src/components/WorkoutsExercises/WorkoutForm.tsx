@@ -3,9 +3,10 @@ import { workoutFormSchema } from "../../api/api.schemas";
 import { useAppForm } from "../Form/form-context";
 import { WorkoutType } from "../../api/api.types";
 import { DAYS } from "../../consts";
+import AddExerciseToWorkoutForm from "./AddExerciseToWorkoutForm";
 
 interface WorkoutFormProps {
-  modalRef: React.RefObject<HTMLDialogElement | null>;
+  modalRef?: React.RefObject<HTMLDialogElement | null>;
   workout?: WorkoutType;
 }
 

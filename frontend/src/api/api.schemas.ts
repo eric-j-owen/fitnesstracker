@@ -88,24 +88,7 @@ export const exerciseFormSchema = z.object({
   tag: z.string(),
 });
 
-export const exerciseWorkoutSchema = z.object({
-  id: z.number(),
-  workoutId: z.number(),
-  name: exerciseSchema.shape.name,
-  tag: exerciseSchema.shape.tag,
-  sets: z.number().min(1, "Sets must be at least 1"),
-  reps: z.number().min(1, "Reps must be at least 1"),
-  weight: z.number().optional(),
-  duration: z.string().optional(),
-  distance: z.number().optional(),
-});
-
 //workouts
-export const workoutSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  days: z.array(z.string()),
-});
 
 export const workoutFormSchema = z.object({
   name: z.string().nonempty("Workout name is required"),
@@ -119,4 +102,22 @@ export const addExerciseToWorkoutSchema = z.object({
   weight: z.number(),
   duration: z.number(),
   distance: z.number(),
+});
+
+export const exerciseWorkoutLinkSchema = z.object({
+  workoutId: z.number(),
+  exerciseId: z.number(),
+  sets: z.number(),
+  reps: z.number(),
+  weight: z.number(),
+  duration: z.string().nullable().optional(), // Interval type from backend is a string
+  distance: z.coerce.number().nullable().optional(),
+  exercise: exerciseSchema,
+});
+
+export const workoutSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  days: z.array(z.string()),
+  workoutExerciseLinks: z.array(exerciseWorkoutLinkSchema),
 });

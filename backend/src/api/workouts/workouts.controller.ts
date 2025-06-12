@@ -13,7 +13,11 @@ const workoutExerciseLinkRepository =
 export const getWorkouts: RequestHandler = async (req, res, next) => {
   const userId = req.session.userId;
   try {
-    const result = await workoutRepository.find({ where: { userId } });
+    const result = await workoutRepository.find({
+      where: { userId },
+      relations: ["workoutExerciseLinks", "workoutExerciseLinks.exercise"],
+    });
+    console.log(result);
     res.status(200).json(result);
   } catch (error) {
     next(error);

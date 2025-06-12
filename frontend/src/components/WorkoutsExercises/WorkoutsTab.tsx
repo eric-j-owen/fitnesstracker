@@ -4,6 +4,7 @@ import WorkoutForm from "./WorkoutForm";
 import { CiEdit } from "react-icons/ci";
 import Modal from "../Modal";
 import { WorkoutType } from "../../api/api.types";
+import AddExerciseToWorkoutForm from "./AddExerciseToWorkoutForm";
 
 function WorkoutsTab() {
   const [editingWorkout, setEditingWorkout] = useState<WorkoutType | undefined>(
@@ -12,11 +13,13 @@ function WorkoutsTab() {
   const [viewingWorkout, setViewingWorkout] = useState<WorkoutType | undefined>(
     undefined
   );
+  const [isAddingExercise, setIsAddingExercise] = useState(false);
 
   const { workouts: workouts, deleteWorkout } = useWorkouts();
 
   const workoutFormModelRef = useRef<HTMLDialogElement>(null);
   const workoutDetailsModalRef = useRef<HTMLDialogElement>(null);
+  const addExerciseModalRef = useRef<HTMLDialogElement>(null);
 
   //rerender -> is viewingWorkout set -> is modal ref available -> show modal
   useEffect(() => {
@@ -24,6 +27,12 @@ function WorkoutsTab() {
       workoutDetailsModalRef.current.showModal();
     }
   }, [viewingWorkout]);
+
+  useEffect(() => {
+    if (isAddingExercise && addExerciseModalRef.current) {
+      addExerciseModalRef.current.showModal();
+    }
+  }, [isAddingExercise]);
 
   return (
     <div className="h-100 overflow-x-auto">
@@ -110,9 +119,45 @@ function WorkoutsTab() {
               {viewingWorkout.days.join(", ") ||
                 "Not scheduled for any specific days"}
             </p>
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={() => setIsAddingExercise(true)}
+            >
+              + Add Exercise
+            </button>
             <h4 className="font-semibold mt-4 mb-2">Exercises:</h4>
-            <p className="italic text-sm">Exercise details</p>
+            {viewingWorkout.workoutExerciseLinks &&
+            viewingWorkout.workoutExerciseLinks.length > 0 ? (
+              <ul>
+                {viewingWorkout.workoutExerciseLinks.map((link) => (
+                  <li key={link.exerciseId}>
+                    {link.exercise.name} - Sets: {link.sets}, Reps: {link.reps},
+                    Weight: {link.weight}
+                    {link.duration && <span>, Duration: {link.duration}</span>}
+                    {link.distance && <span>, Distance: {link.distance}</span>}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="italic text-sm">
+                No exercises added to this workout yet.
+              </p>
+            )}
           </div>
+        </Modal>
+      )}
+
+      {/* Add Exercise Modal */}
+      {viewingWorkout && isAddingExercise && (
+        <Modal
+          modalId="add-exercise-modal"
+          modalRef={addExerciseModalRef}
+          onClose={() => setIsAddingExercise(false)}
+        >
+          <AddExerciseToWorkoutForm
+            workout={viewingWorkout}
+            onComplete={() => setIsAddingExercise(false)}
+          />
         </Modal>
       )}
     </div>
