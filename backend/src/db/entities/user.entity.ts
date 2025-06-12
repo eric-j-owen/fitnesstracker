@@ -8,8 +8,6 @@ import {
 } from "typeorm";
 import type { Metric } from "./metric.entity.js";
 import type { Macro } from "./macro.entity.js";
-import type { Workout } from "./workout.entity.js";
-import type { Exercise } from "./exercise.entity.js";
 
 @Entity("users")
 export class User {
@@ -21,14 +19,6 @@ export class User {
 
   @Column({ type: "text", name: "last_name", nullable: true })
   lastName?: string;
-
-  @Column({
-    type: "enum",
-    name: "user_role",
-    enum: ["basic", "trainer"],
-    default: "basic",
-  })
-  userRole!: "basic" | "trainer";
 
   @Column({ type: "text", unique: true })
   username!: string;
@@ -69,10 +59,4 @@ export class User {
 
   @OneToMany("Macro", (macro: Macro) => macro.user)
   macros!: Macro[];
-
-  @OneToMany("Workout", (workout: Workout) => workout.user)
-  workouts!: Workout[];
-
-  @OneToMany("Exercise", (exercise: Exercise) => exercise.user)
-  exercises!: Exercise[];
 }

@@ -11,7 +11,13 @@ function MetricsModule() {
   return (
     <div>
       <div className="flex justify-end mb-4 ">
-        <Modal modalId="metricsModal" title="+" modalRef={metricModalRef}>
+        <button
+          className="btn"
+          onClick={() => metricModalRef?.current?.showModal()}
+        >
+          + Log Metric
+        </button>
+        <Modal modalId="metricsModal" modalRef={metricModalRef}>
           <MetricsForm modalRef={metricModalRef} />
         </Modal>
       </div>

@@ -48,6 +48,7 @@ export function FormField({
           <input
             aria-label={label}
             placeholder={label}
+            id={field.name}
             type={type}
             name={field.name}
             value={field.state.value}

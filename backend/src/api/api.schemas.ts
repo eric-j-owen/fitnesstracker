@@ -71,33 +71,3 @@ export const logMetricSchema = z.object({
     date: z.string(),
   }),
 });
-
-//exercises
-export const exerciseBodySchema = z.object({
-  body: z.object({
-    name: z.string().max(255),
-    tag: z.string().max(255),
-  }),
-});
-
-//workouts
-export const workoutBodySchema = z.object({
-  body: z.object({
-    name: z.string().min(1).max(255),
-    days: z.array(z.string()),
-  }),
-});
-
-export const addExerciseToWorkoutBodySchema = z.object({
-  body: z.object({
-    exerciseId: z.number().positive(),
-    sets: z.number().min(1),
-    reps: z.number().min(1),
-    weight: z.number().min(0).optional(),
-    duration: z.string().optional(),
-    distance: z.number().min(0).optional(),
-  }),
-  params: z.object({
-    id: z.string().regex(/^[1-9]\d*$/, "Invalid workout id"),
-  }),
-});

@@ -4,7 +4,7 @@ interface ModalProps {
   modalId: string;
   children?: React.ReactNode;
   modalRef: React.RefObject<HTMLDialogElement | null>;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 const Modal: React.FC<ModalProps> = ({

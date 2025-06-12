@@ -17,8 +17,7 @@ export default function Dashboard() {
 
         <div className="card shadow-2xl bg-base-200">
           <div className="card-body">
-            <h2 className="card-title">Workout Schedule</h2>
-            <WorkoutsExercisesModule />
+            <h2 className="card-title">Food Tracker</h2>
           </div>
         </div>
 
