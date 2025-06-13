@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import type { FoodLog } from "./foodLog.entity.js";
 
 interface PortionRecord {
   name?: string; //foodPortions -> {} -> measureUnit
@@ -17,10 +19,13 @@ interface PortionRecord {
   modifier?: string; //if foodPortions->{}->modifier == "90000", skip record
 }
 
-@Entity()
+@Entity({ name: "food_item" })
 export class FoodItem {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @OneToMany("FoodLog", (foodLog: FoodLog) => foodLog.foodItem)
+  foodLogs: FoodLog[];
 
   @Column({ name: "fdc_id", unique: true })
   fdcId: number; //usda FoodData Central ID
@@ -65,6 +70,9 @@ export class FoodItem {
   // ---------
   // macros
   // ---------
+
+  @Column({ type: "decimal", precision: 10, scale: 2 })
+  calories: number;
 
   @Column({ type: "decimal", precision: 10, scale: 2 })
   protein: number;
