@@ -5,6 +5,7 @@ import userRouter from "./users/user.routes.js";
 import authRouter from "./auth/auth.routes.js";
 import macrosRouter from "./macros/macros.routes.js";
 import metricsRouter from "./metrics/metrics.routes.js";
+import foodItemRouter from "./foodItems/foodItems.routes.js";
 
 export default function mountRoutes(app: Express) {
   app.get("/health", (req, res) => {
@@ -15,6 +16,7 @@ export default function mountRoutes(app: Express) {
   app.use("/api/auth", authRouter);
   app.use("/api/macros", requireAuth, macrosRouter);
   app.use("/api/metrics", requireAuth, metricsRouter);
+  app.use("/api/fooditems", foodItemRouter);
 
   app.use((req, res, next) => {
     next(createHttpError(404, `${req.path} Endpoint not found`));

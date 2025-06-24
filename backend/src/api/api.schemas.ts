@@ -71,3 +71,34 @@ export const logMetricSchema = z.object({
     date: z.string(),
   }),
 });
+
+// foodlog
+
+export const createFoodLogSchema = z.object({
+  body: z.object({}),
+});
+
+//fooditem
+
+export const foodItemSchema = z.object({
+  fdcId: z.number(),
+  description: z.string(),
+  publicationDate: z.date(),
+  foodClass: z.string(),
+  brandOwner: z.string().optional(),
+  brandName: z.string().optional(),
+  calories: z.number(),
+  protein: z.number(),
+  carbohydrates: z.number(),
+  fat: z.number(),
+
+  foodPortions: z.array(
+    z.object({
+      portionDescription: z.string().optional(),
+      servingSize: z.number().optional(),
+      servingSizeUnit: z.string().optional(),
+      modifier: z.string().optional(),
+      amount: z.number().optional(),
+    })
+  ),
+});

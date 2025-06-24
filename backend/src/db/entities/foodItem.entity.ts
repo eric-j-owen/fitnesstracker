@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 import type { FoodLog } from "./foodLog.entity.js";
 
-interface PortionRecord {
+interface FoodPortionRecord {
   name?: string; //foodPortions -> {} -> measureUnit
 
   //may have an amound e.g. "1" referring to egg, or portiondescription e.g. "1 egg"
@@ -55,7 +55,7 @@ export class FoodItem {
 
   // only when foodClass != "branded"
   @Column({ type: "jsonb", nullable: true })
-  portions: PortionRecord[];
+  foodPortions: FoodPortionRecord[];
 
   //only when foodClass == "branded"
   @Column({ name: "serving_size", nullable: true })

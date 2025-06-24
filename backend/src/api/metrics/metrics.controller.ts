@@ -28,7 +28,7 @@ export const logMetrics: RequestHandler<unknown, unknown, LogMetric> = async (
 ) => {
   const userId = req.session.userId;
   const { type, val, date } = req.body;
-  console.log(date);
+
   try {
     const result = await metricsRepo
       .createQueryBuilder()
