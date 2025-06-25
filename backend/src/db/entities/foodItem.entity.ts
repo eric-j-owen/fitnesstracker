@@ -7,17 +7,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import type { FoodLog } from "./foodLog.entity.js";
-
-interface FoodPortionRecord {
-  name?: string; //foodPortions -> {} -> measureUnit
-
-  //may have an amound e.g. "1" referring to egg, or portiondescription e.g. "1 egg"
-  amount?: number;
-  portionDescription?: string;
-
-  gramWeight?: number;
-  modifier?: string; //if foodPortions->{}->modifier == "90000", skip record
-}
+import type { FoodPortionsArray, NutrientsType } from "../../api/api.types.js";
 
 @Entity({ name: "food_item" })
 export class FoodItem {
@@ -30,9 +20,8 @@ export class FoodItem {
   @Column({ name: "fdc_id", unique: true })
   fdcId: number; //usda FoodData Central ID
 
-  // ---------
-  // food meta data
-  // ---------
+  @Column({ name: "upc", nullable: true })
+  gtinUpc: string; //bar code
 
   @Column({ name: "publication_date" })
   publicationDate: Date; // last updated by usda
@@ -46,46 +35,17 @@ export class FoodItem {
   @Column({ type: "text", name: "brand_owner", nullable: true })
   brandOwner: string;
 
+  @Column({ type: "text", name: "brand_name", nullable: true })
+  brandName: string;
+
   @Column({ type: "text" })
   description: string;
 
-  // ---------
-  // servings
-  // ---------
+  @Column({ type: "jsonb" })
+  nutrients: NutrientsType;
 
-  // only when foodClass != "branded"
-  @Column({ type: "jsonb", nullable: true })
-  foodPortions: FoodPortionRecord[];
-
-  //only when foodClass == "branded"
-  @Column({ name: "serving_size", nullable: true })
-  servingSize: number;
-
-  @Column({ name: "serving_size_unit", nullable: true })
-  servingSizeUnit: string;
-
-  @Column({ name: "household_serving_full_text", nullable: true })
-  householdServingFullText: string;
-
-  // ---------
-  // macros
-  // ---------
-
-  @Column({ type: "decimal", precision: 10, scale: 2 })
-  calories: number;
-
-  @Column({ type: "decimal", precision: 10, scale: 2 })
-  protein: number;
-
-  @Column({ type: "decimal", precision: 10, scale: 2 })
-  carbohydrates: number;
-
-  @Column({ type: "decimal", precision: 10, scale: 2 })
-  fat: number;
-
-  // ---------
-  // misc data
-  // ---------
+  @Column({ type: "jsonb" })
+  foodPortions: FoodPortionsArray;
 
   @CreateDateColumn()
   createdAt: Date;

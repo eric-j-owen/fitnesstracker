@@ -1,7 +1,12 @@
 import type { RequestHandler } from "express";
 import AppDataSource from "../../db/data-source.js";
 import { FoodItem } from "../../db/entities/foodItem.entity.js";
-import type { FoodPortions, IdParam } from "../api.types.js";
+import type {
+  FoodItemType,
+  FoodPortionsArray,
+  IdParam,
+  NutrientsType,
+} from "../api.types.js";
 
 const foodItemRepo = AppDataSource.getRepository(FoodItem);
 
@@ -29,16 +34,9 @@ export const getFoodItem: RequestHandler<IdParam> = async (req, res, next) => {
       const foodItem = await foodItemRepo.findOneBy({ fdcId });
       res.status(200).send(foodItem);
     } else {
-      //used for parsing api response, matches codes from usda
-      enum nutrientCodes {
-        protein = "203",
-        fat = "204",
-        carbs = "205",
-        kcal = "208",
-      }
-
       interface ApiResponse {
         fdcId: number;
+        gtinUpc: string;
         description: string;
         publicationDate: string;
         foodClass: string;
@@ -76,27 +74,42 @@ export const getFoodItem: RequestHandler<IdParam> = async (req, res, next) => {
       const json = (await response.json()) as ApiResponse;
 
       // parse nutrient data
-      let calories, protein, carbs, fat;
+
+      //used for parsing api response, matches codes from usda
+      enum nutrientCodes {
+        protein = "203",
+        fat = "204",
+        carbs = "205",
+        kcal = "208",
+      }
+
+      //for non branded items, macros are per 100g
+      const nutrients: NutrientsType = {
+        calories: 0,
+        protein: 0,
+        carbs: 0,
+        fat: 0,
+      };
+
       for (const record of json.foodNutrients) {
         switch (record.nutrient.number) {
           case nutrientCodes.kcal:
-            calories = record.amount;
+            nutrients.calories = record.amount;
             break;
           case nutrientCodes.protein:
-            protein = record.amount;
+            nutrients.protein = record.amount;
             break;
           case nutrientCodes.carbs:
-            carbs = record.amount;
+            nutrients.carbs = record.amount;
             break;
           case nutrientCodes.fat:
-            fat = record.amount;
+            nutrients.fat = record.amount;
             break;
         }
       }
 
       // parse food portion data
-      let servingSize,
-        foodPortions: FoodPortions = [];
+      let foodPortions: FoodPortionsArray = [];
       if (json.foodClass === "Branded") {
         foodPortions.push({
           portionDescription: json.householdServingFullText,
@@ -107,29 +120,29 @@ export const getFoodItem: RequestHandler<IdParam> = async (req, res, next) => {
         for (const portion of json.foodPortions) {
           foodPortions.push({
             portionDescription: portion.portionDescription,
-            servingSize: portion.gramWeight,
-            modifier: portion?.modifier,
+            gramWeight: portion.gramWeight,
             amount: portion?.amount,
           });
         }
       }
 
-      const newFoodItem = {
+      const newFoodItemData: FoodItemType = {
         fdcId: json.fdcId,
+        gtinUpc: json?.gtinUpc,
         publicationDate: new Date(json.publicationDate),
-        brandOwner: json?.brandOwner || null,
-        brandName: json?.brandName || null,
+        lastCheckForUpdate: new Date(),
+        brandOwner: json?.brandOwner || undefined,
+        brandName: json?.brandName || undefined,
         foodClass: json.foodClass,
         description: json.description,
-        calories,
-        protein,
-        carbs,
-        fat,
+        nutrients,
         foodPortions,
       };
 
-      //   foodItemRepo.create({});
-      //   foodItemRepo.save({});
+      const newFoodItemInstance = foodItemRepo.create(newFoodItemData);
+
+      const newFoodItem = await foodItemRepo.save(newFoodItemInstance);
+
       res.status(200).json(newFoodItem);
     }
   } catch (error) {

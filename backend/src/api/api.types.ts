@@ -18,5 +18,9 @@ export type LogMacrosBody = z.infer<typeof s.logMacrosBodySchema.shape.body>;
 export type LogMetric = z.infer<typeof s.logMetricSchema.shape.body>;
 
 //fooditems
-export type FoodItem = z.infer<typeof s.foodItemSchema>;
-export type FoodPortions = z.infer<typeof s.foodItemSchema.shape.foodPortions>;
+export type FoodItemType = z.infer<typeof s.foodItemSchema>;
+export type FoodPortionsArray = z.infer<
+  typeof s.foodItemSchema.shape.foodPortions
+>;
+
+export type NutrientsType = z.infer<typeof s.foodItemSchema.shape.nutrients>;
