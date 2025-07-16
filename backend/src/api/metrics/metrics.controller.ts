@@ -27,6 +27,8 @@ export const logMetrics: RequestHandler<unknown, unknown, LogMetric> = async (
   next
 ) => {
   const userId = req.session.userId;
+  console.log("hello");
+  console.log(userId);
   const { type, val, date } = req.body;
 
   try {
@@ -35,12 +37,12 @@ export const logMetrics: RequestHandler<unknown, unknown, LogMetric> = async (
       .insert()
       .into("metrics")
       .values({
-        userId,
+        user: { id: userId },
         type,
         val,
         date: date,
       })
-      .orUpdate(["val"], ["user_id", "type", "date"])
+      .orUpdate(["val"], ["userId", "type", "date"])
       .execute();
 
     res.status(201).json(result);
