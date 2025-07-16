@@ -1,5 +1,5 @@
 import { GoInfinity } from "react-icons/go";
-import { AuthenticatedUser, MacrosFormData } from "../../api/api.schemas";
+import { AuthenticatedUser, MacrosFormData } from "../../api/api.types";
 
 interface MacroProgressBarsProps {
   macros: MacrosFormData[];
