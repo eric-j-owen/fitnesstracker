@@ -156,8 +156,7 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
 
 type SearchQuery = {
   query: string;
-  pageSize?: string;
-  pageNumber?: string;
+  page?: string;
 };
 
 export const searchFoodItems: RequestHandler<
@@ -166,13 +165,15 @@ export const searchFoodItems: RequestHandler<
   unknown,
   SearchQuery
 > = async (req, res, next) => {
+  const PAGE_SIZE = "10";
+
   try {
-    const { query, pageSize, pageNumber } = req.query;
+    const { query, page } = req.query;
 
     const params = new URLSearchParams();
     params.append("query", query);
-    params.append("pageSize", String(pageSize));
-    params.append("pageNumber", String(pageNumber));
+    params.append("page", String(page));
+    params.append("size", PAGE_SIZE);
 
     const response = await fetch(
       `${FDC_API_BASE_URL}/foods/search?api_key=${FDC_API_KEY}&${String(

@@ -1,10 +1,16 @@
 import { useState } from "react";
+import { useFoodLog } from "../../api/foodLog/useFoodLog";
 
 export default function FoodLogModule() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState<string>("");
+  const [submittedQery, setSubmittedQuery] = useState<string>("");
+  const [page, setPage] = useState(1);
+
+  const { data } = useFoodLog(submittedQery);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(query);
+    setSubmittedQuery(query);
   };
   return (
     <div>
