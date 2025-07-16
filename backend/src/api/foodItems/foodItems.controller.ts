@@ -12,7 +12,11 @@ const foodItemRepo = AppDataSource.getRepository(FoodItem);
 
 const { FDC_API_BASE_URL, FDC_API_KEY } = process.env;
 
-export const getFoodItem: RequestHandler<IdParam> = async (req, res, next) => {
+export const getFoodItemById: RequestHandler<IdParam> = async (
+  req,
+  res,
+  next
+) => {
   const fdcId = parseInt(req.params.id);
 
   try {
@@ -71,7 +75,7 @@ export const getFoodItem: RequestHandler<IdParam> = async (req, res, next) => {
         `${FDC_API_BASE_URL}/food/${fdcId}?api_key=${FDC_API_KEY}`
       );
 
-      const json = (await response.json()) as ApiResponse;
+      const data = (await response.json()) as ApiResponse;
 
       // parse nutrient data
 
@@ -91,7 +95,7 @@ export const getFoodItem: RequestHandler<IdParam> = async (req, res, next) => {
         fat: 0,
       };
 
-      for (const record of json.foodNutrients) {
+      for (const record of data.foodNutrients) {
         switch (record.nutrient.number) {
           case nutrientCodes.kcal:
             nutrients.calories = record.amount;
@@ -110,14 +114,14 @@ export const getFoodItem: RequestHandler<IdParam> = async (req, res, next) => {
 
       // parse food portion data
       let foodPortions: FoodPortionsArray = [];
-      if (json.foodClass === "Branded") {
+      if (data.foodClass === "Branded") {
         foodPortions.push({
-          portionDescription: json.householdServingFullText,
-          servingSize: json.servingSize,
-          servingSizeUnit: json.servingSizeUnit,
+          portionDescription: data.householdServingFullText,
+          servingSize: data.servingSize,
+          servingSizeUnit: data.servingSizeUnit,
         });
-      } else if (json.foodPortions) {
-        for (const portion of json.foodPortions) {
+      } else if (data.foodPortions) {
+        for (const portion of data.foodPortions) {
           foodPortions.push({
             portionDescription: portion.portionDescription,
             gramWeight: portion.gramWeight,
@@ -127,14 +131,14 @@ export const getFoodItem: RequestHandler<IdParam> = async (req, res, next) => {
       }
 
       const newFoodItemData: FoodItemType = {
-        fdcId: json.fdcId,
-        gtinUpc: json?.gtinUpc,
-        publicationDate: new Date(json.publicationDate),
+        fdcId: data.fdcId,
+        gtinUpc: data?.gtinUpc,
+        publicationDate: new Date(data.publicationDate),
         lastCheckForUpdate: new Date(),
-        brandOwner: json?.brandOwner || undefined,
-        brandName: json?.brandName || undefined,
-        foodClass: json.foodClass,
-        description: json.description,
+        brandOwner: data?.brandOwner || undefined,
+        brandName: data?.brandName || undefined,
+        foodClass: data.foodClass,
+        description: data.description,
         nutrients,
         foodPortions,
       };
@@ -145,6 +149,40 @@ export const getFoodItem: RequestHandler<IdParam> = async (req, res, next) => {
 
       res.status(200).json(newFoodItem);
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+type SearchQuery = {
+  query: string;
+  pageSize?: string;
+  pageNumber?: string;
+};
+
+export const searchFoodItems: RequestHandler<
+  unknown,
+  unknown,
+  unknown,
+  SearchQuery
+> = async (req, res, next) => {
+  try {
+    const { query, pageSize, pageNumber } = req.query;
+
+    const params = new URLSearchParams();
+    params.append("query", query);
+    params.append("pageSize", String(pageSize));
+    params.append("pageNumber", String(pageNumber));
+
+    const response = await fetch(
+      `${FDC_API_BASE_URL}/foods/search?api_key=${FDC_API_KEY}&${String(
+        params
+      )}`
+    );
+
+    const data = await response.json();
+
+    res.status(200).json(data);
   } catch (error) {
     next(error);
   }

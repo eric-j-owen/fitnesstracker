@@ -5,10 +5,10 @@ import { idParamSchema } from "../api.schemas.js";
 
 // GET /api/fooditem/:fdcid
 // GET /api/fooditem/search
-// POST /api/fooditem
 
 const router = Router();
 
-router.get("/:id", validate(idParamSchema), Controller.getFoodItem);
+router.get("/search", Controller.searchFoodItems);
+router.get("/:id", validate(idParamSchema), Controller.getFoodItemById);
 
 export default router;
