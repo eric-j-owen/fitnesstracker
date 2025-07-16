@@ -27,8 +27,7 @@ export const logMetrics: RequestHandler<unknown, unknown, LogMetric> = async (
   next
 ) => {
   const userId = req.session.userId;
-  console.log("hello");
-  console.log(userId);
+
   const { type, val, date } = req.body;
 
   try {
