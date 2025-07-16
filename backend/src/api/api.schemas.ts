@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { MealCategory } from "../db/entities/foodLog.entity.js";
 
 //common
 export const idParamSchema = z.object({
@@ -72,12 +73,6 @@ export const logMetricSchema = z.object({
   }),
 });
 
-// foodlog
-
-export const createFoodLogSchema = z.object({
-  body: z.object({}),
-});
-
 //fooditem
 
 export const foodItemSchema = z.object({
@@ -106,4 +101,20 @@ export const foodItemSchema = z.object({
       amount: z.number().optional(),
     })
   ),
+});
+
+// foodlog
+
+export const createFoodLogSchema = z.object({
+  body: z.object({
+    fdcId: z.number(),
+    mealCategory: z.string(),
+    amount: z.number(),
+    unit: z.string(),
+    logDate: z.date(),
+    calculatedCalories: z.number(),
+    calculatedProtein: z.number(),
+    calculatedCarbs: z.number(),
+    calculatedFat: z.number(),
+  }),
 });
