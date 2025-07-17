@@ -159,6 +159,12 @@ type SearchQuery = {
   page?: string;
 };
 
+interface SearchQueryResponse {
+  foods: [];
+  totalPages: number;
+  currentPage: number;
+}
+
 export const searchFoodItems: RequestHandler<
   unknown,
   unknown,
@@ -172,8 +178,8 @@ export const searchFoodItems: RequestHandler<
 
     const params = new URLSearchParams();
     params.append("query", query);
-    params.append("page", String(page));
-    params.append("size", PAGE_SIZE);
+    params.append("pageNumber", String(page));
+    params.append("pageSize", PAGE_SIZE);
 
     const response = await fetch(
       `${FDC_API_BASE_URL}/foods/search?api_key=${FDC_API_KEY}&${String(
@@ -181,9 +187,15 @@ export const searchFoodItems: RequestHandler<
       )}`
     );
 
-    const data = await response.json();
+    const data = (await response.json()) as SearchQueryResponse;
+    const { foods, totalPages, currentPage } = data;
 
-    res.status(200).json(data);
+    const nextCursor = currentPage < totalPages ? currentPage + 1 : undefined;
+
+    res.status(200).json({
+      nextCursor,
+      foods,
+    });
   } catch (error) {
     next(error);
   }
