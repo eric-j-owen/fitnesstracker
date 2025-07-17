@@ -1,11 +1,30 @@
 import { fetchClient } from "../client";
 
-export const searchFoodItems = async (query: string, page = 1) => {
+interface FoodItem {
+  fdcId: string;
+  description: string;
+  brandName?: string;
+}
+
+interface ApiResponse {
+  foods: FoodItem[];
+  nextCursor?: number;
+}
+
+export const searchFoodItems = async ({
+  query,
+  pageParam,
+}: {
+  query: string;
+  pageParam: number;
+}): Promise<ApiResponse> => {
   const params = new URLSearchParams({
     query,
-    page: String(page),
+    page: String(pageParam),
   });
-  const result = await fetchClient(`/api/fooditems/search?${params}`);
+  const result: ApiResponse = await fetchClient(
+    `/api/fooditems/search?${params}`
+  );
   console.log(result);
   return result;
 };
