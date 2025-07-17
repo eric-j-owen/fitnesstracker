@@ -1,4 +1,4 @@
-import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { FOOD_SEARCH_KEY } from "../../consts";
 import { searchFoodItems } from "./foodLog.api";
 
@@ -8,7 +8,7 @@ export const useFoodLog = (query: string) => {
     queryFn: ({ pageParam = 0 }) => searchFoodItems({ query, pageParam }),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
-    // maxPages: 3,
+    staleTime: Infinity,
 
     //to prevent query from running on pageload
     enabled: !!query,
