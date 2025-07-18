@@ -38,7 +38,7 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
       const foodItem = await foodItemRepo.findOneBy({ fdcId });
       res.status(200).send(foodItem);
     } else {
-      interface ApiResponse {
+      interface UsdaByFdcIdResponse {
         fdcId: number;
         gtinUpc: string;
         description: string;
@@ -75,7 +75,7 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
         `${FDC_API_BASE_URL}/food/${fdcId}?api_key=${FDC_API_KEY}`
       );
 
-      const data = (await response.json()) as ApiResponse;
+      const data = (await response.json()) as UsdaByFdcIdResponse;
 
       // parse nutrient data
 
@@ -187,8 +187,8 @@ export const searchFoodItems: RequestHandler<
       )}`
     );
 
-    const data = (await response.json()) as SearchQueryResponse;
-    const { foods, totalPages, currentPage } = data;
+    const { foods, totalPages, currentPage } =
+      (await response.json()) as SearchQueryResponse;
 
     const nextCursor = currentPage < totalPages ? currentPage + 1 : undefined;
 
