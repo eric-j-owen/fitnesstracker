@@ -34,7 +34,7 @@ export const createLogEntry: RequestHandler<
 
     const foodItem = await foodItemRepo.findOneBy({ fdcId });
     if (!foodItem) {
-      return res.status(404).json({ message: "food item not found" });
+      res.status(404).json({ message: "food item not found" });
     }
 
     const logEntry = foodLogRepo.create({
