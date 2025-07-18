@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import type { Metric } from "./metric.entity.js";
 import type { Macro } from "./macro.entity.js";
+import type { FoodLog } from "./foodLog.entity.js";
 
 @Entity("users")
 export class User {
@@ -59,4 +60,7 @@ export class User {
 
   @OneToMany("Macro", (macro: Macro) => macro.user)
   macros: Macro[];
+
+  @OneToMany("FoodLog", (foodLog: FoodLog) => foodLog.user)
+  foodLogs: FoodLog[];
 }
