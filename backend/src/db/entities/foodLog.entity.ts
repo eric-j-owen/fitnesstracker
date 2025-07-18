@@ -2,10 +2,12 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import type { FoodItem } from "./foodItem.entity.js";
+import type { User } from "./user.entity.js";
 
 export enum MealCategory {
   BREAKFAST = "breakfast",
@@ -16,17 +18,22 @@ export enum MealCategory {
 }
 
 @Entity({ name: "food_log" })
-@Index(["userId", "logDate"])
+@Index(["user", "logDate"])
 export class FoodLog {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: "user_id" })
-  userId: number;
+  @ManyToOne("User", (user: User) => user.foodLogs, {
+    nullable: false,
+    onDelete: "CASCADE",
+  })
+  @JoinColumn({ name: "user_id" })
+  user: User;
 
   @ManyToOne("FoodItem", (foodItem: FoodItem) => foodItem.foodLogs, {
     onDelete: "RESTRICT",
   })
+  @JoinColumn({ name: "food_item_id" })
   foodItem: FoodItem;
 
   @Column({
@@ -70,12 +77,12 @@ export class FoodLog {
   calculatedProtein: number;
 
   @Column({
-    name: "calculated_carbohydrates",
+    name: "calculated_carbs",
     type: "decimal",
     precision: 10,
     scale: 2,
   })
-  calculatedCarbohydrates: number;
+  calculatedCarbs: number;
 
   @Column({ name: "calculated_fat", type: "decimal", precision: 10, scale: 2 })
   calculatedFat: number;
