@@ -3,6 +3,7 @@ import AppDataSource from "../../db/data-source.js";
 import { FoodItem } from "../../db/entities/foodItem.entity.js";
 import { FoodLog, MealCategory } from "../../db/entities/foodLog.entity.js";
 import type { FoodLogReqBody } from "../api.types.js";
+import createHttpError from "http-errors";
 
 const foodLogRepo = AppDataSource.getRepository(FoodLog);
 const foodItemRepo = AppDataSource.getRepository(FoodItem);
@@ -34,7 +35,7 @@ export const createLogEntry: RequestHandler<
 
     const foodItem = await foodItemRepo.findOneBy({ fdcId });
     if (!foodItem) {
-      res.status(404).json({ message: "food item not found" });
+      throw createHttpError(404, "Not found.");
     }
 
     const logEntry = foodLogRepo.create({
