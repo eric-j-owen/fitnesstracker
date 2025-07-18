@@ -28,5 +28,6 @@ export class Metric {
     nullable: false,
     onDelete: "CASCADE",
   })
+  @JoinColumn({ name: "user_id" })
   user: User;
 }

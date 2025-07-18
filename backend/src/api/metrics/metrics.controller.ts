@@ -11,7 +11,7 @@ export const getMetrics: RequestHandler = async (req, res, next) => {
   try {
     const result = await metricsRepo
       .createQueryBuilder("metrics")
-      .where("metrics.userId = :userId", { userId })
+      .where("metrics.user_id = :userId", { userId })
       .orderBy("metrics.date", "ASC")
       .getMany();
 
@@ -41,7 +41,7 @@ export const logMetrics: RequestHandler<unknown, unknown, LogMetric> = async (
         val,
         date: date,
       })
-      .orUpdate(["val"], ["userId", "type", "date"])
+      .orUpdate(["val"], ["user_id", "type", "date"])
       .execute();
 
     res.status(201).json(result);
