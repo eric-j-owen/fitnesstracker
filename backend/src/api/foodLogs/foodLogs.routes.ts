@@ -10,8 +10,8 @@ const router = Router();
 // POST  /api/Foodlog
 // PATCH /api/foodlog/:id
 
-router.get("/", Controller.getFoodLogDay);
-router.get("/:id", Controller.getFoodLogEntry);
+router.get("/", Controller.getLoggedDay);
+router.get("/:id", Controller.getLogEntry);
 router.post(
   "/",
 
