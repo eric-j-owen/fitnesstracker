@@ -6,7 +6,7 @@ export const useFoodLog = (query: string) => {
   const searchQuery = useInfiniteQuery({
     queryKey: [FOOD_SEARCH_KEY, query],
     queryFn: ({ pageParam = 1 }) => searchFoodItems({ query, pageParam }),
-    initialPageParam: 0,
+    initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
     staleTime: Infinity,
 

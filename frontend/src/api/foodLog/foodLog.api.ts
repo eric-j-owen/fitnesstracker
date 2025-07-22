@@ -4,6 +4,7 @@ interface FoodItem {
   fdcId: string;
   description: string;
   brandName?: string;
+  foodCategory: string;
 }
 
 interface ApiResponse {
@@ -28,3 +29,5 @@ export const searchFoodItems = async ({
   console.log(result);
   return result;
 };
+
+export const logFoodItem = async (food: any) => {};

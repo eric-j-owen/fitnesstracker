@@ -1,22 +1,31 @@
 import React, { useState } from "react";
 import { useFoodLog } from "../../api/foodLog/useFoodLog";
+import { useFoodItem } from "../../api/foodItem/useFoodItem";
 
 export default function FoodLogModule() {
   const [query, setQuery] = useState<string>("");
   const [submittedQuery, setSubmittedQuery] = useState<string>("");
+  const [selectedFdcId, setSelectedFdcId] = useState<string>("");
 
   const {
-    data,
+    data: searchResults,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isSearchLoading,
   } = useFoodLog(submittedQuery);
 
+  const { data: foodItem } = useFoodItem(selectedFdcId);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmittedQuery(query);
   };
+
+  const handleSelect = (fdcId: string) => {
+    setSelectedFdcId(fdcId);
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -28,18 +37,25 @@ export default function FoodLogModule() {
         <button className="btn">Submit</button>
       </form>
       {isSearchLoading && <p>Loading results...</p>}
-      {!isSearchLoading && data?.pages[0].foods.length === 0 && (
+      {!isSearchLoading && searchResults?.pages[0].foods.length === 0 && (
         <p>No results found.</p>
       )}
-      {!isSearchLoading && data?.pages?.length && (
+      {!isSearchLoading && searchResults?.pages?.length && (
         <div>
           <ul>
-            {data.pages.map((page, i) => (
+            {searchResults.pages.map((page, i) => (
               <React.Fragment key={i}>
                 {page.foods.map((food) => (
                   <li key={food.fdcId}>
                     {food?.brandName && <p>{food.brandName}</p>}
                     <p>{food.description}</p>
+                    <p>{food.foodCategory}</p>
+                    <button
+                      className="btn"
+                      onClick={() => handleSelect(food.fdcId)}
+                    >
+                      +
+                    </button>
                   </li>
                 ))}
               </React.Fragment>
