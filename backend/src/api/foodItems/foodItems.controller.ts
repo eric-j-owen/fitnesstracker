@@ -18,7 +18,6 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
   next
 ) => {
   const fdcId = parseInt(req.params.id);
-
   try {
     if (FDC_API_BASE_URL === undefined || FDC_API_KEY === undefined) {
       throw Error;
@@ -46,6 +45,8 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
         foodClass: string;
         brandOwner?: string;
         brandName?: string;
+        foodCategory?: string;
+        brandedFoodCategory?: string;
         foodNutrients: Array<{
           nutrient: {
             name: string;
@@ -69,6 +70,13 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
             abbreviation: string;
           };
         }>;
+        packageWeight?: string;
+        labelNutrients?: {
+          calories: { value: number };
+          protein: { value: number };
+          carbohydrates: { value: number };
+          fat: { value: number };
+        };
       }
 
       const response = await fetch(
@@ -87,28 +95,43 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
         kcal = "208",
       }
 
-      //for non branded items, macros are per 100g
       const nutrients: NutrientsType = {
-        calories: 0,
-        protein: 0,
-        carbs: 0,
-        fat: 0,
+        calories: { per100g: 0 },
+        protein: { per100g: 0 },
+        carbs: { per100g: 0 },
+        fat: { per100g: 0 },
       };
 
-      for (const record of data.foodNutrients) {
-        switch (record.nutrient.number) {
-          case nutrientCodes.kcal:
-            nutrients.calories = record.amount;
-            break;
-          case nutrientCodes.protein:
-            nutrients.protein = record.amount;
-            break;
-          case nutrientCodes.carbs:
-            nutrients.carbs = record.amount;
-            break;
-          case nutrientCodes.fat:
-            nutrients.fat = record.amount;
-            break;
+      //macro parsing, foods may have 1 or 2 objects labelNutrients and/or foodNutrients
+
+      //per serving
+      if (data.labelNutrients && Object.keys(data.labelNutrients).length) {
+        nutrients.calories.perServing = data.labelNutrients.calories.value;
+        nutrients.protein.perServing = data.labelNutrients.protein.value;
+        nutrients.carbs.perServing = data.labelNutrients.carbohydrates.value;
+        nutrients.fat.perServing = data.labelNutrients.fat.value;
+      }
+      // per 100g
+      if (data.foodNutrients) {
+        for (const record of data.foodNutrients) {
+          if (!record.nutrient) {
+            console.warn("skipping record: ", record.nutrient);
+            continue;
+          }
+          switch (record.nutrient.number) {
+            case nutrientCodes.kcal:
+              nutrients.calories.per100g = record.amount;
+              break;
+            case nutrientCodes.protein:
+              nutrients.protein.per100g = record.amount;
+              break;
+            case nutrientCodes.carbs:
+              nutrients.carbs.per100g = record.amount;
+              break;
+            case nutrientCodes.fat:
+              nutrients.fat.per100g = record.amount;
+              break;
+          }
         }
       }
 
@@ -132,13 +155,16 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
 
       const newFoodItemData: FoodItemType = {
         fdcId: data.fdcId,
-        gtinUpc: data?.gtinUpc,
+        gtinUpc: data.gtinUpc,
         publicationDate: new Date(data.publicationDate),
         lastCheckForUpdate: new Date(),
         brandOwner: data?.brandOwner || undefined,
         brandName: data?.brandName || undefined,
+        foodCategory:
+          data.foodCategory || data.brandedFoodCategory || "Uncategorized",
         foodClass: data.foodClass,
         description: data.description,
+        packageWeight: data?.packageWeight || "",
         nutrients,
         foodPortions,
       };

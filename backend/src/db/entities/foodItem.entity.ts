@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -17,6 +18,7 @@ export class FoodItem {
   @OneToMany("FoodLog", (foodLog: FoodLog) => foodLog.foodItem)
   foodLogs: FoodLog[];
 
+  @Index()
   @Column({ name: "fdc_id", unique: true })
   fdcId: number; //usda FoodData Central ID
 
@@ -32,6 +34,9 @@ export class FoodItem {
   @Column({ name: "food_class" })
   foodClass: string;
 
+  @Column({ name: "food_category" })
+  foodCategory: string;
+
   @Column({ type: "text", name: "brand_owner", nullable: true })
   brandOwner: string;
 
@@ -40,6 +45,9 @@ export class FoodItem {
 
   @Column({ type: "text" })
   description: string;
+
+  @Column({ type: "text", name: "package_weight" })
+  packageWeight: string;
 
   @Column({ type: "jsonb" })
   nutrients: NutrientsType;
