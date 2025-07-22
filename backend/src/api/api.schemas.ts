@@ -84,12 +84,25 @@ export const foodItemSchema = z.object({
   foodClass: z.string(),
   brandOwner: z.string().optional(),
   brandName: z.string().optional(),
-
+  foodCategory: z.string(),
+  packageWeight: z.string(),
   nutrients: z.object({
-    calories: z.number(),
-    protein: z.number(),
-    carbs: z.number(),
-    fat: z.number(),
+    calories: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+    protein: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+    carbs: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+    fat: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
   }),
 
   foodPortions: z.array(
