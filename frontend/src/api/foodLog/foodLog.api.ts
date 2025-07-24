@@ -1,14 +1,8 @@
+import { FoodItemType, FoodLogReqBody } from "../api.types";
 import { fetchClient } from "../client";
 
-interface FoodItem {
-  fdcId: string;
-  description: string;
-  brandName?: string;
-  foodCategory: string;
-}
-
-interface ApiResponse {
-  foods: FoodItem[];
+interface SearchResponse {
+  foods: FoodItemType[];
   nextCursor?: number;
 }
 
@@ -18,16 +12,20 @@ export const searchFoodItems = async ({
 }: {
   query: string;
   pageParam: number;
-}): Promise<ApiResponse> => {
+}): Promise<SearchResponse> => {
   const params = new URLSearchParams({
     query,
     page: String(pageParam),
   });
-  const result: ApiResponse = await fetchClient(
+  const result: SearchResponse = await fetchClient(
     `/api/fooditems/search?${params}`
   );
-  console.log(result);
   return result;
 };
 
-export const logFoodItem = async (food: any) => {};
+export const logFoodItem = async (foodEntry: FoodLogReqBody) => {
+  return await fetchClient("/api/foodlog", {
+    method: "POST",
+    body: JSON.stringify(foodEntry),
+  });
+};
