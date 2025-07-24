@@ -75,3 +75,61 @@ export const metricsFormSchema = z.object({
   val: z.coerce.number().positive().max(20000),
   date: z.string(),
 });
+
+//fooditem
+export const foodItemSchema = z.object({
+  fdcId: z.number(),
+  gtinUpc: z.string(),
+  description: z.string(),
+  publicationDate: z.date(),
+  lastCheckForUpdate: z.date(),
+  foodClass: z.string(),
+  brandOwner: z.string().optional(),
+  brandName: z.string().optional(),
+  foodCategory: z.string(),
+  packageWeight: z.string(),
+  nutrients: z.object({
+    calories: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+    protein: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+    carbs: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+    fat: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+  }),
+
+  foodPortions: z.array(
+    z.object({
+      portionDescription: z.string().optional(),
+      gramWeight: z.number().optional(),
+      servingSize: z.number().optional(),
+      servingSizeUnit: z.string().optional(),
+      amount: z.number().optional(),
+    })
+  ),
+});
+
+// foodlog
+
+export const createFoodLogSchema = z.object({
+  body: z.object({
+    fdcId: z.number(),
+    mealCategory: z.string(),
+    amount: z.number(),
+    unit: z.string(),
+    logDate: z.date(),
+    calculatedCalories: z.number(),
+    calculatedProtein: z.number(),
+    calculatedCarbs: z.number(),
+    calculatedFat: z.number(),
+  }),
+});
