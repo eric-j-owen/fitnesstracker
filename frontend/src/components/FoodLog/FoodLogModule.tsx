@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useFoodLog } from "../../api/foodLog/useFoodLog";
 import { useFoodItem } from "../../api/foodItem/useFoodItem";
+import Modal from "../Modal";
+import LogFoodForm from "./LogFoodForm";
 
 export default function FoodLogModule() {
   const [query, setQuery] = useState<string>("");
   const [submittedQuery, setSubmittedQuery] = useState<string>("");
-  const [selectedFdcId, setSelectedFdcId] = useState<string>("");
+  const [selectedFdcId, setSelectedFdcId] = useState<number>();
+
+  const foodModalRef = useRef<HTMLDialogElement>(null);
 
   const {
     data: searchResults,
@@ -15,15 +19,22 @@ export default function FoodLogModule() {
     isSearchLoading,
   } = useFoodLog(submittedQuery);
 
-  const { data: foodItem } = useFoodItem(selectedFdcId);
+  const { data: foodItem, isLoading: loadingFoodItem } =
+    useFoodItem(selectedFdcId);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmittedQuery(query);
   };
 
-  const handleSelect = (fdcId: string) => {
+  const handleSelect = (fdcId: number) => {
     setSelectedFdcId(fdcId);
+  };
+
+  const renderModalContent = () => {
+    if (loadingFoodItem) return <p>Loading details...</p>;
+    if (!foodItem) return <p>Something went wrong...</p>;
+    return <LogFoodForm modalRef={foodModalRef} foodEntry={foodItem} />;
   };
 
   return (
@@ -42,6 +53,9 @@ export default function FoodLogModule() {
       )}
       {!isSearchLoading && searchResults?.pages?.length && (
         <div>
+          <Modal modalId="foodModal" modalRef={foodModalRef}>
+            {renderModalContent()}
+          </Modal>
           <ul>
             {searchResults.pages.map((page, i) => (
               <React.Fragment key={i}>
@@ -52,7 +66,10 @@ export default function FoodLogModule() {
                     <p>{food.foodCategory}</p>
                     <button
                       className="btn"
-                      onClick={() => handleSelect(food.fdcId)}
+                      onClick={() => {
+                        foodModalRef.current?.showModal();
+                        handleSelect(food.fdcId);
+                      }}
                     >
                       +
                     </button>
@@ -61,6 +78,7 @@ export default function FoodLogModule() {
               </React.Fragment>
             ))}
           </ul>
+
           <button
             className="btn"
             onClick={() => fetchNextPage()}
