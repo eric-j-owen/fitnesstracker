@@ -6,6 +6,7 @@ import {
 import { FOOD_SEARCH_KEY, MACROS_KEY } from "../../consts";
 import { logFoodItem, searchFoodItems } from "./foodLog.api";
 import toast from "react-hot-toast";
+import { FoodItemType } from "../api.types";
 
 export const useFoodLog = (query: string) => {
   const queryClient = useQueryClient();
@@ -21,14 +22,14 @@ export const useFoodLog = (query: string) => {
     enabled: !!query,
   });
 
-  const logEntry = useMutation({
+  const logMutation = useMutation({
     mutationFn: logFoodItem,
     onSuccess: () => {
       toast.success("Metric logged successfully");
       queryClient.invalidateQueries({ queryKey: [MACROS_KEY] });
     },
     onError: (err) => {
-      toast.error("Failed to log metric");
+      toast.error("Failed to log");
       console.error(err);
     },
   });
@@ -43,8 +44,8 @@ export const useFoodLog = (query: string) => {
     isFetchingNextPage: searchQuery.isFetchingNextPage,
 
     // logging
-    logFood: logEntry.mutate,
-    isLogging: logEntry.isPending,
-    logError: logEntry.error,
+    logFood: logMutation.mutate,
+    isLogging: logMutation.isPending,
+    logError: logMutation.error,
   };
 };
