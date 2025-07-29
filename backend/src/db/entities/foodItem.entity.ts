@@ -18,7 +18,6 @@ export class FoodItem {
   @OneToMany("FoodLog", (foodLog: FoodLog) => foodLog.foodItem)
   foodLogs: FoodLog[];
 
-  @Index()
   @Column({ name: "fdc_id", unique: true })
   fdcId: number; //usda FoodData Central ID
 

@@ -45,7 +45,10 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
         foodClass: string;
         brandOwner?: string;
         brandName?: string;
-        foodCategory?: string;
+        foodCategory?: string | { description: string };
+        wweiaFoodCategory?: {
+          wweiaFoodCategoryDescription: string;
+        };
         brandedFoodCategory?: string;
         foodNutrients: Array<{
           nutrient: {
@@ -153,6 +156,26 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
         }
       }
 
+      const normalizedFoodCategory = (item: UsdaByFdcIdResponse) => {
+        if (item.brandedFoodCategory) {
+          return item.brandedFoodCategory;
+        }
+
+        if (typeof item.foodCategory === "string") {
+          return item.foodCategory;
+        }
+
+        if (item.wweiaFoodCategory) {
+          return item.wweiaFoodCategory.wweiaFoodCategoryDescription;
+        }
+
+        if (item.foodCategory?.description) {
+          return item.foodCategory.description;
+        }
+
+        return "Uncategorized";
+      };
+
       const newFoodItemData: FoodItemType = {
         fdcId: data.fdcId,
         gtinUpc: data.gtinUpc,
@@ -160,8 +183,7 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
         lastCheckForUpdate: new Date(),
         brandOwner: data?.brandOwner || undefined,
         brandName: data?.brandName || undefined,
-        foodCategory:
-          data.foodCategory || data.brandedFoodCategory || "Uncategorized",
+        foodCategory: normalizedFoodCategory(data),
         foodClass: data.foodClass,
         description: data.description,
         packageWeight: data?.packageWeight || "",
