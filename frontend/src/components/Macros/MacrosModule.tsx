@@ -5,8 +5,8 @@ import MacroProgressBars from "./MacroProgressBars";
 import { UnauthorizedError } from "../../api/errors";
 
 function MacrosModule() {
-  const { macros, isLoadingQuery, isErrorQuery } = useMacros();
   const { user } = useAuth();
+  const { macros, isLoadingQuery, isErrorQuery } = useMacros();
 
   if (!user) throw new UnauthorizedError();
 
