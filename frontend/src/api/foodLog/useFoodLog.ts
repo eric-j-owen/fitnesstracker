@@ -6,7 +6,6 @@ import {
 import { FOOD_SEARCH_KEY, MACROS_KEY } from "../../consts";
 import { logFoodItem, searchFoodItems } from "./foodLog.api";
 import toast from "react-hot-toast";
-import { FoodItemType } from "../api.types";
 
 export const useFoodLog = (query: string) => {
   const queryClient = useQueryClient();

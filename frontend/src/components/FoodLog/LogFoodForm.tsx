@@ -1,4 +1,4 @@
-import { createFoodLogSchema, foodLogFormInputs } from "../../api/api.schemas";
+import { foodLogFormInputs } from "../../api/api.schemas";
 import { FoodItemType } from "../../api/api.types";
 import { useFoodLog } from "../../api/foodLog/useFoodLog";
 import { useAppForm } from "../Form/form-context";
@@ -12,7 +12,7 @@ export default function LogFoodForm({ foodEntry, modalRef }: LogFoodFormProps) {
   const today = new Date().toISOString().split("T")[0];
   const { logFood } = useFoodLog("");
 
-  const unitOptions = [{ unit: "g", label: "grams" }];
+  // const unitOptions = [{ unit: "g", label: "grams" }];
 
   const form = useAppForm({
     defaultValues: {
@@ -45,7 +45,6 @@ export default function LogFoodForm({ foodEntry, modalRef }: LogFoodFormProps) {
       modalRef.current?.close();
     },
   });
-
   return (
     <form
       noValidate
@@ -54,7 +53,14 @@ export default function LogFoodForm({ foodEntry, modalRef }: LogFoodFormProps) {
         form.handleSubmit();
       }}
     >
-      <h3>{JSON.stringify(foodEntry)}</h3>
+      <div>
+        <p>{foodEntry.foodCategory}</p>
+        <p>{foodEntry.description}</p>
+        <p>
+          {foodEntry.brandName &&
+            `${foodEntry.brandName} - ${foodEntry.brandOwner}`}
+        </p>
+      </div>
       <form.AppField
         name="logDate"
         children={(field) => (
