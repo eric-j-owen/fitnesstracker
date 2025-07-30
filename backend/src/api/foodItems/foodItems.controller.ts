@@ -67,35 +67,35 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
     if (!FDC_API_BASE_URL || !FDC_API_KEY || !fdcId)
       throw new Error("Invalid configuration");
 
-    // check for and return existing fooditem in local db
     console.time("existing item");
-
+    // check for and return existing fooditem in local db
     const existingItem = await foodItemRepo.findOneBy({ fdcId });
     if (existingItem) {
       res.status(200).send(existingItem);
       return;
     }
-
     console.timeEnd("existing item");
 
     console.time("api fetch");
-    // fooditem doesnt exist, fetch from api
-    const response = await fetch(
-      `${FDC_API_BASE_URL}/food/${fdcId}?api_key=${FDC_API_KEY}`
-    );
 
-    const data = (await response.json()) as UsdaByFdcIdResponse;
-    console.timeEnd("api fetch");
-
-    // parse nutrient data
-
-    //used for parsing api response, matches codes from usda
-    enum nutrientCodes {
+    // parse nutrient data and fetch data
+    enum usdaCodes {
       protein = "203",
       fat = "204",
       carbs = "205",
       kcal = "208",
     }
+
+    const params = new URLSearchParams({
+      api_key: FDC_API_KEY,
+      nutrients: Object.values(usdaCodes).join(","),
+    });
+
+    // fooditem doesnt exist, fetch from api
+    const response = await fetch(`${FDC_API_BASE_URL}/food/${fdcId}?${params}`);
+    const data = (await response.json()) as UsdaByFdcIdResponse;
+
+    console.timeEnd("api fetch");
 
     const nutrients: NutrientsType = {
       calories: { per100g: 0 },
@@ -104,11 +104,9 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
       fat: { per100g: 0 },
     };
 
-    //macro parsing, foods may have 1 or 2 objects labelNutrients and/or foodNutrients
-
+    //macro parsing, foods may have 1 or 2 objects labelNutrients and/or foodNutrients. label nutrients are per serving, foodnutrients are per 100g
     //per serving
     console.time("label and food nutrients");
-
     if (data.labelNutrients && Object.keys(data.labelNutrients).length) {
       nutrients.calories.perServing = data.labelNutrients.calories.value;
       nutrients.protein.perServing = data.labelNutrients.protein.value;
@@ -123,16 +121,16 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
           continue;
         }
         switch (record.nutrient.number) {
-          case nutrientCodes.kcal:
+          case usdaCodes.kcal:
             nutrients.calories.per100g = record.amount;
             break;
-          case nutrientCodes.protein:
+          case usdaCodes.protein:
             nutrients.protein.per100g = record.amount;
             break;
-          case nutrientCodes.carbs:
+          case usdaCodes.carbs:
             nutrients.carbs.per100g = record.amount;
             break;
-          case nutrientCodes.fat:
+          case usdaCodes.fat:
             nutrients.fat.per100g = record.amount;
             break;
         }
@@ -158,10 +156,10 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
         });
       }
     }
-
     console.timeEnd("foodPortions array");
 
     console.time("normalized food category");
+    // normalizes multiple possible data structures for food category field
     const normalizedFoodCategory = (item: UsdaByFdcIdResponse) => {
       if (item.brandedFoodCategory) {
         return item.brandedFoodCategory;
@@ -184,7 +182,8 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
     console.timeEnd("normalized food category");
 
     console.time("insert");
-    const insertedItem = await foodItemRepo.insert({
+    // insert opertation
+    const newFoodItemData: FoodItemType = {
       fdcId: data.fdcId,
       gtinUpc: data.gtinUpc,
       publicationDate: new Date(data.publicationDate),
@@ -197,28 +196,12 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
       packageWeight: data?.packageWeight || "",
       nutrients,
       foodPortions,
-    });
+    };
+
+    const newFoodItemCreate = foodItemRepo.create(newFoodItemData);
+    const newFoodItem = await foodItemRepo.save(newFoodItemCreate);
 
     console.timeEnd("insert");
-
-    // const newFoodItemData: FoodItemType = {
-    //   fdcId: data.fdcId,
-    //   gtinUpc: data.gtinUpc,
-    //   publicationDate: new Date(data.publicationDate),
-    //   lastCheckForUpdate: new Date(),
-    //   brandOwner: data?.brandOwner || undefined,
-    //   brandName: data?.brandName || undefined,
-    //   foodCategory: normalizedFoodCategory(data),
-    //   foodClass: data.foodClass,
-    //   description: data.description,
-    //   packageWeight: data?.packageWeight || "",
-    //   nutrients,
-    //   foodPortions,
-    // };
-
-    // const newFoodItemInstance = foodItemRepo.create(newFoodItemData);
-
-    const newFoodItem = await foodItemRepo.findOneBy({ fdcId });
 
     res.status(200).json(newFoodItem);
   } catch (error) {
