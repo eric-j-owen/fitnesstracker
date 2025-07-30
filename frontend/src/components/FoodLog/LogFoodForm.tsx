@@ -1,7 +1,10 @@
-import { foodLogFormInputs } from "../../api/api.schemas";
-import { FoodItemType } from "../../api/api.types";
+import { useState } from "react";
+import {
+  FoodItemType,
+  FoodLogFormInputs,
+  FoodLogReqBody,
+} from "../../api/api.types";
 import { useFoodLog } from "../../api/foodLog/useFoodLog";
-import { useAppForm } from "../Form/form-context";
 
 interface LogFoodFormProps {
   foodEntry: FoodItemType;
@@ -12,114 +15,106 @@ export default function LogFoodForm({ foodEntry, modalRef }: LogFoodFormProps) {
   const today = new Date().toISOString().split("T")[0];
   const { logFood } = useFoodLog("");
 
-  // const unitOptions = [{ unit: "g", label: "grams" }];
-
-  const form = useAppForm({
-    defaultValues: {
-      amount: 1,
-      unit: "g",
-      mealCategory: "Other",
-      logDate: today,
-    },
-
-    validators: {
-      onChange: foodLogFormInputs,
-    },
-
-    onSubmit: async ({ value }) => {
-      const calculatedMacros = {
-        calculatedCalories:
-          (foodEntry.nutrients.calories.per100g / 100) * value.amount,
-        calculatedProtein:
-          (foodEntry.nutrients.protein.per100g / 100) * value.amount,
-        calculatedCarbs:
-          (foodEntry.nutrients.carbs.per100g / 100) * value.amount,
-        calculatedFat: (foodEntry.nutrients.fat.per100g / 100) * value.amount,
-      };
-
-      await logFood({
-        ...value,
-        ...calculatedMacros,
-      });
-
-      modalRef.current?.close();
-    },
+  //initial state
+  const [formData, setFormData] = useState<FoodLogFormInputs>({
+    amount: 1,
+    unit: "g",
+    mealCategory: "Other",
+    logDate: today,
   });
+
+  const caluclatedMacros = {
+    calories: (
+      (foodEntry.nutrients.calories.per100g / 100) *
+      formData.amount
+    ).toFixed(2),
+    protein: (
+      (foodEntry.nutrients.protein.per100g / 100) *
+      formData.amount
+    ).toFixed(2),
+    carbs: (
+      (foodEntry.nutrients.carbs.per100g / 100) *
+      formData.amount
+    ).toFixed(2),
+    fat: ((foodEntry.nutrients.fat.per100g / 100) * formData.amount).toFixed(2),
+  };
+
+  //event functions
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "amount" ? Number(value) : value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    console.log(formData);
+
+    modalRef.current?.close();
+  };
+
   return (
-    <form
-      noValidate
-      onSubmit={(e) => {
-        e.preventDefault();
-        form.handleSubmit();
-      }}
-    >
+    <form onSubmit={handleSubmit}>
       <div>
-        <p>{foodEntry.foodCategory}</p>
-        <p>{foodEntry.description}</p>
-        <p>
-          {foodEntry.brandName &&
-            `${foodEntry.brandName} - ${foodEntry.brandOwner}`}
-        </p>
+        <div>
+          <h3>{foodEntry.description}</h3>
+          <p>{foodEntry.foodCategory}</p>
+          <p>
+            {foodEntry.brandName &&
+              `${foodEntry.brandName} - ${foodEntry.brandOwner}`}
+          </p>
+        </div>
+        <div>
+          <h4>Macros</h4>
+          <p>Calories: {caluclatedMacros.calories}</p>
+          <p>Protein: {caluclatedMacros.protein}</p>
+          <p>Carbs: {caluclatedMacros.carbs}</p>
+          <p>Fat: {caluclatedMacros.fat}</p>
+        </div>
       </div>
-      <form.AppField
-        name="logDate"
-        children={(field) => (
-          <field.FormField label="Date" type="date" showLabel={true} />
-        )}
-      />
 
-      <form.AppField
-        name="mealCategory"
-        children={(field) => (
-          <div className="form-control w-full">
-            <label className="label" htmlFor="meal-select">
-              <span className="label-text">Meal</span>
-            </label>
+      <div>
+        <label htmlFor="mealCategory">Meal</label>
+        <select
+          name="mealCategory"
+          id="mealCategory"
+          value={formData.mealCategory}
+          onChange={handleChange}
+        >
+          <option value="Breakfast">Breakfast</option>
+          <option value="Lunch">Lunch</option>
+          <option value="Dinner">Dinner</option>
+          <option value="Other">Other</option>
+        </select>
 
-            <select
-              className="select select-bordered w-full"
-              value={field.state.value}
-              onChange={(e) => field.handleChange(e.target.value)}
-              id="meal-select"
-            >
-              <option value="Breakfast">Breakfast</option>
-              <option value="Lunch">Lunch</option>
-              <option value="Dinner">Dinner</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-        )}
-      />
+        <label htmlFor="amount">Amount</label>
+        <input
+          type="number"
+          id="amount"
+          name="amount"
+          value={formData.amount === 0 ? "" : formData.amount}
+          onChange={handleChange}
+          min={1}
+        />
 
-      <form.AppField
-        name="amount"
-        children={(field) => (
-          <field.FormField label="Amount" type="number" showLabel={true} />
-        )}
-      />
+        <label htmlFor="unit"></label>
+        <select
+          name="unit"
+          id="unit"
+          value={formData.unit}
+          onChange={handleChange}
+        >
+          <option value="g">g</option>
+        </select>
+      </div>
 
-      <form.AppField
-        name="unit"
-        children={(field) => (
-          <div>
-            <label htmlFor="">
-              <span>Unit</span>
-            </label>
-
-            <select
-              name="unit"
-              id="unit"
-              className="select select-bordered w-full"
-              onChange={(e) => field.handleChange(e.target.value)}
-            >
-              <option value="g">Grams</option>
-            </select>
-          </div>
-        )}
-      />
-      <form.AppForm>
-        <form.SubscribeButton label="Submit" />
-      </form.AppForm>
+      <button type="submit">Submit</button>
     </form>
   );
 }

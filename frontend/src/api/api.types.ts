@@ -22,3 +22,4 @@ export type NutrientsType = z.infer<typeof s.foodItemSchema.shape.nutrients>;
 
 // food log
 export type FoodLogReqBody = z.infer<typeof s.createFoodLogSchema.shape.body>;
+export type FoodLogFormInputs = z.infer<typeof s.foodLogFormInputs>;
