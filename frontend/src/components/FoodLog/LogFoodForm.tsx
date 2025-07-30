@@ -1,10 +1,6 @@
 import { useState } from "react";
-import {
-  FoodItemType,
-  FoodLogFormInputs,
-  FoodLogReqBody,
-} from "../../api/api.types";
-import { useFoodLog } from "../../api/foodLog/useFoodLog";
+import { FoodItemType, FoodLogFormInputs } from "../../api/api.types";
+import { useLogFood } from "../../api/foodLog/useFoodLog";
 
 interface LogFoodFormProps {
   foodEntry: FoodItemType;
@@ -13,7 +9,7 @@ interface LogFoodFormProps {
 
 export default function LogFoodForm({ foodEntry, modalRef }: LogFoodFormProps) {
   const today = new Date().toISOString().split("T")[0];
-  const { logFood } = useFoodLog("");
+  const { logFood } = useLogFood();
 
   //initial state
   const [formData, setFormData] = useState<FoodLogFormInputs>({

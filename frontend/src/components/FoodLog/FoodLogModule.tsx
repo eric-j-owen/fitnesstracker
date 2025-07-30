@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useFoodLog } from "../../api/foodLog/useFoodLog";
+import { useFoodSearch } from "../../api/foodLog/useFoodLog";
 import { useFoodItem } from "../../api/foodItem/useFoodItem";
 import Modal from "../Modal";
 import LogFoodForm from "./LogFoodForm";
@@ -17,7 +17,7 @@ export default function FoodLogModule() {
     hasNextPage,
     isFetchingNextPage,
     isSearchLoading,
-  } = useFoodLog(submittedQuery);
+  } = useFoodSearch(submittedQuery);
 
   const { data: foodItem, isLoading: loadingFoodItem } =
     useFoodItem(selectedFdcId);

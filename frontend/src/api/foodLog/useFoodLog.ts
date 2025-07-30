@@ -7,9 +7,7 @@ import { FOOD_SEARCH_KEY, MACROS_KEY } from "../../consts";
 import { logFoodItem, searchFoodItems } from "./foodLog.api";
 import toast from "react-hot-toast";
 
-export const useFoodLog = (query: string) => {
-  const queryClient = useQueryClient();
-
+export const useFoodSearch = (query: string) => {
   const searchQuery = useInfiniteQuery({
     queryKey: [FOOD_SEARCH_KEY, query],
     queryFn: ({ pageParam = 1 }) => searchFoodItems({ query, pageParam }),
@@ -21,7 +19,20 @@ export const useFoodLog = (query: string) => {
     enabled: !!query,
   });
 
-  const logMutation = useMutation({
+  return {
+    data: searchQuery.data,
+    searchError: searchQuery.isError,
+    isSearchLoading: searchQuery.isLoading,
+    fetchNextPage: searchQuery.fetchNextPage,
+    hasNextPage: searchQuery.hasNextPage,
+    isFetchingNextPage: searchQuery.isFetchingNextPage,
+  };
+};
+
+export const useLogFood = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
     mutationFn: logFoodItem,
     onSuccess: () => {
       toast.success("Metric logged successfully");
@@ -34,17 +45,8 @@ export const useFoodLog = (query: string) => {
   });
 
   return {
-    // searching
-    data: searchQuery.data,
-    searchError: searchQuery.isError,
-    isSearchLoading: searchQuery.isLoading,
-    fetchNextPage: searchQuery.fetchNextPage,
-    hasNextPage: searchQuery.hasNextPage,
-    isFetchingNextPage: searchQuery.isFetchingNextPage,
-
-    // logging
-    logFood: logMutation.mutate,
-    isLogging: logMutation.isPending,
-    logError: logMutation.error,
+    logFood: mutation.mutate,
+    isLogging: mutation.isPending,
+    logError: mutation.error,
   };
 };
