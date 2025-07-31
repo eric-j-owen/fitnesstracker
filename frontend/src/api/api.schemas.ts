@@ -78,6 +78,7 @@ export const metricsFormSchema = z.object({
 
 //fooditem
 export const foodItemSchema = z.object({
+  id: z.number(),
   fdcId: z.number(),
   gtinUpc: z.string(),
   description: z.string(),
@@ -124,10 +125,11 @@ export const foodLogFormInputs = z.object({
   mealCategory: z.string(),
   amount: z.number(),
   unit: z.string(),
-  logDate: z.string(),
+  logDate: z.date(),
 });
 export const createFoodLogSchema = z.object({
   body: foodLogFormInputs.extend({
+    foodItemId: z.number(),
     calculatedCalories: z.number().min(0),
     calculatedProtein: z.number().min(0),
     calculatedCarbs: z.number().min(0),

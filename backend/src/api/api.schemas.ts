@@ -120,11 +120,11 @@ export const foodItemSchema = z.object({
 
 export const createFoodLogSchema = z.object({
   body: z.object({
-    fdcId: z.number(),
+    foodItemId: z.number(),
     mealCategory: z.string(),
     amount: z.number(),
     unit: z.string(),
-    logDate: z.date(),
+    logDate: z.string().datetime(),
     calculatedCalories: z.number(),
     calculatedProtein: z.number(),
     calculatedCarbs: z.number(),

@@ -2,7 +2,7 @@ import type { RequestHandler } from "express";
 import AppDataSource from "../../db/data-source.js";
 import { FoodItem } from "../../db/entities/foodItem.entity.js";
 import { FoodLog, MealCategory } from "../../db/entities/foodLog.entity.js";
-import type { FoodLogReqBody } from "../api.types.js";
+import type { FoodLogReqBody, IdParam } from "../api.types.js";
 import createHttpError from "http-errors";
 
 const foodLogRepo = AppDataSource.getRepository(FoodLog);
@@ -14,7 +14,7 @@ export const deleteLogEntry: RequestHandler = async (req, res, next) => {};
 export const editLogEntry: RequestHandler = async (req, res, next) => {};
 
 export const createLogEntry: RequestHandler<
-  unknown,
+  IdParam,
   unknown,
   FoodLogReqBody,
   unknown
@@ -22,7 +22,7 @@ export const createLogEntry: RequestHandler<
   try {
     const { userId } = req.session;
     const {
-      fdcId,
+      foodItemId,
       mealCategory,
       amount,
       unit,
@@ -33,14 +33,14 @@ export const createLogEntry: RequestHandler<
       calculatedFat,
     } = req.body;
 
-    const foodItem = await foodItemRepo.findOneBy({ fdcId });
+    const foodItem = await foodItemRepo.findOneBy({ id: foodItemId });
     if (!foodItem) {
       throw createHttpError(404, "Not found.");
     }
 
     const logEntry = foodLogRepo.create({
       user: { id: userId },
-      foodItem,
+      foodItem: { id: foodItemId },
       mealCategory: mealCategory as MealCategory,
       amount,
       unit,

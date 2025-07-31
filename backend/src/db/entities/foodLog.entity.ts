@@ -10,11 +10,10 @@ import type { FoodItem } from "./foodItem.entity.js";
 import type { User } from "./user.entity.js";
 
 export enum MealCategory {
-  BREAKFAST = "breakfast",
-  LUNCH = "lunch",
-  DINNER = "dinner",
-  SNACKS = "snacks",
-  OTHER = "other",
+  BREAKFAST = "Breakfast",
+  LUNCH = "Lunch",
+  DINNER = "Dinner",
+  OTHER = "Other",
 }
 
 @Entity({ name: "food_log" })
@@ -49,9 +48,6 @@ export class FoodLog {
 
   @Column()
   unit: string; //cup, g, ml, package etc
-
-  @Column({ type: "decimal", precision: 10, scale: 2 })
-  totalGrams: number; //used to calculate macros
 
   @Column({ type: "timestamptz" })
   logDate: Date;

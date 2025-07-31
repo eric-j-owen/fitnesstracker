@@ -8,7 +8,7 @@ interface LogFoodFormProps {
 }
 
 export default function LogFoodForm({ foodEntry, modalRef }: LogFoodFormProps) {
-  const today = new Date().toISOString().split("T")[0];
+  const today = new Date();
   const { logFood } = useLogFood();
 
   //initial state
@@ -20,19 +20,20 @@ export default function LogFoodForm({ foodEntry, modalRef }: LogFoodFormProps) {
   });
 
   const caluclatedMacros = {
-    calories: (
-      (foodEntry.nutrients.calories.per100g / 100) *
-      formData.amount
-    ).toFixed(2),
-    protein: (
-      (foodEntry.nutrients.protein.per100g / 100) *
-      formData.amount
-    ).toFixed(2),
-    carbs: (
-      (foodEntry.nutrients.carbs.per100g / 100) *
-      formData.amount
-    ).toFixed(2),
-    fat: ((foodEntry.nutrients.fat.per100g / 100) * formData.amount).toFixed(2),
+    calories: Number(
+      ((foodEntry.nutrients.calories.per100g / 100) * formData.amount).toFixed(
+        2
+      )
+    ),
+    protein: Number(
+      ((foodEntry.nutrients.protein.per100g / 100) * formData.amount).toFixed(2)
+    ),
+    carbs: Number(
+      ((foodEntry.nutrients.carbs.per100g / 100) * formData.amount).toFixed(2)
+    ),
+    fat: Number(
+      ((foodEntry.nutrients.fat.per100g / 100) * formData.amount).toFixed(2)
+    ),
   };
 
   //event functions
@@ -50,7 +51,16 @@ export default function LogFoodForm({ foodEntry, modalRef }: LogFoodFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(formData);
+    const { calories, protein, carbs, fat } = caluclatedMacros;
+
+    await logFood({
+      ...formData,
+      foodItemId: foodEntry.id,
+      calculatedCalories: calories,
+      calculatedProtein: protein,
+      calculatedCarbs: carbs,
+      calculatedFat: fat,
+    });
 
     modalRef.current?.close();
   };
