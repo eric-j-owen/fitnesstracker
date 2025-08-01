@@ -11,7 +11,6 @@ const router = Router();
 // PATCH /api/foodlog/:id
 
 router.get("/", Controller.getLoggedDay);
-router.get("/:id", Controller.getLogEntry);
 router.post(
   "/",
 
@@ -19,5 +18,6 @@ router.post(
   Controller.createLogEntry
 );
 router.patch("/:id", Controller.editLogEntry);
+router.delete("/:id", Controller.deleteLogEntry);
 
 export default router;

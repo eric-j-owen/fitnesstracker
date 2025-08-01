@@ -8,13 +8,90 @@ import createHttpError from "http-errors";
 const foodLogRepo = AppDataSource.getRepository(FoodLog);
 const foodItemRepo = AppDataSource.getRepository(FoodItem);
 
-export const getLogEntry: RequestHandler = async (req, res, next) => {};
-export const getLoggedDay: RequestHandler = async (req, res, next) => {};
-export const deleteLogEntry: RequestHandler = async (req, res, next) => {};
-export const editLogEntry: RequestHandler = async (req, res, next) => {};
+export const getLoggedDay: RequestHandler = async (req, res, next) => {
+  try {
+    const { userId } = req.session;
+    const dateStr = String(req.query.date).split("T")[0];
+
+    if (!dateStr) {
+      throw createHttpError(400, "missing date");
+    }
+    const logs = await foodLogRepo.find({
+      where: {
+        user: { id: userId },
+        logDate: dateStr,
+      },
+    });
+
+    res.status(200).json(logs);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteLogEntry: RequestHandler = async (req, res, next) => {
+  try {
+    const { userId } = req.session;
+    const { id } = req.params;
+
+    const result = await foodLogRepo.delete({
+      id: Number(id),
+      user: { id: userId },
+    });
+
+    if (result.affected === 0) {
+      throw createHttpError(404, "entry not found");
+    }
+
+    res.sendStatus(204);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const editLogEntry: RequestHandler = async (req, res, next) => {
+  try {
+    const { userId } = req.session;
+    const { id } = req.params;
+    const {
+      amount,
+      unit,
+      mealCategory,
+      calculatedCalories,
+      calculatedProtein,
+      calculatedCarbs,
+      calculatedFat,
+    } = req.body;
+
+    const result = await foodLogRepo.update(
+      {
+        user: { id: userId },
+        id: Number(id),
+      },
+      {
+        amount,
+        unit,
+        mealCategory,
+        calculatedCalories,
+        calculatedProtein,
+        calculatedCarbs,
+        calculatedFat,
+      }
+    );
+
+    if (result.affected === 0) {
+      throw createHttpError(404, "entry not found");
+    }
+
+    const updatedEntry = await foodLogRepo.findOneBy({ id: Number(id) });
+    res.status(200).json(updatedEntry);
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const createLogEntry: RequestHandler<
-  IdParam,
+  unknown,
   unknown,
   FoodLogReqBody,
   unknown
@@ -44,7 +121,7 @@ export const createLogEntry: RequestHandler<
       mealCategory: mealCategory as MealCategory,
       amount,
       unit,
-      logDate: new Date(logDate),
+      logDate: logDate.split("T")[0],
       calculatedCalories,
       calculatedProtein,
       calculatedCarbs,
