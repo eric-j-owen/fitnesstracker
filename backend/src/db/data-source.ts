@@ -11,7 +11,8 @@ export const dataSourceOptions: DataSourceOptions = {
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
   synchronize: true,
-  logging: false,
+  logging: true,
+  cache: true,
   entities: [
     entities.User,
     entities.Metric,
