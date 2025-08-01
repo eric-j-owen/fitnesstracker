@@ -3,6 +3,7 @@ import { useFoodItem } from "../../api/foodItem/useFoodItem";
 import Modal from "../Modal";
 import LogFoodForm from "./LogFoodForm";
 import SearchFoodItems from "./SearchFoodItems";
+import FoodLogDisplay from "./FoodLogDisplay";
 
 export default function FoodLogModule() {
   const [selectedFdcId, setSelectedFdcId] = useState<number>();
@@ -29,6 +30,8 @@ export default function FoodLogModule() {
       <Modal modalId="foodModal" modalRef={foodModalRef}>
         {renderModalContent()}
       </Modal>
+
+      <FoodLogDisplay date={new Date()} />
     </div>
   );
 }
