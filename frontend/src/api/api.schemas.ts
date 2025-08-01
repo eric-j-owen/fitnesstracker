@@ -123,16 +123,19 @@ export const foodItemSchema = z.object({
 
 export const foodLogFormInputs = z.object({
   mealCategory: z.string(),
-  amount: z.number(),
-  unit: z.string(),
+  amount: z.number().positive(),
+  unit: z.string().min(1).max(25),
   logDate: z.date(),
 });
-export const createFoodLogSchema = z.object({
-  body: foodLogFormInputs.extend({
-    foodItemId: z.number(),
-    calculatedCalories: z.number().min(0),
-    calculatedProtein: z.number().min(0),
-    calculatedCarbs: z.number().min(0),
-    calculatedFat: z.number().min(0),
-  }),
+
+export const foodLogSchema = foodLogFormInputs.extend({
+  foodItemId: z.number(),
+  calculatedCalories: z.number().min(0),
+  calculatedProtein: z.number().min(0),
+  calculatedCarbs: z.number().min(0),
+  calculatedFat: z.number().min(0),
+});
+
+export const foodLogResponseSchema = foodLogSchema.extend({
+  foodItem: foodItemSchema,
 });
