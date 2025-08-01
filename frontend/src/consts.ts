@@ -14,3 +14,6 @@ export const AUTH_KEY = "auth-user";
 export const METRICS_KEY = "metrics";
 export const WORKOUTS_KEY = "workouts";
 export const FOOD_SEARCH_KEY = "food-search";
+export const FOOD_LOG_KEY = "food-log";
+
+export const MEAL_CATEGORIES = ["Breakfast", "Lunch", "Dinner", "Other"];
