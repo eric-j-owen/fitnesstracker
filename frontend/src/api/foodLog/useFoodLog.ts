@@ -1,11 +1,18 @@
 import {
   useInfiniteQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { FOOD_SEARCH_KEY, MACROS_KEY } from "../../consts";
-import { logFoodItem, searchFoodItems } from "./foodLog.api";
+import { FOOD_LOG_KEY, FOOD_SEARCH_KEY, MACROS_KEY } from "../../consts";
+import { getLogByDate, logFoodItem, searchFoodItems } from "./foodLog.api";
 import toast from "react-hot-toast";
+
+/*
+todos
+  change log food query key to include logged date
+  update log mutation invalidation to include that date
+*/
 
 export const useFoodSearch = (query: string) => {
   const searchQuery = useInfiniteQuery({
@@ -37,6 +44,7 @@ export const useLogFood = () => {
     onSuccess: () => {
       toast.success("Metric logged successfully");
       queryClient.invalidateQueries({ queryKey: [MACROS_KEY] });
+      queryClient.invalidateQueries({ queryKey: [FOOD_LOG_KEY] });
     },
     onError: (err) => {
       toast.error("Failed to log");
@@ -48,5 +56,17 @@ export const useLogFood = () => {
     logFood: mutation.mutate,
     isLogging: mutation.isPending,
     logError: mutation.error,
+  };
+};
+
+export const useGetLogs = (date: Date) => {
+  const query = useQuery({
+    queryKey: [FOOD_LOG_KEY],
+    queryFn: () => getLogByDate(date),
+  });
+
+  return {
+    data: query.data,
+    isLoading: query.isPending,
   };
 };
