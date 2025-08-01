@@ -49,8 +49,9 @@ export class FoodLog {
   @Column()
   unit: string; //cup, g, ml, package etc
 
-  @Column({ type: "timestamptz" })
-  logDate: Date;
+  //yyyy-mm-dd
+  @Column({ type: "varchar", length: 10, name: "log_date" })
+  logDate: string;
 
   // ----
   // macros
