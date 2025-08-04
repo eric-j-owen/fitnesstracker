@@ -10,7 +10,6 @@ import toast from "react-hot-toast";
 
 /*
 todos
-  change log food query key to include logged date
   update log mutation invalidation to include that date
 */
 
@@ -61,7 +60,7 @@ export const useLogFood = () => {
 
 export const useGetLogs = (date: Date) => {
   const query = useQuery({
-    queryKey: [FOOD_LOG_KEY],
+    queryKey: [FOOD_LOG_KEY, date.toISOString()],
     queryFn: () => getLogByDate(date),
   });
 

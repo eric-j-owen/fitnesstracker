@@ -137,5 +137,6 @@ export const foodLogSchema = foodLogFormInputs.extend({
 });
 
 export const foodLogResponseSchema = foodLogSchema.extend({
+  id: z.number(),
   foodItem: foodItemSchema,
 });

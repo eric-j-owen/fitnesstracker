@@ -21,6 +21,7 @@ export const getLoggedDay: RequestHandler = async (req, res, next) => {
         user: { id: userId },
         logDate: dateStr,
       },
+      relations: ["foodItem"],
     });
 
     res.status(200).json(logs);

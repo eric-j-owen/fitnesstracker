@@ -8,6 +8,7 @@ todos
     drag and drop entries
 */
 
+import { useState } from "react";
 import { useGetLogs } from "../../api/foodLog/useFoodLog";
 import { MEAL_CATEGORIES } from "../../consts";
 
@@ -16,12 +17,32 @@ interface FoodLogDisplayProps {
 }
 
 export default function FoodLogDisplay({ date }: FoodLogDisplayProps) {
-  const { data: logs } = useGetLogs(date);
+  const [selectedDate, setSelectedDate] = useState(date);
+  const { data: logs } = useGetLogs(selectedDate);
+
+  const handleSubDay = () => {
+    const result = new Date(selectedDate);
+    result.setDate(result.getDate() - 1);
+    setSelectedDate(result);
+  };
+
+  const handleAddDay = () => {
+    const result = new Date(selectedDate);
+    result.setDate(result.getDate() + 1);
+    setSelectedDate(result);
+  };
 
   return (
     <div>
+      {/* date nav and display */}
       <div>
-        <h2>{date.toISOString()}</h2>
+        <button onClick={handleSubDay} className="btn">
+          previous
+        </button>
+        <h2>{selectedDate.toISOString().split("T")[0]}</h2>
+        <button onClick={handleAddDay} className="btn">
+          next
+        </button>
       </div>
 
       {/* meal categories  */}
@@ -41,7 +62,7 @@ export default function FoodLogDisplay({ date }: FoodLogDisplayProps) {
                 <div>
                   <ul>
                     {filteredLogs.map((log) => (
-                      <li>{log.foodItem.description}</li>
+                      <li key={log.id}>{log.foodItem.description}</li>
                     ))}
                   </ul>
                 </div>
