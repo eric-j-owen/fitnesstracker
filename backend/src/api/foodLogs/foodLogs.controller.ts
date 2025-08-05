@@ -44,7 +44,7 @@ export const deleteLogEntry: RequestHandler = async (req, res, next) => {
       throw createHttpError(404, "entry not found");
     }
 
-    res.sendStatus(204);
+    res.status(200).json({ success: true });
   } catch (error) {
     next(error);
   }
@@ -122,7 +122,7 @@ export const createLogEntry: RequestHandler<
       mealCategory: mealCategory as MealCategory,
       amount,
       unit,
-      logDate: logDate.split("T")[0],
+      logDate: String(logDate).split("T")[0],
       calculatedCalories,
       calculatedProtein,
       calculatedCarbs,
