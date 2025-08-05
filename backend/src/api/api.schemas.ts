@@ -124,7 +124,7 @@ export const createFoodLogSchema = z.object({
     mealCategory: z.string(),
     amount: z.number(),
     unit: z.string(),
-    logDate: z.string().datetime(),
+    logDate: z.coerce.date(),
     calculatedCalories: z.number(),
     calculatedProtein: z.number(),
     calculatedCarbs: z.number(),
