@@ -33,5 +33,16 @@ export const logFoodItem = async (foodEntry: FoodLogEntry) => {
 export const getLogByDate = (date: Date): Promise<FoodLogResponse[]> => {
   return fetchClient(`/api/foodlog?date=${date.toISOString()}`);
 };
-export const editLogEntry = async (id: number) => {};
-export const deleteLogEntry = async (id: number) => {};
+
+export const patchLogEntry = (id: number, data: FoodLogEntry) => {
+  return fetchClient(`/api/foodlog/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+};
+
+export const deleteLogEntry = (id: number) => {
+  return fetchClient(`/api/foodlog/${id}`, {
+    method: "DELETE",
+  });
+};

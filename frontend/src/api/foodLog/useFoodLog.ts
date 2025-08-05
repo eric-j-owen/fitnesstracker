@@ -5,8 +5,15 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { FOOD_LOG_KEY, FOOD_SEARCH_KEY, MACROS_KEY } from "../../consts";
-import { getLogByDate, logFoodItem, searchFoodItems } from "./foodLog.api";
+import {
+  deleteLogEntry,
+  getLogByDate,
+  logFoodItem,
+  patchLogEntry,
+  searchFoodItems,
+} from "./foodLog.api";
 import toast from "react-hot-toast";
+import { FoodLogEntry } from "../api.types";
 
 /*
 todos
@@ -67,5 +74,49 @@ export const useGetLogs = (date: Date) => {
   return {
     data: query.data,
     isLoading: query.isPending,
+  };
+};
+
+export const useEditLogs = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: FoodLogEntry }) =>
+      patchLogEntry(id, data),
+
+    onSuccess: () => {
+      toast.success("Log updated successfully");
+      queryClient.invalidateQueries({ queryKey: [MACROS_KEY] });
+      queryClient.invalidateQueries({ queryKey: [FOOD_LOG_KEY] });
+    },
+
+    onError: (err) => {
+      toast.error("Failed to update log");
+      console.error(err);
+    },
+  });
+
+  return {
+    editLog: mutation.mutateAsync,
+  };
+};
+export const useDeleteLogs = () => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (id: number) => deleteLogEntry(id),
+    onSuccess: () => {
+      toast.success("Log deleted");
+      queryClient.invalidateQueries({ queryKey: [MACROS_KEY] });
+      queryClient.invalidateQueries({ queryKey: [FOOD_LOG_KEY] });
+    },
+    onError: (err) => {
+      toast.error("Failed to delete");
+      console.error(err);
+    },
+  });
+
+  return {
+    deleteLog: mutation.mutateAsync,
   };
 };
