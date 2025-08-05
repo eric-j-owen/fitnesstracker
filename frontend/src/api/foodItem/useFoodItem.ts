@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getFoodItemById } from "./foodItem.api";
 import { FoodItemType } from "../api.types";
 
-export const useFoodItem = (fdcId?: number) => {
+export const useFoodItem = (fdcId: number | null) => {
   const foodItemQuery = useQuery({
     queryKey: [fdcId],
     queryFn: () => {
@@ -13,7 +13,7 @@ export const useFoodItem = (fdcId?: number) => {
   });
 
   return {
-    data: foodItemQuery.data as FoodItemType | undefined,
+    data: foodItemQuery.data as FoodItemType,
     isLoading: foodItemQuery.isPending,
   };
 };
