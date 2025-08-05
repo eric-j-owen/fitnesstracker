@@ -6,7 +6,7 @@ import SearchFoodItems from "./SearchFoodItems";
 import FoodLogDisplay from "./FoodLogDisplay";
 
 export default function FoodLogModule() {
-  const [selectedFdcId, setSelectedFdcId] = useState<number>();
+  const [selectedFdcId, setSelectedFdcId] = useState<number | null>(null);
 
   const foodModalRef = useRef<HTMLDialogElement>(null);
 
@@ -21,13 +21,23 @@ export default function FoodLogModule() {
   const renderModalContent = () => {
     if (loadingFoodItem) return <p>Loading details...</p>;
     if (!foodItem) return <p>Something went wrong...</p>;
-    return <LogFoodForm modalRef={foodModalRef} foodEntry={foodItem} />;
+    return (
+      <LogFoodForm
+        modalRef={foodModalRef}
+        foodItem={foodItem}
+        title="Log Food"
+      />
+    );
   };
 
   return (
     <div>
       <SearchFoodItems onSelect={handleSelect} />
-      <Modal modalId="foodModal" modalRef={foodModalRef}>
+      <Modal
+        modalId="foodModal"
+        modalRef={foodModalRef}
+        onClose={() => setSelectedFdcId(null)}
+      >
         {renderModalContent()}
       </Modal>
 

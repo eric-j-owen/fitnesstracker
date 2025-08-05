@@ -1,22 +1,35 @@
 import { useState } from "react";
-import { FoodItemType, FoodLogFormInputs } from "../../api/api.types";
-import { useLogFood } from "../../api/foodLog/useFoodLog";
+import {
+  FoodItemType,
+  FoodLogFormInputs,
+  FoodLogResponse,
+} from "../../api/api.types";
+import { useEditLogs, useLogFood } from "../../api/foodLog/useFoodLog";
 
 interface LogFoodFormProps {
-  foodEntry: FoodItemType;
   modalRef: React.RefObject<HTMLDialogElement | null>;
+  foodItem: FoodItemType;
+  loggedFood?: FoodLogResponse;
+  title: string;
 }
 
-export default function LogFoodForm({ foodEntry, modalRef }: LogFoodFormProps) {
+export default function LogFoodForm({
+  foodItem: foodEntry,
+  modalRef,
+  loggedFood,
+  title,
+}: LogFoodFormProps) {
   const today = new Date();
+
   const { logFood } = useLogFood();
+  const { editLog } = useEditLogs();
 
   //initial state
   const [formData, setFormData] = useState<FoodLogFormInputs>({
-    amount: 1,
-    unit: "g",
-    mealCategory: "Other",
-    logDate: today,
+    amount: loggedFood?.amount || 1,
+    unit: loggedFood?.unit || "g",
+    mealCategory: loggedFood?.mealCategory || "Other",
+    logDate: loggedFood?.logDate || today,
   });
 
   const caluclatedMacros = {
@@ -53,14 +66,20 @@ export default function LogFoodForm({ foodEntry, modalRef }: LogFoodFormProps) {
 
     const { calories, protein, carbs, fat } = caluclatedMacros;
 
-    await logFood({
+    const payload = {
       ...formData,
       foodItemId: foodEntry.id,
       calculatedCalories: calories,
       calculatedProtein: protein,
       calculatedCarbs: carbs,
       calculatedFat: fat,
-    });
+    };
+
+    if (loggedFood) {
+      await editLog({ id: loggedFood.id, data: payload });
+    } else {
+      await logFood(payload);
+    }
 
     modalRef.current?.close();
   };
@@ -68,6 +87,7 @@ export default function LogFoodForm({ foodEntry, modalRef }: LogFoodFormProps) {
   return (
     <form onSubmit={handleSubmit}>
       <div>
+        <h2>{title}</h2>
         <div>
           <h3>{foodEntry.description}</h3>
           <p>{foodEntry.foodCategory}</p>

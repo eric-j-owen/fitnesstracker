@@ -11,6 +11,7 @@ todos
 import { useState } from "react";
 import { useGetLogs } from "../../api/foodLog/useFoodLog";
 import { MEAL_CATEGORIES } from "../../consts";
+import FoodLogEntry from "./FoodLogEntry";
 
 interface FoodLogDisplayProps {
   date: Date;
@@ -62,7 +63,7 @@ export default function FoodLogDisplay({ date }: FoodLogDisplayProps) {
                 <div>
                   <ul>
                     {filteredLogs.map((log) => (
-                      <li key={log.id}>{log.foodItem.description}</li>
+                      <FoodLogEntry entry={log} key={log.id} />
                     ))}
                   </ul>
                 </div>
@@ -73,7 +74,6 @@ export default function FoodLogDisplay({ date }: FoodLogDisplayProps) {
           </div>
         );
       })}
-      <div>{}</div>
     </div>
   );
 }
