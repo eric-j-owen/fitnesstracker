@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { MealCategory } from "../db/entities/foodLog.entity.js";
 
 //common
 export const idParamSchema = z.object({
@@ -72,32 +73,61 @@ export const logMetricSchema = z.object({
   }),
 });
 
-//exercises
-export const exerciseBodySchema = z.object({
-  body: z.object({
-    name: z.string().max(255),
-    tag: z.string().max(255),
+//fooditem
+
+export const foodItemSchema = z.object({
+  fdcId: z.number(),
+  gtinUpc: z.string(),
+  description: z.string(),
+  publicationDate: z.date(),
+  lastCheckForUpdate: z.date(),
+  foodClass: z.string(),
+  brandOwner: z.string().optional(),
+  brandName: z.string().optional(),
+  foodCategory: z.string(),
+  packageWeight: z.string(),
+  nutrients: z.object({
+    calories: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+    protein: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+    carbs: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+    fat: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
   }),
+
+  foodPortions: z.array(
+    z.object({
+      portionDescription: z.string().optional(),
+      gramWeight: z.number().optional(),
+      servingSize: z.number().optional(),
+      servingSizeUnit: z.string().optional(),
+      amount: z.number().optional(),
+    })
+  ),
 });
 
-//workouts
-export const workoutBodySchema = z.object({
-  body: z.object({
-    name: z.string().min(1).max(255),
-    days: z.array(z.string()),
-  }),
-});
+// foodlog
 
-export const addExerciseToWorkoutBodySchema = z.object({
+export const createFoodLogSchema = z.object({
   body: z.object({
-    exerciseId: z.number().positive(),
-    sets: z.number().min(1),
-    reps: z.number().min(1),
-    weight: z.number().min(0).optional(),
-    duration: z.string().optional(),
-    distance: z.number().min(0).optional(),
-  }),
-  params: z.object({
-    id: z.string().regex(/^[1-9]\d*$/, "Invalid workout id"),
+    foodItemId: z.number(),
+    mealCategory: z.string(),
+    amount: z.number(),
+    unit: z.string(),
+    logDate: z.coerce.date(),
+    calculatedCalories: z.number(),
+    calculatedProtein: z.number(),
+    calculatedCarbs: z.number(),
+    calculatedFat: z.number(),
   }),
 });

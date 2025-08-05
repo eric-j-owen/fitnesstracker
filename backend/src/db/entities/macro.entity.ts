@@ -12,25 +12,25 @@ import type { User } from "./user.entity.js";
 @Unique(["userId", "date"])
 export class Macro {
   @PrimaryGeneratedColumn()
-  id!: number;
+  id: number;
 
   @Column({ name: "user_id" })
-  userId!: number;
+  userId: number;
 
   @Column({ type: "int" })
-  calories!: number;
+  calories: number;
 
   @Column({ type: "int" })
-  protein!: number;
+  protein: number;
 
   @Column({ type: "int" })
-  carbs!: number;
+  carbs: number;
 
   @Column({ type: "int" })
-  fats!: number;
+  fats: number;
 
   @Column({ type: "date" })
-  date!: Date;
+  date: Date;
 
   //relations
 
@@ -38,6 +38,5 @@ export class Macro {
     nullable: false,
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "user_id" })
-  user!: User;
+  user: User;
 }

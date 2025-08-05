@@ -11,7 +11,7 @@ export const getMetrics: RequestHandler = async (req, res, next) => {
   try {
     const result = await metricsRepo
       .createQueryBuilder("metrics")
-      .where("metrics.userId = :userId", { userId })
+      .where("metrics.user_id = :userId", { userId })
       .orderBy("metrics.date", "ASC")
       .getMany();
 
@@ -27,15 +27,16 @@ export const logMetrics: RequestHandler<unknown, unknown, LogMetric> = async (
   next
 ) => {
   const userId = req.session.userId;
+
   const { type, val, date } = req.body;
-  console.log(date);
+
   try {
     const result = await metricsRepo
       .createQueryBuilder()
       .insert()
       .into("metrics")
       .values({
-        userId,
+        user: { id: userId },
         type,
         val,
         date: date,

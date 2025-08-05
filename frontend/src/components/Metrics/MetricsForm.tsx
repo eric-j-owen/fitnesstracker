@@ -49,7 +49,7 @@ export default function MetricsForm({ modalRef }: MetricsFormProps) {
         name="type"
         children={(field) => (
           <div className="form-control w-full">
-            <label className="label">
+            <label className="label" htmlFor="type-select">
               <span className="label-text">Type</span>
             </label>
 
@@ -57,6 +57,7 @@ export default function MetricsForm({ modalRef }: MetricsFormProps) {
               className="select select-bordered w-full"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
+              id="type-select"
             >
               <option value="weight">Weight</option>
             </select>

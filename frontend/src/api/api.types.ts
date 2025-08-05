@@ -12,14 +12,15 @@ export type MacrosFormData = z.infer<typeof s.macrosFormSchema>;
 //metrics
 export type MetricsFormData = z.infer<typeof s.metricsFormSchema>;
 
-//exercies
-export type ExerciseType = z.infer<typeof s.exerciseSchema>;
-export type ExerciseFormValues = z.infer<typeof s.exerciseFormSchema>;
-
-//workouts
-export type WorkoutFormValues = z.infer<typeof s.workoutFormSchema>;
-export type WorkoutType = z.infer<typeof s.workoutSchema>;
-export type addExerciseToWorkoutType = z.infer<
-  typeof s.addExerciseToWorkoutSchema
+//fooditems
+export type FoodItemType = z.infer<typeof s.foodItemSchema>;
+export type FoodPortionsArray = z.infer<
+  typeof s.foodItemSchema.shape.foodPortions
 >;
-export type ExerciseWorkoutLink = z.infer<typeof s.exerciseWorkoutLinkSchema>;
+
+export type NutrientsType = z.infer<typeof s.foodItemSchema.shape.nutrients>;
+
+// food log
+export type FoodLogEntry = z.infer<typeof s.foodLogSchema>;
+export type FoodLogFormInputs = z.infer<typeof s.foodLogFormInputs>;
+export type FoodLogResponse = z.infer<typeof s.foodLogResponseSchema>;

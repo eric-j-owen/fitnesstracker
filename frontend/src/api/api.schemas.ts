@@ -76,48 +76,67 @@ export const metricsFormSchema = z.object({
   date: z.string(),
 });
 
-//exercises
-export const exerciseSchema = z.object({
+//fooditem
+export const foodItemSchema = z.object({
   id: z.number(),
-  name: z.string().nonempty("Exercise name is required").max(255),
-  tag: z.string(),
+  fdcId: z.number(),
+  gtinUpc: z.string(),
+  description: z.string(),
+  publicationDate: z.date(),
+  lastCheckForUpdate: z.date(),
+  foodClass: z.string(),
+  brandOwner: z.string().optional(),
+  brandName: z.string().optional(),
+  foodCategory: z.string(),
+  packageWeight: z.string(),
+  nutrients: z.object({
+    calories: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+    protein: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+    carbs: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+    fat: z.object({
+      per100g: z.number(),
+      perServing: z.number().optional(),
+    }),
+  }),
+
+  foodPortions: z.array(
+    z.object({
+      portionDescription: z.string().optional(),
+      gramWeight: z.number().optional(),
+      servingSize: z.number().optional(),
+      servingSizeUnit: z.string().optional(),
+      amount: z.number().optional(),
+    })
+  ),
 });
 
-export const exerciseFormSchema = z.object({
-  name: z.string().nonempty("Exercise name is required"),
-  tag: z.string(),
+// foodlog
+
+export const foodLogFormInputs = z.object({
+  mealCategory: z.string(),
+  amount: z.number().positive(),
+  unit: z.string().min(1).max(25),
+  logDate: z.date(),
 });
 
-//workouts
-
-export const workoutFormSchema = z.object({
-  name: z.string().nonempty("Workout name is required"),
-  days: z.array(z.string()),
+export const foodLogSchema = foodLogFormInputs.extend({
+  foodItemId: z.number(),
+  calculatedCalories: z.number().min(0),
+  calculatedProtein: z.number().min(0),
+  calculatedCarbs: z.number().min(0),
+  calculatedFat: z.number().min(0),
 });
 
-export const addExerciseToWorkoutSchema = z.object({
-  exerciseId: z.number(),
-  sets: z.number(),
-  reps: z.number(),
-  weight: z.number(),
-  duration: z.number(),
-  distance: z.number(),
-});
-
-export const exerciseWorkoutLinkSchema = z.object({
-  workoutId: z.number(),
-  exerciseId: z.number(),
-  sets: z.number(),
-  reps: z.number(),
-  weight: z.number(),
-  duration: z.string().nullable().optional(), // Interval type from backend is a string
-  distance: z.coerce.number().nullable().optional(),
-  exercise: exerciseSchema,
-});
-
-export const workoutSchema = z.object({
+export const foodLogResponseSchema = foodLogSchema.extend({
   id: z.number(),
-  name: z.string(),
-  days: z.array(z.string()),
-  workoutExerciseLinks: z.array(exerciseWorkoutLinkSchema),
+  foodItem: foodItemSchema,
 });

@@ -9,22 +9,19 @@ import {
 import type { User } from "./user.entity.js";
 
 @Entity("metrics")
-@Unique(["userId", "date", "type"])
+@Unique(["user", "date", "type"])
 export class Metric {
   @PrimaryGeneratedColumn()
-  id!: number;
-
-  @Column({ name: "user_id" })
-  userId!: number;
+  id: number;
 
   @Column({ type: "enum", enum: ["weight"] })
-  type!: "weight";
+  type: "weight";
 
   @Column({ type: "decimal", precision: 6, scale: 2 })
-  val!: number;
+  val: number;
 
   @Column({ type: "date" })
-  date!: string;
+  date: string;
 
   //relations
   @ManyToOne("User", (user: User) => user.metrics, {
@@ -32,5 +29,5 @@ export class Metric {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "user_id" })
-  user!: User;
+  user: User;
 }

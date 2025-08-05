@@ -1,0 +1,146 @@
+import { useState } from "react";
+import {
+  FoodItemType,
+  FoodLogFormInputs,
+  FoodLogResponse,
+} from "../../api/api.types";
+import { useEditLogs, useLogFood } from "../../api/foodLog/useFoodLog";
+
+interface LogFoodFormProps {
+  modalRef: React.RefObject<HTMLDialogElement | null>;
+  foodItem: FoodItemType;
+  loggedFood?: FoodLogResponse;
+  title: string;
+}
+
+export default function LogFoodForm({
+  foodItem: foodEntry,
+  modalRef,
+  loggedFood,
+  title,
+}: LogFoodFormProps) {
+  const today = new Date();
+
+  const { logFood } = useLogFood();
+  const { editLog } = useEditLogs();
+
+  //initial state
+  const [formData, setFormData] = useState<FoodLogFormInputs>({
+    amount: loggedFood?.amount || 1,
+    unit: loggedFood?.unit || "g",
+    mealCategory: loggedFood?.mealCategory || "Other",
+    logDate: loggedFood?.logDate || today,
+  });
+
+  const caluclatedMacros = {
+    calories: Number(
+      ((foodEntry.nutrients.calories.per100g / 100) * formData.amount).toFixed(
+        2
+      )
+    ),
+    protein: Number(
+      ((foodEntry.nutrients.protein.per100g / 100) * formData.amount).toFixed(2)
+    ),
+    carbs: Number(
+      ((foodEntry.nutrients.carbs.per100g / 100) * formData.amount).toFixed(2)
+    ),
+    fat: Number(
+      ((foodEntry.nutrients.fat.per100g / 100) * formData.amount).toFixed(2)
+    ),
+  };
+
+  //event functions
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "amount" ? Number(value) : value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const { calories, protein, carbs, fat } = caluclatedMacros;
+
+    const payload = {
+      ...formData,
+      foodItemId: foodEntry.id,
+      calculatedCalories: calories,
+      calculatedProtein: protein,
+      calculatedCarbs: carbs,
+      calculatedFat: fat,
+    };
+
+    if (loggedFood) {
+      await editLog({ id: loggedFood.id, data: payload });
+    } else {
+      await logFood(payload);
+    }
+
+    modalRef.current?.close();
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <h2>{title}</h2>
+        <div>
+          <h3>{foodEntry.description}</h3>
+          <p>{foodEntry.foodCategory}</p>
+          <p>
+            {foodEntry.brandName &&
+              `${foodEntry.brandName} - ${foodEntry.brandOwner}`}
+          </p>
+        </div>
+        <div>
+          <h4>Macros</h4>
+          <p>Calories: {caluclatedMacros.calories}</p>
+          <p>Protein: {caluclatedMacros.protein}</p>
+          <p>Carbs: {caluclatedMacros.carbs}</p>
+          <p>Fat: {caluclatedMacros.fat}</p>
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="mealCategory">Meal</label>
+        <select
+          name="mealCategory"
+          id="mealCategory"
+          value={formData.mealCategory}
+          onChange={handleChange}
+        >
+          <option value="Breakfast">Breakfast</option>
+          <option value="Lunch">Lunch</option>
+          <option value="Dinner">Dinner</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label htmlFor="amount">Amount</label>
+        <input
+          type="number"
+          id="amount"
+          name="amount"
+          value={formData.amount === 0 ? "" : formData.amount}
+          onChange={handleChange}
+          min={1}
+        />
+
+        <label htmlFor="unit"></label>
+        <select
+          name="unit"
+          id="unit"
+          value={formData.unit}
+          onChange={handleChange}
+        >
+          <option value="g">g</option>
+        </select>
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+  );
+}

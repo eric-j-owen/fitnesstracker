@@ -59,8 +59,8 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(
   rateLimit({
-    windowMs: 15 * 60 * 1000,
-    limit: 100,
+    windowMs: 60 * 1000,
+    limit: 60,
     standardHeaders: true,
     legacyHeaders: false,
   })

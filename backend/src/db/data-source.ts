@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import type { DataSourceOptions } from "typeorm";
-import * as entities from "./entities/_index.js";
+import * as entities from "./entities/index.js";
 
 export const dataSourceOptions: DataSourceOptions = {
   type: "postgres",
@@ -11,14 +11,14 @@ export const dataSourceOptions: DataSourceOptions = {
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
   synchronize: true,
-  logging: ["error"],
+  logging: true,
+  cache: true,
   entities: [
     entities.User,
     entities.Metric,
     entities.Macro,
-    entities.Workout,
-    entities.Exercise,
-    entities.WorkoutExercisesLink,
+    entities.FoodItem,
+    entities.FoodLog,
   ],
 };
 

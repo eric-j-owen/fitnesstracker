@@ -8,7 +8,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { MacrosFormData } from "../../api/api.schemas";
+import { MacrosFormData } from "../../api/api.types";
 
 ChartJS.register(
   CategoryScale,

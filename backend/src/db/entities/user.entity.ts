@@ -8,52 +8,43 @@ import {
 } from "typeorm";
 import type { Metric } from "./metric.entity.js";
 import type { Macro } from "./macro.entity.js";
-import type { Workout } from "./workout.entity.js";
-import type { Exercise } from "./exercise.entity.js";
+import type { FoodLog } from "./foodLog.entity.js";
 
 @Entity("users")
 export class User {
   @PrimaryGeneratedColumn()
-  id!: number;
+  id: number;
 
   @Column({ type: "text", name: "first_name" })
-  firstName!: string;
+  firstName: string;
 
   @Column({ type: "text", name: "last_name", nullable: true })
-  lastName?: string;
-
-  @Column({
-    type: "enum",
-    name: "user_role",
-    enum: ["basic", "trainer"],
-    default: "basic",
-  })
-  userRole!: "basic" | "trainer";
+  lastName: string;
 
   @Column({ type: "text", unique: true })
-  username!: string;
+  username: string;
 
   @Column({ type: "text", name: "password_hash" })
-  passwordHash!: string;
+  passwordHash: string;
 
   @Column({ type: "text", name: "avatar_url", nullable: true })
-  avatarUrl?: string;
+  avatarUrl: string;
 
   @Column({ type: "integer", name: "target_protein", nullable: true })
-  targetProtein?: number;
+  targetProtein: number;
 
   @Column({ type: "integer", name: "target_carbs", nullable: true })
-  targetCarbs?: number;
+  targetCarbs: number;
 
   @Column({ type: "integer", name: "target_fats", nullable: true })
-  targetFats?: number;
+  targetFats: number;
 
   @CreateDateColumn({
     type: "timestamptz",
     name: "created_at",
     default: () => "CURRENT_TIMESTAMP",
   })
-  createdAt!: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({
     type: "timestamptz",
@@ -61,18 +52,15 @@ export class User {
     default: () => "CURRENT_TIMESTAMP",
     onUpdate: "CURRENT_TIMESTAMP",
   })
-  updatedAt!: Date;
+  updatedAt: Date;
 
   //relations
   @OneToMany("Metric", (metric: Metric) => metric.user)
-  metrics!: Metric[];
+  metrics: Metric[];
 
   @OneToMany("Macro", (macro: Macro) => macro.user)
-  macros!: Macro[];
+  macros: Macro[];
 
-  @OneToMany("Workout", (workout: Workout) => workout.user)
-  workouts!: Workout[];
-
-  @OneToMany("Exercise", (exercise: Exercise) => exercise.user)
-  exercises!: Exercise[];
+  @OneToMany("FoodLog", (foodLog: FoodLog) => foodLog.user)
+  foodLogs: FoodLog[];
 }
