@@ -15,7 +15,7 @@ export default function mountRoutes(app: Express) {
 
   app.use("/api/users", requireAuth, userRouter);
   app.use("/api/auth", authRouter);
-  app.use("/api/macros", requireAuth, macrosRouter);
+  app.use("/api/macros", macrosRouter);
   app.use("/api/metrics", requireAuth, metricsRouter);
   app.use("/api/fooditems", foodItemRouter);
   app.use("/api/foodlog", foodLogRouter);

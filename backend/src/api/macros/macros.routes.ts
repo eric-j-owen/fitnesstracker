@@ -6,6 +6,7 @@ const router = Router();
 
 // GET  /api/macros
 
-router.get("/", requireAuth, Controller.getMacrosLogs);
+router.get("/daily", Controller.getDailyMacros);
+router.get("/historical", Controller.getHistoricalMacros);
 
 export default router;
