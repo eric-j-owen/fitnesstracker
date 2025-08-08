@@ -3,10 +3,14 @@ import { useAuth } from "../../api/auth/useAuth";
 // import MacrosChart from "./MacrosChart";
 import MacroProgressBars from "./MacroProgressBars";
 import { UnauthorizedError } from "../../api/errors";
+import { DateContext } from "../../pages/Dashboard";
+import { useContext } from "react";
 
 function MacrosModule() {
+  const { selectedDate } = useContext(DateContext);
+  console.log(selectedDate);
   const { user } = useAuth();
-  const { dailyMacros, isLoadingQuery, isErrorQuery } = useMacros(new Date());
+  const { dailyMacros, isLoadingQuery, isErrorQuery } = useMacros(selectedDate);
 
   if (!user) throw new UnauthorizedError();
 

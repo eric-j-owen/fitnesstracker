@@ -32,15 +32,26 @@ export default function SearchFoodItems({ onSelect }: SearchFoodItemsProps) {
     setSubmittedQuery(query);
   };
   return (
-    <div>
+    <div className="relative">
       {/* search bar */}
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          className="bg-base-100 border w-full"
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <button className="btn">Submit</button>
+        <div className="relative my-10">
+          <input
+            type="text"
+            className="input input-accent w-full"
+            placeholder="Search for food"
+            aria-label="Search for food"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <button
+            className="btn btn-ghost text-accent absolute right-0"
+            onClick={() => setQuery("")}
+          >
+            x
+          </button>
+          <button className="btn">Submit</button>
+        </div>
       </form>
 
       {/* loading states */}
@@ -51,39 +62,42 @@ export default function SearchFoodItems({ onSelect }: SearchFoodItemsProps) {
 
       {/* results */}
       {searchResults && (
-        <div>
-          <ul>
-            {searchResults.pages.map((page, i) => (
-              <React.Fragment key={i}>
-                {page.foods.map((food) => (
-                  <li key={food.fdcId}>
-                    {food?.brandName && <p>{food.brandName}</p>}
-                    <p>{food.description}</p>
-                    <p>{food.foodCategory}</p>
-                    <button
-                      className="btn"
-                      onClick={() => onSelect(food.fdcId)}
-                    >
-                      +
-                    </button>
-                  </li>
-                ))}
-              </React.Fragment>
-            ))}
-          </ul>
-
+        <div className="absolute z-20 bg-base-300 shadow-xl max-h-100 overflow-y-auto border border-accent w-full">
+          <div className="p-2">
+            <ul>
+              {searchResults.pages.map((page, i) => (
+                <React.Fragment key={i}>
+                  {page.foods.map((food) => (
+                    <li key={food.fdcId}>
+                      {food?.brandName && <p>{food.brandName}</p>}
+                      <p>{food.description}</p>
+                      <p>{food.foodCategory}</p>
+                      <button
+                        className="btn"
+                        onClick={() => onSelect(food.fdcId)}
+                      >
+                        +
+                      </button>
+                    </li>
+                  ))}
+                </React.Fragment>
+              ))}
+            </ul>
+          </div>
           {/* pagination */}
-          <button
-            className="btn"
-            onClick={() => fetchNextPage()}
-            disabled={!hasNextPage || isFetchingNextPage}
-          >
-            {isFetchingNextPage
-              ? "Loading..."
-              : hasNextPage
-              ? "Show more results"
-              : "No more results"}
-          </button>
+          <div className="sticky bottom-0">
+            <button
+              className="btn btn-block"
+              onClick={() => fetchNextPage()}
+              disabled={!hasNextPage || isFetchingNextPage}
+            >
+              {isFetchingNextPage
+                ? "Loading..."
+                : hasNextPage
+                ? "Show more results"
+                : "No more results"}
+            </button>
+          </div>
         </div>
       )}
     </div>

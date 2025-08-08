@@ -58,7 +58,7 @@ function MacroProgressBars({ macros, user }: MacroProgressBarsProps) {
     <div>
       <h2>{macros.date}</h2>
       {MacroProgressConfig.map((field) => (
-        <div key={macros.date}>
+        <div key={field.id}>
           <div>
             {field.label}: {macros[field.id]}/
             {field.target ? (

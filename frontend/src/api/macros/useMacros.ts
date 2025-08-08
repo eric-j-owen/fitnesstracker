@@ -4,9 +4,11 @@ import { MacrosFormData } from "../api.types";
 import { MACROS_KEY } from "../../consts";
 
 export const useMacros = (date: Date) => {
+  const dateString = date.toISOString().split("T")[0];
+
   const getDailyMacros = useQuery<MacrosFormData>({
-    queryKey: [MACROS_KEY],
-    queryFn: () => getMacrosLogs(String(date.toISOString().split("T")[0])),
+    queryKey: [MACROS_KEY, dateString],
+    queryFn: () => getMacrosLogs(dateString),
   });
 
   return {

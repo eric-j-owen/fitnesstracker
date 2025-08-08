@@ -4,17 +4,14 @@ todos
     drag and drop entries
 */
 
-import { useState } from "react";
+import { useContext } from "react";
 import { useGetLogs } from "../../api/foodLog/useFoodLog";
 import { MEAL_CATEGORIES } from "../../consts";
 import FoodLogEntry from "./FoodLogEntry";
+import { DateContext } from "../../pages/Dashboard";
 
-interface FoodLogDisplayProps {
-  date: Date;
-}
-
-export default function FoodLogDisplay({ date }: FoodLogDisplayProps) {
-  const [selectedDate, setSelectedDate] = useState(date);
+export default function FoodLogDisplay() {
+  const { selectedDate, setSelectedDate } = useContext(DateContext);
   const { data: logs } = useGetLogs(selectedDate);
 
   const handleSubDay = () => {

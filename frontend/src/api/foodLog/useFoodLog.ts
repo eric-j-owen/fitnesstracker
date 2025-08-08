@@ -49,7 +49,6 @@ export const useLogFood = () => {
     mutationFn: logFoodItem,
     onSuccess: () => {
       toast.success("Metric logged successfully");
-      queryClient.invalidateQueries({ queryKey: [MACROS_KEY] });
       queryClient.invalidateQueries({ queryKey: [FOOD_LOG_KEY] });
     },
     onError: (err) => {

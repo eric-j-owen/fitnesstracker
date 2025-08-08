@@ -33,6 +33,8 @@ export default function FoodLogModule() {
   return (
     <div>
       <SearchFoodItems onSelect={handleSelect} />
+      <FoodLogDisplay />
+
       <Modal
         modalId="foodModal"
         modalRef={foodModalRef}
@@ -40,8 +42,6 @@ export default function FoodLogModule() {
       >
         {renderModalContent()}
       </Modal>
-
-      <FoodLogDisplay date={new Date()} />
     </div>
   );
 }
