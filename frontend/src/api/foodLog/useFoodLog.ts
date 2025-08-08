@@ -68,7 +68,7 @@ export const useLogFood = () => {
 export const useGetLogs = (date: Date) => {
   const query = useQuery({
     queryKey: [FOOD_LOG_KEY, date.toISOString()],
-    queryFn: () => getLogByDate(date),
+    queryFn: () => getLogByDate(String(date.toISOString().split("T")[0])),
   });
 
   return {

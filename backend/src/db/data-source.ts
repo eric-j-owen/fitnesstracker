@@ -16,7 +16,6 @@ export const dataSourceOptions: DataSourceOptions = {
   entities: [
     entities.User,
     entities.Metric,
-    entities.Macro,
     entities.FoodItem,
     entities.FoodLog,
   ],

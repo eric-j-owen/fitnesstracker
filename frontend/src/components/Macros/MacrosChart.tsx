@@ -59,7 +59,7 @@ function MacrosChart({ data, isLoadingQuery, isErrorQuery }: MacrosChartProps) {
     datasets: [
       {
         label: "Fats",
-        data: data.map((record) => record.fats),
+        data: data.map((record) => record.fat),
         backgroundColor: "rgb(255, 99, 132)",
       },
       {

@@ -2,7 +2,7 @@ import { GoInfinity } from "react-icons/go";
 import { AuthenticatedUser, MacrosFormData } from "../../api/api.types";
 
 interface MacroProgressBarsProps {
-  macros: MacrosFormData[];
+  macros: MacrosFormData;
   user: AuthenticatedUser;
 }
 function MacroProgressBars({ macros, user }: MacroProgressBarsProps) {
@@ -15,42 +15,39 @@ function MacroProgressBars({ macros, user }: MacroProgressBarsProps) {
     user?.targetProtein * CALS_PER_G_PROTEIN +
     user?.targetFats * CALS_PER_G_FATS;
 
-  const todaysLog = macros?.find((log) =>
-    log.date.startsWith(new Date().toISOString().split("T")[0])
-  );
-
   type MacroProgressConfigType = {
-    id: "calories" | "protein" | "carbs" | "fats";
+    id: keyof MacrosFormData;
     label: string;
     target: number;
     unit: string;
     color: string;
   };
+
   const MacroProgressConfig: MacroProgressConfigType[] = [
     {
       id: "calories",
-      label: "Calories",
+      label: "CAL",
       target: calculatedMaxCalories,
       unit: "",
       color: "white",
     },
     {
       id: "protein",
-      label: "Protein",
+      label: "P",
       target: user?.targetProtein,
       unit: "g",
       color: "rgb(75, 192, 192)",
     },
     {
       id: "carbs",
-      label: "Carbs",
+      label: "C",
       target: user?.targetCarbs,
       unit: "g",
       color: "rgb(53, 162, 235)",
     },
     {
-      id: "fats",
-      label: "Fats",
+      id: "fat",
+      label: "F",
       target: user?.targetFats,
       unit: "g",
       color: "rgb(255, 99, 132)",
@@ -58,19 +55,12 @@ function MacroProgressBars({ macros, user }: MacroProgressBarsProps) {
   ];
 
   return (
-    <div className="flex flex-col gap-1 w-full">
+    <div>
+      <h2>{macros.date}</h2>
       {MacroProgressConfig.map((field) => (
-        <div key={field.id} className="flex items-center gap-2">
-          <progress
-            className="progress"
-            value={todaysLog?.[field.id] || 0}
-            max={String(field.target)}
-            aria-labelledby={`${field.id}-label`}
-            style={{ color: field.color }}
-          ></progress>
-
-          <div className="text-sm flex items-center  w-17">
-            {todaysLog?.[field.id] || 0}/
+        <div key={macros.date}>
+          <div>
+            {field.label}: {macros[field.id]}/
             {field.target ? (
               field.target
             ) : (
@@ -82,6 +72,14 @@ function MacroProgressBars({ macros, user }: MacroProgressBarsProps) {
               </div>
             )}
           </div>
+
+          <progress
+            className="progress"
+            value={macros[field.id]}
+            max={String(field.target)}
+            aria-labelledby={`${field.id}-label`}
+            style={{ color: field.color }}
+          ></progress>
         </div>
       ))}
     </div>

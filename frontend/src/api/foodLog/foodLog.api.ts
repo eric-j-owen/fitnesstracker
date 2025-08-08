@@ -30,8 +30,8 @@ export const logFoodItem = async (foodEntry: FoodLogEntry) => {
   });
 };
 
-export const getLogByDate = (date: Date): Promise<FoodLogResponse[]> => {
-  return fetchClient(`/api/foodlog?date=${date.toISOString()}`);
+export const getLogByDate = (date: string): Promise<FoodLogResponse[]> => {
+  return fetchClient(`/api/foodlog?date=${date}`);
 };
 
 export const patchLogEntry = (id: number, data: FoodLogEntry) => {

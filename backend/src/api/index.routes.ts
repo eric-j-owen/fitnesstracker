@@ -15,10 +15,10 @@ export default function mountRoutes(app: Express) {
 
   app.use("/api/users", requireAuth, userRouter);
   app.use("/api/auth", authRouter);
-  app.use("/api/macros", macrosRouter);
+  app.use("/api/macros", requireAuth, macrosRouter);
   app.use("/api/metrics", requireAuth, metricsRouter);
-  app.use("/api/fooditems", foodItemRouter);
-  app.use("/api/foodlog", foodLogRouter);
+  app.use("/api/fooditems", requireAuth, foodItemRouter);
+  app.use("/api/foodlog", requireAuth, foodLogRouter);
 
   app.use((req, res, next) => {
     next(createHttpError(404, `${req.path} Endpoint not found`));

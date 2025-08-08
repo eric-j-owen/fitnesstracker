@@ -1,12 +1,12 @@
 import { useMacros } from "../../api/macros/useMacros";
 import { useAuth } from "../../api/auth/useAuth";
-import MacrosChart from "./MacrosChart";
+// import MacrosChart from "./MacrosChart";
 import MacroProgressBars from "./MacroProgressBars";
 import { UnauthorizedError } from "../../api/errors";
 
 function MacrosModule() {
   const { user } = useAuth();
-  const { macros, isLoadingQuery, isErrorQuery } = useMacros();
+  const { dailyMacros, isLoadingQuery, isErrorQuery } = useMacros(new Date());
 
   if (!user) throw new UnauthorizedError();
 
@@ -19,15 +19,15 @@ function MacrosModule() {
 
   return (
     <div>
-      <MacroProgressBars user={user} macros={macros || []} />
+      <MacroProgressBars user={user} macros={dailyMacros} />
 
       <div className="w-full overflow-x-auto">
         <div className="min-w-[400px]">
-          <MacrosChart
+          {/* <MacrosChart
             isLoadingQuery={isLoadingQuery}
             isErrorQuery={isErrorQuery}
-            data={macros || []}
-          />
+            data={dailyMacros || []}
+          /> */}
         </div>
       </div>
     </div>

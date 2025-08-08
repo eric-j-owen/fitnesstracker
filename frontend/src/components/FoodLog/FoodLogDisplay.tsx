@@ -1,9 +1,5 @@
 /*
 todos 
-    cycle dates
-    fooditementry
-    edit entries
-    delete entries
     styles
     drag and drop entries
 */
