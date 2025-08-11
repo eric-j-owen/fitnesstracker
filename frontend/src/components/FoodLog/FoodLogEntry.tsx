@@ -16,38 +16,7 @@ export default function FoodLogEntry({ entry }: FoodLogEntryProps) {
   const [formKey, setFormKey] = useState(0);
 
   return (
-    <li className="hover:bg-base-200">
-      <div>
-        <div>
-          <h3>{entry.foodItem.description}</h3>
-          <div>
-            <span>
-              {entry.amount} {entry.unit}
-            </span>
-          </div>
-          <div>
-            <span>CAL: {entry.calculatedCalories}</span>
-            <span>P: {entry.calculatedProtein}</span>
-            <span>C: {entry.calculatedCarbs}</span>
-            <span>F: {entry.calculatedFat}</span>
-          </div>
-        </div>
-        <div>
-          <button
-            className="btn"
-            onClick={() => {
-              setFormKey((prev) => prev + 1);
-              editModalRef.current?.showModal();
-            }}
-          >
-            edit
-          </button>
-          <button className="btn" onClick={() => deleteLog(entry.id)}>
-            delete
-          </button>
-        </div>
-      </div>
-
+    <li className="list-row ">
       <Modal modalRef={editModalRef} modalId="editFoodEntry">
         <LogFoodForm
           key={formKey}
@@ -56,7 +25,37 @@ export default function FoodLogEntry({ entry }: FoodLogEntryProps) {
           loggedFood={entry}
           title="Edit entry"
         />
+        <button className="btn" onClick={() => deleteLog(entry.id)}>
+          &#x1F5D1; Delete
+        </button>
       </Modal>
+
+      <div
+        className="hover:bg-base-300 cursor-pointer p-5"
+        onClick={() => {
+          setFormKey((prev) => prev + 1);
+          editModalRef.current?.showModal();
+        }}
+      >
+        <div className="flex justify-between flex-col">
+          <div>
+            <div className="flex gap-2">
+              {/* <span>{entry.foodItem.foodCategory}</span> */}
+              <span>{entry.foodItem.brandName}</span>
+              <span>{entry.foodItem.description} </span>
+            </div>
+            <div className="text-xs uppercase font-semibold opacity-60">
+              {entry.amount} {entry.unit}
+            </div>
+          </div>
+          <div className="flex justify-start gap-5 text-xs uppercase font-semibold opacity-60">
+            <span>CAL: {entry.calculatedCalories}</span>
+            <span>P: {entry.calculatedProtein}</span>
+            <span>C: {entry.calculatedCarbs}</span>
+            <span>F: {entry.calculatedFat}</span>
+          </div>
+        </div>
+      </div>
     </li>
   );
 }

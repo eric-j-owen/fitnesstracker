@@ -1,15 +1,6 @@
 import { useFoodSearch } from "../../api/foodLog/useFoodLog";
 import React, { useState } from "react";
-
-/*
-todos
-    styles 
-    debouncing
-    accessability
-    skeleton loading
-    error state
-    clear search button? 
-*/
+import { useDebounce } from "use-debounce";
 
 interface SearchFoodItemsProps {
   onSelect: (fdcId: number) => void;
@@ -17,7 +8,7 @@ interface SearchFoodItemsProps {
 
 export default function SearchFoodItems({ onSelect }: SearchFoodItemsProps) {
   const [query, setQuery] = useState<string>("");
-  const [submittedQuery, setSubmittedQuery] = useState<string>("");
+  const [value] = useDebounce(query, 500);
 
   const {
     data: searchResults,
@@ -25,59 +16,70 @@ export default function SearchFoodItems({ onSelect }: SearchFoodItemsProps) {
     hasNextPage,
     isFetchingNextPage,
     isSearchLoading,
-  } = useFoodSearch(submittedQuery);
+  } = useFoodSearch(value);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSubmittedQuery(query);
-  };
   return (
-    <div className="relative">
+    <div className="mt-5">
       {/* search bar */}
-      <form onSubmit={handleSubmit}>
-        <div className="relative my-10">
+      <form onSubmit={(e) => e.preventDefault()}>
+        <div className="flex">
           <input
             type="text"
-            className="input input-accent w-full"
-            placeholder="Search for food"
+            className="input input-accent w-50 focus:w-full transition-all duration-300"
+            placeholder="🔍 Search for food"
             aria-label="Search for food"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <button
-            className="btn btn-ghost text-accent absolute right-0"
-            onClick={() => setQuery("")}
-          >
-            x
-          </button>
-          <button className="btn">Submit</button>
+          {query && (
+            <button
+              type="button"
+              className="btn btn-ghost text-accent"
+              onClick={() => {
+                setQuery("");
+              }}
+            >
+              &times;{" "}
+            </button>
+          )}
         </div>
       </form>
 
       {/* loading states */}
-      {isSearchLoading && <p>Loading results...</p>}
+      {isSearchLoading && (
+        <div className="absolute z-20 bg-base-300 shadow-2xl flex flex-col justify-center items-center border border-accent rounded-lg w-100">
+          <div className="loading loading-spinner loading-xl m-10"></div>
+          <div className="flex w-100 flex-col gap-4">
+            <div className="skeleton h-4 w-75"></div>
+            <div className="skeleton h-4 w-75"></div>
+            <div className="skeleton h-4 w-75"></div>
+            <div className="skeleton h-4 w-75"></div>
+          </div>
+        </div>
+      )}
       {!isSearchLoading && searchResults?.pages[0].foods.length === 0 && (
         <p>No results found.</p>
       )}
 
       {/* results */}
       {searchResults && (
-        <div className="absolute z-20 bg-base-300 shadow-xl max-h-100 overflow-y-auto border border-accent w-full">
+        <div className="absolute z-20 bg-base-300 shadow-2xl max-h-120 overflow-y-auto w-100 border border-accent rounded-lg">
           <div className="p-2">
             <ul>
+              <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
+                Search results
+              </li>
               {searchResults.pages.map((page, i) => (
                 <React.Fragment key={i}>
                   {page.foods.map((food) => (
-                    <li key={food.fdcId}>
+                    <li
+                      key={food.fdcId}
+                      className="hover:bg-base-100 cursor-pointer p-2 m-2 flex"
+                      onClick={() => onSelect(food.fdcId)}
+                    >
                       {food?.brandName && <p>{food.brandName}</p>}
                       <p>{food.description}</p>
                       <p>{food.foodCategory}</p>
-                      <button
-                        className="btn"
-                        onClick={() => onSelect(food.fdcId)}
-                      >
-                        +
-                      </button>
                     </li>
                   ))}
                 </React.Fragment>
@@ -87,7 +89,7 @@ export default function SearchFoodItems({ onSelect }: SearchFoodItemsProps) {
           {/* pagination */}
           <div className="sticky bottom-0">
             <button
-              className="btn btn-block"
+              className="btn btn-block text-primary"
               onClick={() => fetchNextPage()}
               disabled={!hasNextPage || isFetchingNextPage}
             >

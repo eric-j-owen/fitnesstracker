@@ -29,13 +29,24 @@ export default function FoodLogDisplay() {
   return (
     <div>
       {/* date nav and display */}
-      <div>
-        <button onClick={handleSubDay} className="btn">
-          previous
+      <div className="mt-10 flex justify-center items-center bg-base-300">
+        <button
+          onClick={handleSubDay}
+          className="cursor-pointer text-xl w-full hover:text-accent"
+        >
+          &#8249;
         </button>
-        <h2>{selectedDate.toISOString().split("T")[0]}</h2>
-        <button onClick={handleAddDay} className="btn">
-          next
+        <div className="text-md font-semibold w-full text-center">
+          {selectedDate.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          })}
+        </div>
+        <button
+          onClick={handleAddDay}
+          className="cursor-pointer text-xl w-full hover:text-accent"
+        >
+          &#8250;
         </button>
       </div>
 
@@ -50,18 +61,20 @@ export default function FoodLogDisplay() {
             className="collapse collapse-arrow bg-base-100 border-base-300 border"
           >
             <input type="checkbox" defaultChecked />
-            <div className="collapse-title font-semibold">{category}</div>
+            <div className="collapse-title font-bold text-secondary">
+              {category}
+            </div>
             <div className="collapse-content text-sm">
               {filteredLogs.length ? (
-                <div>
-                  <ul>
+                <>
+                  <ul className="">
                     {filteredLogs.map((log) => (
                       <FoodLogEntry entry={log} key={log.id} />
                     ))}
                   </ul>
-                </div>
+                </>
               ) : (
-                <span>No entries</span>
+                <span className="p-4 pb-2 text-xs opacity-60 ">No entries</span>
               )}
             </div>
           </div>
