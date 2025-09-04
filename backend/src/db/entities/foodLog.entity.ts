@@ -47,11 +47,17 @@ export class FoodLog {
   amount: number;
 
   @Column()
-  unit: string; //cup, g, ml, package etc
+  servingUnit: string; //cup, g, ml, package etc
+
+  @Column({ type: "decimal", precision: 10, scale: 2 })
+  servingWeight: number;
 
   //yyyy-mm-dd
   @Column({ type: "varchar", length: 10, name: "log_date" })
   logDate: string;
+
+  @Column({ name: "portion_desc" })
+  portionDescription: string; //cup, g, ml, package etc
 
   // ----
   // macros
