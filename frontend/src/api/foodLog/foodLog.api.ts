@@ -1,4 +1,9 @@
-import { FoodItemType, FoodLogEntry, FoodLogResponse } from "../api.types";
+import {
+  FoodItemType,
+  CreateFoodLogEntry,
+  FoodLogResponse,
+  EditFoodLogEntry,
+} from "../api.types";
 import { fetchClient } from "../client";
 
 interface SearchResponse {
@@ -23,7 +28,7 @@ export const searchFoodItems = async ({
   return result;
 };
 
-export const logFoodItem = async (foodEntry: FoodLogEntry) => {
+export const logFoodItem = async (foodEntry: CreateFoodLogEntry) => {
   return await fetchClient("/api/foodlog", {
     method: "POST",
     body: JSON.stringify(foodEntry),
@@ -34,7 +39,7 @@ export const getLogByDate = (date: string): Promise<FoodLogResponse[]> => {
   return fetchClient(`/api/foodlog?date=${date}`);
 };
 
-export const patchLogEntry = (id: number, data: FoodLogEntry) => {
+export const patchLogEntry = (id: number, data: EditFoodLogEntry) => {
   return fetchClient(`/api/foodlog/${id}`, {
     method: "PATCH",
     body: JSON.stringify(data),

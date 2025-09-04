@@ -13,7 +13,7 @@ import {
   searchFoodItems,
 } from "./foodLog.api";
 import toast from "react-hot-toast";
-import { FoodLogEntry } from "../api.types";
+import { EditFoodLogEntry } from "../api.types";
 
 /*
 todos
@@ -81,7 +81,7 @@ export const useEditLogs = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: FoodLogEntry }) =>
+    mutationFn: ({ id, data }: { id: number; data: EditFoodLogEntry }) =>
       patchLogEntry(id, data),
 
     onSuccess: () => {
