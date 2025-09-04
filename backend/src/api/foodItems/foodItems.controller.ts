@@ -67,16 +67,12 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
     if (!FDC_API_BASE_URL || !FDC_API_KEY || !fdcId)
       throw new Error("Invalid configuration");
 
-    console.time("existing item");
     // check for and return existing fooditem in local db
     const existingItem = await foodItemRepo.findOneBy({ fdcId });
     if (existingItem) {
       res.status(200).send(existingItem);
       return;
     }
-    console.timeEnd("existing item");
-
-    console.time("api fetch");
 
     // parse nutrient data and fetch data
     enum usdaCodes {
@@ -95,31 +91,17 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
     const response = await fetch(`${FDC_API_BASE_URL}/food/${fdcId}?${params}`);
     const data = (await response.json()) as UsdaByFdcIdResponse;
 
-    console.timeEnd("api fetch");
-
     const nutrients: NutrientsType = {
-      calories: { per100g: 0 },
-      protein: { per100g: 0 },
-      carbs: { per100g: 0 },
-      fat: { per100g: 0 },
+      calories: { per100g: null, perLabelServing: null },
+      protein: { per100g: null, perLabelServing: null },
+      carbs: { per100g: null, perLabelServing: null },
+      fat: { per100g: null, perLabelServing: null },
     };
 
-    //macro parsing, foods may have 1 or 2 objects labelNutrients and/or foodNutrients. label nutrients are per serving, foodnutrients are per 100g
-    //per serving
-    console.time("label and food nutrients");
-    if (data.labelNutrients && Object.keys(data.labelNutrients).length) {
-      nutrients.calories.perServing = data.labelNutrients.calories.value;
-      nutrients.protein.perServing = data.labelNutrients.protein.value;
-      nutrients.carbs.perServing = data.labelNutrients.carbohydrates.value;
-      nutrients.fat.perServing = data.labelNutrients.fat.value;
-    }
     // per 100g
     if (data.foodNutrients) {
       for (const record of data.foodNutrients) {
-        if (!record.nutrient) {
-          console.warn("skipping record: ", record.nutrient);
-          continue;
-        }
+        if (!record.nutrient) continue;
         switch (record.nutrient.number) {
           case usdaCodes.kcal:
             nutrients.calories.per100g = record.amount;
@@ -136,29 +118,61 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
         }
       }
     }
-    console.timeEnd("label and food nutrients");
 
-    console.time("foodPortions array");
+    //per serving
+    if (data.labelNutrients && Object.keys(data.labelNutrients).length) {
+      nutrients.calories.perLabelServing = data.labelNutrients.calories.value;
+      nutrients.protein.perLabelServing = data.labelNutrients.protein.value;
+      nutrients.carbs.perLabelServing = data.labelNutrients.carbohydrates.value;
+      nutrients.fat.perLabelServing = data.labelNutrients.fat.value;
+    }
+
     // parse food portion data
     let foodPortions: FoodPortionsArray = [];
     if (data.foodClass === "Branded") {
       foodPortions.push({
-        portionDescription: data.householdServingFullText,
-        servingSize: data.servingSize,
-        servingSizeUnit: data.servingSizeUnit,
+        portionDescription: data.householdServingFullText || "",
+        servingWeight: data.servingSize,
+        servingUnit: data.servingSizeUnit,
       });
     } else if (data.foodPortions) {
       for (const portion of data.foodPortions) {
+        let portionDescription = "";
+        let servingUnit = "";
+
+        //"undetermined" is used in the usda db when a food item does not have a measureunit
+        if (
+          portion.measureUnit &&
+          portion.measureUnit.name !== "undetermined"
+        ) {
+          servingUnit = portion.measureUnit.name;
+        }
+        //modifiers are either unneeded numeric codes or relevant data
+        else if (portion.modifier && isNaN(Number(portion.modifier))) {
+          servingUnit = portion.modifier;
+        }
+
+        //"Quantity not specified" is assigned to portionDescription in the usda db which is not relevant
+        if (
+          portion.portionDescription &&
+          portion.portionDescription !== "Quantity not specified"
+        ) {
+          portionDescription = portion.portionDescription;
+        }
+        //this checks if servingUnit was not previously assigned to the modifier (would cause duplicate values) and that the modifier is relavant data, therefore we can use the modifer as the portionDescription.
+        else if (isNaN(Number(portion.modifier)) && servingUnit === "") {
+          portionDescription = portion.modifier;
+        }
+
         foodPortions.push({
-          portionDescription: portion.portionDescription,
-          gramWeight: portion.gramWeight,
-          amount: portion?.amount,
+          portionDescription,
+          servingWeight: portion.gramWeight,
+          servingUnit,
+          amount: portion.amount,
         });
       }
     }
-    console.timeEnd("foodPortions array");
 
-    console.time("normalized food category");
     // normalizes multiple possible data structures for food category field
     const normalizedFoodCategory = (item: UsdaByFdcIdResponse) => {
       if (item.brandedFoodCategory) {
@@ -179,29 +193,25 @@ export const getFoodItemById: RequestHandler<IdParam> = async (
 
       return "Uncategorized";
     };
-    console.timeEnd("normalized food category");
 
-    console.time("insert");
     // insert opertation
     const newFoodItemData: FoodItemType = {
       fdcId: data.fdcId,
       gtinUpc: data.gtinUpc,
       publicationDate: new Date(data.publicationDate),
       lastCheckForUpdate: new Date(),
-      brandOwner: data?.brandOwner || undefined,
-      brandName: data?.brandName || undefined,
+      brandOwner: data?.brandOwner,
+      brandName: data?.brandName,
       foodCategory: normalizedFoodCategory(data),
       foodClass: data.foodClass,
       description: data.description,
-      packageWeight: data?.packageWeight || "",
+      packageWeight: data.packageWeight || "",
       nutrients,
       foodPortions,
     };
 
     const newFoodItemCreate = foodItemRepo.create(newFoodItemData);
     const newFoodItem = await foodItemRepo.save(newFoodItemCreate);
-
-    console.timeEnd("insert");
 
     res.status(200).json(newFoodItem);
   } catch (error) {
