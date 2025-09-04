@@ -76,7 +76,20 @@ export const metricsFormSchema = z.object({
   date: z.string(),
 });
 
-//fooditem
+//fooditem foodlog
+
+export const foodPortion = z.object({
+  portionDescription: z.string().nullable(),
+  servingWeight: z.number().nullable(),
+  servingUnit: z.string().nullable(),
+  amount: z.number(),
+});
+
+export const foodLogFormInputs = foodPortion.extend({
+  mealCategory: z.string(),
+  logDate: z.string(),
+});
+
 export const foodItemSchema = z.object({
   id: z.number(),
   fdcId: z.number(),
@@ -92,51 +105,37 @@ export const foodItemSchema = z.object({
   nutrients: z.object({
     calories: z.object({
       per100g: z.number(),
-      perServing: z.number().optional(),
+      perLabelServing: z.number().optional(),
     }),
     protein: z.object({
       per100g: z.number(),
-      perServing: z.number().optional(),
+      perLabelServing: z.number().optional(),
     }),
     carbs: z.object({
       per100g: z.number(),
-      perServing: z.number().optional(),
+      perLabelServing: z.number().optional(),
     }),
     fat: z.object({
       per100g: z.number(),
-      perServing: z.number().optional(),
+      perLabelServing: z.number().optional(),
     }),
   }),
 
-  foodPortions: z.array(
-    z.object({
-      portionDescription: z.string().optional(),
-      gramWeight: z.number().optional(),
-      servingSize: z.number().optional(),
-      servingSizeUnit: z.string().optional(),
-      amount: z.number().optional(),
-    })
-  ),
+  foodPortions: z.array(foodPortion),
 });
 
-// foodlog
-
-export const foodLogFormInputs = z.object({
-  mealCategory: z.string(),
-  amount: z.number().positive(),
-  unit: z.string().min(1).max(25),
-  logDate: z.date(),
-});
-
-export const foodLogSchema = foodLogFormInputs.extend({
-  foodItemId: z.number(),
+export const editFoodLogSchema = foodLogFormInputs.extend({
   calculatedCalories: z.number().min(0),
   calculatedProtein: z.number().min(0),
   calculatedCarbs: z.number().min(0),
   calculatedFat: z.number().min(0),
 });
 
-export const foodLogResponseSchema = foodLogSchema.extend({
+export const createFoodLogSchema = editFoodLogSchema.extend({
+  foodItemId: z.number(),
+});
+
+export const foodLogResponseSchema = createFoodLogSchema.extend({
   id: z.number(),
   foodItem: foodItemSchema,
 });

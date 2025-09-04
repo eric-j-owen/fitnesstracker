@@ -88,29 +88,28 @@ export const foodItemSchema = z.object({
   packageWeight: z.string(),
   nutrients: z.object({
     calories: z.object({
-      per100g: z.number(),
-      perServing: z.number().optional(),
+      per100g: z.number().nullable(),
+      perLabelServing: z.number().nullable(),
     }),
     protein: z.object({
-      per100g: z.number(),
-      perServing: z.number().optional(),
+      per100g: z.number().nullable(),
+      perLabelServing: z.number().nullable(),
     }),
     carbs: z.object({
-      per100g: z.number(),
-      perServing: z.number().optional(),
+      per100g: z.number().nullable(),
+      perLabelServing: z.number().nullable(),
     }),
     fat: z.object({
-      per100g: z.number(),
-      perServing: z.number().optional(),
+      per100g: z.number().nullable(),
+      perLabelServing: z.number().nullable(),
     }),
   }),
 
   foodPortions: z.array(
     z.object({
-      portionDescription: z.string().optional(),
-      gramWeight: z.number().optional(),
-      servingSize: z.number().optional(),
-      servingSizeUnit: z.string().optional(),
+      portionDescription: z.string(),
+      servingWeight: z.number().optional(),
+      servingUnit: z.string().optional(),
       amount: z.number().optional(),
     })
   ),
@@ -123,7 +122,9 @@ export const createFoodLogSchema = z.object({
     foodItemId: z.number(),
     mealCategory: z.string(),
     amount: z.number(),
-    unit: z.string(),
+    servingWeight: z.number(),
+    servingUnit: z.string(),
+    portionDescription: z.string(),
     logDate: z.coerce.date(),
     calculatedCalories: z.number(),
     calculatedProtein: z.number(),

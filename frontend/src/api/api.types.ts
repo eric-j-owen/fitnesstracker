@@ -14,13 +14,12 @@ export type MetricsFormData = z.infer<typeof s.metricsFormSchema>;
 
 //fooditems
 export type FoodItemType = z.infer<typeof s.foodItemSchema>;
-export type FoodPortionsArray = z.infer<
-  typeof s.foodItemSchema.shape.foodPortions
->;
+export type FoodPortion = z.infer<typeof s.foodPortion>;
 
 export type NutrientsType = z.infer<typeof s.foodItemSchema.shape.nutrients>;
 
 // food log
-export type FoodLogEntry = z.infer<typeof s.foodLogSchema>;
+export type CreateFoodLogEntry = z.infer<typeof s.createFoodLogSchema>;
+export type EditFoodLogEntry = z.infer<typeof s.editFoodLogSchema>;
 export type FoodLogFormInputs = z.infer<typeof s.foodLogFormInputs>;
 export type FoodLogResponse = z.infer<typeof s.foodLogResponseSchema>;
