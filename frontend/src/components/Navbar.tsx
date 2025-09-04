@@ -10,7 +10,7 @@ export default function Navbar() {
     <nav className="navbar bg-base-100 shadow-sm">
       <div className="flex-1">
         <Link to="/dashboard" className="btn btn-ghost text-xl">
-          workoutPR
+          tracker
         </Link>
       </div>
       <div className="flex-none">
@@ -24,12 +24,6 @@ export default function Navbar() {
                   className="flex items-center gap-2 btn btn-ghost"
                 >
                   <span className="">Welcome {user?.firstName}</span>
-                  <div className="w-10">
-                    <img
-                      alt="User avatar"
-                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                    />
-                  </div>
                   <FaChevronDown />
                 </div>
                 <ul
