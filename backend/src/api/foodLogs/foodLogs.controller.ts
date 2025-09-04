@@ -50,19 +50,14 @@ export const deleteLogEntry: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const editLogEntry: RequestHandler = async (req, res, next) => {
+export const editLogEntry: RequestHandler<
+  IdParam,
+  unknown,
+  FoodLogReqBody
+> = async (req, res, next) => {
   try {
     const { userId } = req.session;
     const { id } = req.params;
-    const {
-      amount,
-      unit,
-      mealCategory,
-      calculatedCalories,
-      calculatedProtein,
-      calculatedCarbs,
-      calculatedFat,
-    } = req.body;
 
     const result = await foodLogRepo.update(
       {
@@ -70,13 +65,9 @@ export const editLogEntry: RequestHandler = async (req, res, next) => {
         id: Number(id),
       },
       {
-        amount,
-        unit,
-        mealCategory,
-        calculatedCalories,
-        calculatedProtein,
-        calculatedCarbs,
-        calculatedFat,
+        ...req.body,
+        mealCategory: req.body.mealCategory as MealCategory,
+        logDate: String(req.body.logDate),
       }
     );
 
@@ -103,7 +94,9 @@ export const createLogEntry: RequestHandler<
       foodItemId,
       mealCategory,
       amount,
-      unit,
+      servingUnit,
+      servingWeight,
+      portionDescription,
       logDate,
       calculatedCalories,
       calculatedProtein,
@@ -121,7 +114,9 @@ export const createLogEntry: RequestHandler<
       foodItem: { id: foodItemId },
       mealCategory: mealCategory as MealCategory,
       amount,
-      unit,
+      servingUnit,
+      servingWeight,
+      portionDescription,
       logDate: String(logDate).split("T")[0],
       calculatedCalories,
       calculatedProtein,
