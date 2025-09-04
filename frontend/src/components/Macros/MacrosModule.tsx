@@ -24,13 +24,7 @@ function MacrosModule() {
       <MacroProgressBars user={user} macros={dailyMacros} />
 
       <div className="w-full overflow-x-auto">
-        <div className="min-w-[400px]">
-          {/* <MacrosChart
-            isLoadingQuery={isLoadingQuery}
-            isErrorQuery={isErrorQuery}
-            data={dailyMacros || []}
-          /> */}
-        </div>
+        <div className="min-w-[400px]"></div>
       </div>
     </div>
   );

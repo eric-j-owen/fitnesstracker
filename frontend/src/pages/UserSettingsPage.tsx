@@ -3,7 +3,7 @@ import { UserSettingsForm } from "../components/UserSettingsForm";
 
 export const UserSettingsPage = () => {
   return (
-    <FormLayout title="Update Profile">
+    <FormLayout title="Settings">
       <UserSettingsForm />
     </FormLayout>
   );
