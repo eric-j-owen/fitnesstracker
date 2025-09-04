@@ -17,28 +17,30 @@ export default function Dashboard() {
 
   return (
     <DateContext.Provider value={{ selectedDate, setSelectedDate }}>
-      <div className="container mx-auto p-4 md:p-6 ">
-        <h1 className="text-4xl font-bold mb-24 text-center">Dashboard</h1>
+      <div className="container mx-auto px-2">
+        <h1 className="text-3xl font-bold my-5 text-center">Dashboard</h1>
+        <div className="divider"></div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-24">
-          <div className="card shadow-2xl bg-base-200 row-span-2">
+        <div className="flex flex-col gap-12 lg:flex-row">
+          <div className="card shadow-2xl bg-base-200 flex-1">
             <div className="card-body">
-              <h2 className="card-title mx-auto">Log</h2>
+              <h2 className="card-title divider divider-start">Log</h2>
               <FoodLogModule />
             </div>
           </div>
-
-          <div className="card shadow-2xl bg-base-200">
-            <div className="card-body">
-              <h2 className="card-title mx-auto">Macros</h2>
-              <MacrosModule />
+          <div className="flex flex-col gap-12">
+            <div className=" card shadow-2xl bg-base-200 w-auto">
+              <div className="card-body">
+                <h2 className="card-title divider divider-start">Macros</h2>
+                <MacrosModule />
+              </div>
             </div>
-          </div>
 
-          <div className="card shadow-2xl bg-base-200">
-            <div className="card-body">
-              <h2 className="card-title mx-auto">Metrics</h2>
-              <MetricsModule />
+            <div className="card shadow-2xl bg-base-200">
+              <div className="card-body">
+                <h2 className="card-title divider divider-start">Metrics</h2>
+                <MetricsModule />
+              </div>
             </div>
           </div>
         </div>
