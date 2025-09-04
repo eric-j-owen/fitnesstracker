@@ -6,7 +6,8 @@
   "scripts": {
     "test": "vitest",
     "build": "tsc",
-    "dev": "node dist/src/server.js"
+    "dev": "node dist/src/server.js",
+    "watch": "npx tsc --watch"
   },
   "keywords": [],
   "author": "",
