@@ -16,7 +16,7 @@ export default function FoodLogEntry({ entry }: FoodLogEntryProps) {
   const [formKey, setFormKey] = useState(0);
 
   return (
-    <li className="list-row ">
+    <li className="list-row relative">
       <Modal modalRef={editModalRef} modalId="editFoodEntry">
         <LogFoodForm
           key={formKey}
@@ -25,9 +25,6 @@ export default function FoodLogEntry({ entry }: FoodLogEntryProps) {
           loggedFood={entry}
           title="Edit entry"
         />
-        <button className="btn" onClick={() => deleteLog(entry.id)}>
-          &#x1F5D1; Delete
-        </button>
       </Modal>
 
       <div
@@ -40,12 +37,13 @@ export default function FoodLogEntry({ entry }: FoodLogEntryProps) {
         <div className="flex justify-between flex-col">
           <div>
             <div className="flex gap-2">
-              {/* <span>{entry.foodItem.foodCategory}</span> */}
-              <span>{entry.foodItem.brandName}</span>
+              {entry.foodItem.brandName && (
+                <span>{entry.foodItem.brandName}</span>
+              )}
               <span>{entry.foodItem.description} </span>
             </div>
             <div className="text-xs uppercase font-semibold opacity-60">
-              {entry.amount} {entry.unit}
+              {entry.amount} {entry.servingUnit || entry.portionDescription}
             </div>
           </div>
           <div className="flex justify-start gap-5 text-xs uppercase font-semibold opacity-60">
@@ -56,6 +54,13 @@ export default function FoodLogEntry({ entry }: FoodLogEntryProps) {
           </div>
         </div>
       </div>
+      <button
+        className="absolute top-0 right-0 hover:text-red-400 cursor-pointer text-lg p-2"
+        onClick={() => deleteLog(entry.id)}
+        aria-label="Delete entry"
+      >
+        ×
+      </button>
     </li>
   );
 }
