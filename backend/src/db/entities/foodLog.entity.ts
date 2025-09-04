@@ -47,7 +47,7 @@ export class FoodLog {
   amount: number;
 
   @Column()
-  servingUnit: string; //cup, g, ml, package etc
+  servingUnit: string;
 
   @Column({ type: "decimal", precision: 10, scale: 2 })
   servingWeight: number;
@@ -57,7 +57,7 @@ export class FoodLog {
   logDate: string;
 
   @Column({ name: "portion_desc" })
-  portionDescription: string; //cup, g, ml, package etc
+  portionDescription: string;
 
   // ----
   // macros
